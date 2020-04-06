@@ -1,4 +1,7 @@
 **/.vs
 
+**/bin/
+**/Intermediate/
+
 *.vcxproj.user
 *.vcxproj.filters
