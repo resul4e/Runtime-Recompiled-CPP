@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	
 	//load all of the plugins
 	PluginLoader pl;
-	pl.LoadPlugins();
+	pl.LoadPlugins(path("../../Plugins"));
 	pl.Start();
 
 	//create the Level class
@@ -51,10 +51,10 @@ int main(int argc, char* argv[])
 	while (!RenderEngineAPI::GetIsWindowClosed())
 	{
 		//check if the use wants to restart
-		//if(InputComponent::GetKeyPressed(InputComponent::Key::R))
-		//{
-		//	restartLevel = true;
-		//}
+		if(InputComponent::GetKeyPressed(InputComponent::Key::R))
+		{
+			restartLevel = true;
+		}
 
 		if(restartLevel)
 		{
@@ -102,7 +102,7 @@ std::string SetWorkingDirectory()
 {
 	char working_directory[MAX_PATH + 1];
 	GetCurrentDirectoryA(sizeof(working_directory), working_directory); // **** win32 specific ****
-	//cout << working_directory << endl;
+	cout << working_directory << endl;
 #ifdef _MSC_VER
 #pragma warning(disable:4996)
 #endif
@@ -114,6 +114,7 @@ std::string SetWorkingDirectory()
 	_chdir(enginePath.c_str());
 
 	GetCurrentDirectoryA(sizeof(working_directory), working_directory); // **** win32 specific ****
+	cout << working_directory << endl;
 	return std::string(working_directory);
-	//cout << working_directory << endl;
+
 }

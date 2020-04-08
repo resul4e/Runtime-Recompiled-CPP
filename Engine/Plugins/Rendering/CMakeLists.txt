@@ -11,4 +11,4 @@ add_library("Rendering" SHARED
 
 target_link_libraries("Rendering" "PluginBase")
 target_link_libraries("Rendering" sfml-graphics)
-target_compile_definitions("Rendering" PRIVATE RENDERING_DLL PRIVATE ENGINE_PROJECT)
+target_compile_definitions("Rendering" PRIVATE RENDERING_DLL)
