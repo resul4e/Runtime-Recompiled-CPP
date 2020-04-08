@@ -11,6 +11,7 @@ include_directories(BEFORE "Plugins")
 #external includes
 include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
+include_directories(BEFORE "Extern/Box2DProj/Box2D")
 include_directories(BEFORE "Extern/SFML-2.5.1VS64/include")
 
 set(SFML_STATIC_LIBRARIES TRUE)

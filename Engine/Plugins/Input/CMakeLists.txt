@@ -1,4 +1,4 @@
-project(Rendering VERSION 1.0.0)
+project(Input VERSION 1.0.0)
 
 find_package(SFML 2.5 COMPONENTS window REQUIRED)
 
@@ -11,5 +11,4 @@ add_library("Input" SHARED
 
 target_link_libraries("Input" "PluginBase")
 target_link_libraries("Input" "Rendering")
-target_link_libraries("Input" sfml-window)
 target_compile_definitions("Input" PRIVATE INPUT_DLL)
