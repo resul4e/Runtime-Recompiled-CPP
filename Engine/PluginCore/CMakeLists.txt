@@ -1,6 +1,6 @@
 project(PluginCore VERSION 1.0.0)
 
-add_library("PluginCore" SHARED
+add_library("PluginCore" STATIC
     "ExportDetails.h"
     "PluginBase.h"
     "PluginBase.cpp"

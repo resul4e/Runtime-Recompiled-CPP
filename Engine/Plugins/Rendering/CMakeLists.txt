@@ -9,6 +9,6 @@ add_library("Rendering" SHARED
     "RenderComponent.h"
     "RenderComponent.cpp")
 
-target_link_libraries("Rendering" "Base")
-target_link_libraries("Main" sfml-graphics)
+target_link_libraries("Rendering" "PluginBase")
+target_link_libraries("Rendering" sfml-graphics)
 target_compile_definitions("Rendering" PRIVATE RENDERING_DLL PRIVATE ENGINE_PROJECT)

@@ -51,10 +51,10 @@ int main(int argc, char* argv[])
 	while (!RenderEngineAPI::GetIsWindowClosed())
 	{
 		//check if the use wants to restart
-		if(InputComponent::GetKeyPressed(InputComponent::Key::R))
-		{
-			restartLevel = true;
-		}
+		//if(InputComponent::GetKeyPressed(InputComponent::Key::R))
+		//{
+		//	restartLevel = true;
+		//}
 
 		if(restartLevel)
 		{

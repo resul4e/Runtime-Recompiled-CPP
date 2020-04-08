@@ -11,6 +11,7 @@ include_directories(BEFORE "Plugins")
 #external includes
 include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
+include_directories(BEFORE "Extern/SFML-2.5.1VS64/include")
 
 set(SFML_STATIC_LIBRARIES TRUE)
 
@@ -34,6 +35,3 @@ add_subdirectory("Main")
 add_subdirectory("Core")
 add_subdirectory("PluginCore")
 add_subdirectory("Plugins")
-
-#dependency chains
-add_dependencies("Main" "Core" "Transform")

@@ -7,6 +7,6 @@ add_library("Transform" SHARED
     "Vector.h"
     "Vector.cpp")
 
-target_link_libraries("Transform" "Base")
+target_link_libraries("Transform" "PluginBase")
 
 target_compile_definitions("Transform" PRIVATE TRANSFORM_DLL)
