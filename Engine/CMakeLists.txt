@@ -12,12 +12,12 @@ include_directories(BEFORE "Plugins")
 include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
 include_directories(BEFORE "Extern/Box2DProj/Box2D")
-include_directories(BEFORE "Extern/SFML-2.5.1VS64/include")
+include_directories(BEFORE "Extern/SFML/include")
 
 set(SFML_STATIC_LIBRARIES TRUE)
 
 #indicate where external dependencies can be found
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/Extern/SFML-2.5.1VS64/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+set(SFML_DIR "${CMAKE_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
 
 #base library that all other project depend on
 add_library("Base" INTERFACE)
