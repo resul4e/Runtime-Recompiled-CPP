@@ -17,7 +17,7 @@ include_directories(BEFORE "Extern/SFML/include")
 set(SFML_STATIC_LIBRARIES TRUE)
 
 #indicate where external dependencies can be found
-set(SFML_DIR "${CMAKE_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
 
 #base library that all other project depend on
 add_library("Base" INTERFACE)
