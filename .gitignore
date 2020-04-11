@@ -2,8 +2,5 @@
 
 **/build
 
-**/bin/
-**/Intermediate/
-
 *.vcxproj.user
 *.vcxproj.filters
