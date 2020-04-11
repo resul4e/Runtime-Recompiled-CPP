@@ -8,6 +8,7 @@ add_library("Input" SHARED
     "InputComponent.cpp"
     "InputPlugin.h"
     "InputPlugin.cpp")
+set_target_properties("Input" PROPERTIES FOLDER Plugins)
 
 target_link_libraries("Input" "PluginBase")
 target_link_libraries("Input" "Rendering")

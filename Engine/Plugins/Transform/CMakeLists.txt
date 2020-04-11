@@ -6,6 +6,7 @@ add_library("Transform" SHARED
     "TransformPlugin.cpp"
     "Vector.h"
     "Vector.cpp")
+set_target_properties("Transform" PROPERTIES FOLDER Plugins)
 
 target_link_libraries("Transform" "PluginBase")
 

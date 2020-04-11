@@ -8,6 +8,7 @@ add_library("Rendering" SHARED
     "RenderEngineAPI.cpp"
     "RenderComponent.h"
     "RenderComponent.cpp")
+set_target_properties("Rendering" PROPERTIES FOLDER Plugins)
 
 target_link_libraries("Rendering" "PluginBase")
 target_link_libraries("Rendering" sfml-graphics)

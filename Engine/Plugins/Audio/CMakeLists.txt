@@ -8,6 +8,7 @@ add_library("Audio" SHARED
     "AudioComponent.cpp"
     "AudioPlugin.h"
     "AudioPlugin.cpp")
+set_target_properties("Audio" PROPERTIES FOLDER Plugins)
 
 target_link_libraries("Audio" "PluginBase")
 target_link_libraries("Audio" "Core")

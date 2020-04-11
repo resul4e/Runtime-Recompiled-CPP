@@ -12,7 +12,7 @@ add_library("Physics" SHARED
     "stdafx.h"
     "stdafx.cpp"
     "targetver.h")
-
+set_target_properties("Physics" PROPERTIES FOLDER Plugins)
 #find_package(Box2D REQUIRED)
 
 target_link_libraries("Physics" "PluginBase")

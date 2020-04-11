@@ -8,4 +8,3 @@ add_subdirectory(Input)
 #add_subdirectory(Physics)
 add_subdirectory(Audio)
 
-#source_group("Plugins")
