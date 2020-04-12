@@ -9,4 +9,4 @@ add_library("PluginCore" STATIC
 )
 target_link_libraries("PluginCore" "EngineBase")
 target_compile_definitions("PluginCore" PRIVATE PLUGIN_DLL PRIVATE ENGINE_PROJECT)
-target_compile_definitions("PluginCore" PRIVATE TARGET_DIRECTORY="${CMAKE_BINARY_DIR}")
+target_compile_definitions("PluginCore" PRIVATE OUTPUT_DIRECTORY="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/")

@@ -19,6 +19,11 @@ void PluginLoader::LoadPlugins(const path& PluginFolder)
 {
 	for (auto p : directory_iterator(PluginFolder))
 	{
+		if(!is_directory(p))
+		{
+			continue;
+		}
+		
 		std::string DLLName = p.path().stem().string();
 		if(!LoadDLL(DLLName))
 		{
@@ -62,11 +67,12 @@ void PluginLoader::Delete()
 
 bool PluginLoader::LoadDLL(std::string aDLLName)
 {
-	std:: string dll = std::string(TARGET_DIRECTORY + aDLLName + ".dll");
+	const std:: string dll = std::string(OUTPUT_DIRECTORY + std::string(CMAKE_INTDIR) + std::string("/") + aDLLName + ".dll");
 	HINSTANCE tempDLL = LoadLibraryA(dll.c_str());
 	if (tempDLL == nullptr)
 	{
-		cout << "Couldn't load the DLL of the plugin " << aDLLName << endl;
+		const int errorCode = GetLastError();
+		cout << "Couldn't load the DLL of the plugin " << aDLLName << ". Exited with error code " << errorCode << endl;
 		return false;
 	}
 	

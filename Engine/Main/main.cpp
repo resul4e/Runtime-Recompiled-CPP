@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	
 	//load all of the plugins
 	PluginLoader pl;
-	pl.LoadPlugins(path("../../Plugins"));
+	pl.LoadPlugins(path(SOURCE_DIR + std::string("/Engine/Plugins")));
 	pl.Start();
 
 	//create the Level class

@@ -6,7 +6,6 @@
 #include "Rendering/WindowComponent.h"
 #include "Particle.h"
 
-
 SCRIPT_START(Game)
 
 Game::Game()

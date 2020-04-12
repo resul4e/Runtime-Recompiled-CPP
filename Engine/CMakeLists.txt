@@ -3,6 +3,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project("RRCPP")
 
+#set the output directory for all target to be bin
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 #includes from within the project
 include_directories(BEFORE "Core")
 include_directories(BEFORE "PluginCore")
