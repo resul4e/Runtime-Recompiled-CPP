@@ -98,7 +98,7 @@ public:
 
 private:
 	///the list of logger handles with the name as the key.
-	CORE_API static std::unordered_map<const char*, std::shared_ptr<spdlog::logger>> loggerHandleList;
+	CORE_API static std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> loggerHandleList;
 };
 
 template <typename ... Args>

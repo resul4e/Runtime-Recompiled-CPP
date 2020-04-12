@@ -4,7 +4,7 @@
 
 using namespace spdlog;
 
-CORE_API std::unordered_map<const char*, std::shared_ptr<spdlog::logger>> Logger::loggerHandleList;
+CORE_API std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> Logger::loggerHandleList;
 
 extern "C" CORE_API LoggerHandle Logger::Add(const char* aConsoleName)
 {
