@@ -3,6 +3,7 @@
 #include "ForwardDecl.h"
 #include "Handle.h"
 #include "Logger.h"
+#include "ConfigDirectories.h"
 
 #include <vector>
 #include <memory>
@@ -10,6 +11,7 @@
 #include <filesystem>
 
 #include "Windows.h"
+
 
 
 //forward declarations
@@ -23,7 +25,7 @@ class Level : std::enable_shared_from_this<Level>
 {
 //functions
 public:
-	Level();
+	Level(std::shared_ptr<ConfigDirectories> _directory);
 	~Level();
 
 	/**
@@ -32,7 +34,7 @@ public:
 	 * In scriptLoader it compiles and loads the necessary files and functions.
 	 * \see ScriptLoader::Start().
 	 */
-	CORE_API void Start(const char* aGamePath, const char* aWorkingDir);
+	CORE_API void Start(/*const char* aGamePath, const char* aGameScriptsPath, const char* aWorkingDir*/);
 	/**
 	 * \brief Calls ScriptLoader::Update()
 	 * \param aDeltatime the time between the last frame and this fram
@@ -77,12 +79,12 @@ public:
 
 private:
 
-	unsigned long long RemoveOldDLL(std::filesystem::path aGamePath);
+	unsigned long long RemoveOldDLL();
 
 //variables
 public:
 private:
-	friend CORE_API std::shared_ptr<Level> CreateLevel();
+	friend CORE_API std::shared_ptr<Level> CreateLevel(ConfigDirectories*);
 	friend class ScriptCompiler;
 	friend class Script;
 	friend class ScriptLoader;
@@ -102,6 +104,8 @@ private:
 
 	///the coreLogger
 	LoggerHandle coreConsole;
+
+	std::shared_ptr<ConfigDirectories> directories;
 };
 
 /**
@@ -111,4 +115,4 @@ private:
  * \todo Don't return a shared pointer in a dll, because then we need to have the dll compiled with the same settings. 
  *			Return a new instead and create a separate function that deletes this object.
  */
-CORE_API std::shared_ptr<Level> CreateLevel();
+CORE_API std::shared_ptr<Level> CreateLevel(ConfigDirectories*);

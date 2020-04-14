@@ -3,9 +3,12 @@
 #include <iostream>
 #include "Windows.h"
 #include <direct.h>
-#include "Level.h"
+#include <filesystem>
 
+#include "Level.h"
 #include "PluginLoader.h"
+#include "ConfigDirectories.h"
+
 #include "Rendering/RenderEngineAPI.h"
 #include "Input/InputComponent.h"
 
@@ -14,12 +17,13 @@ using std::endl;
 
 ///Changes the working directory to be the Engine folder
 std::string SetWorkingDirectory();
+//Set the directories needed throughout the project.
+std::shared_ptr<ConfigDirectories> SetConfigDirectories();
 
 int main(int argc, char* argv[])
 {
-	//change working directory
-	std::string workingDir = SetWorkingDirectory();
-
+	std::shared_ptr<ConfigDirectories> directories = SetConfigDirectories();
+	
 	//deltatime
 	float oldTime = 0;
 	float newTime = 0.016f;
@@ -32,21 +36,15 @@ int main(int argc, char* argv[])
 	bool restartLevel = false;
 	
 	//load all of the plugins
-	PluginLoader pl;
-	pl.LoadPlugins(path(SOURCE_DIR + std::string("/Engine/Plugins")));
+	PluginLoader pl{directories};
+	pl.LoadPlugins();
 	pl.Start();
 
 	//create the Level class
-	std::shared_ptr<Level> lvl = CreateLevel();
-	//initialize the Start function with a standard gamePath
-	if (argc < 2)
-	{
-		lvl->Start((workingDir + "../Game").c_str(), workingDir.c_str());
-	}
-	else
-	{
-		lvl->Start(argv[1], workingDir.c_str());
-	}
+	std::shared_ptr<Level> lvl = CreateLevel(directories.get());
+
+	//start the level class.
+	lvl->Start();
 
 	while (!RenderEngineAPI::GetIsWindowClosed())
 	{
@@ -98,23 +96,17 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-std::string SetWorkingDirectory()
+std::shared_ptr<ConfigDirectories> SetConfigDirectories()
 {
-	char working_directory[MAX_PATH + 1];
-	GetCurrentDirectoryA(sizeof(working_directory), working_directory); // **** win32 specific ****
-	cout << working_directory << endl;
-#ifdef _MSC_VER
-#pragma warning(disable:4996)
-#endif
-	std::string enginePath = std::string(working_directory) + std::string("/../Engine");
-	//cout << enginePath << endl;
-#ifdef _MSC_VER
-#pragma warning(default:4996)
-#endif
-	_chdir(enginePath.c_str());
+	std::shared_ptr<ConfigDirectories> directories = std::make_shared<ConfigDirectories>();
+	
+	directories->RootSourceDirectory = { std::string{ SOURCE_DIR } };
+	directories->RootBinaryDirectory  = { std::string{ BINARY_DIR } };
+	directories->RootGameSourceDirectory = directories->RootSourceDirectory / GAME_NAME;
+	directories->RootGameBinaryDirectory = directories->RootBinaryDirectory / GAME_NAME;
+	directories->EngineSourceDirectory = { directories->RootSourceDirectory / "Engine" };
+	directories->PluginSourceDirectory = { directories->EngineSourceDirectory / "Plugins" };
+	directories->PythonToolsDirectory = { directories->EngineSourceDirectory / "Tools" };
 
-	GetCurrentDirectoryA(sizeof(working_directory), working_directory); // **** win32 specific ****
-	cout << working_directory << endl;
-	return std::string(working_directory);
-
+	return directories;
 }

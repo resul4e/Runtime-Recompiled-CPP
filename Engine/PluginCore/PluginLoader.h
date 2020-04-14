@@ -3,8 +3,7 @@
 #include <Windows.h>
 #include <unordered_map>
 #include "../Core/PlatformDetails.h"
-
-using std::filesystem::path;
+#include "ConfigDirectories.h"
 
 //forward declaration
 class PluginBase;
@@ -19,7 +18,7 @@ typedef void(__cdecl *DELETEFUNCTION)(PluginBase*);
 class PluginLoader
 {
 public:
-	PluginLoader();
+	PluginLoader(std::shared_ptr<ConfigDirectories> _directories);
 	~PluginLoader();
 
 	/**
@@ -32,7 +31,7 @@ public:
 	 * \warning DLL name and Folder name should match!
 	 * \param PluginFolder the path to the Plugin folder, default values is "Plugins"
 	 */
-	void LoadPlugins(const path& PluginFolder = path("Plugins"));
+	void LoadPlugins();
 
 	/**
 	 * \brief Goes through all of the plugins and starts them up.
@@ -72,5 +71,7 @@ private:
 	std::unordered_map<std::string, CREATEFUNCTION> CreatePluginList;
 	///The function that deletes a plugin using its pointer.
 	std::unordered_map<std::string, DELETEFUNCTION> DeletePluginList;
+
+	std::shared_ptr<ConfigDirectories> directories;
 };
 

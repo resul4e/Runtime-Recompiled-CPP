@@ -41,7 +41,7 @@ public:
 	 * \brief has to be separate from the CTor because we first need to have created a shared pointer
 	 * \param gamePath the path where the game files are stored
 	 */
-	void CreateScriptCompiler(fpath gamePath, fpath aWorkingPath);
+	void CreateScriptCompiler();
 	/**
 	 * \brief Creates the "Game" script. Through this script all other scripts will be initialized
 	 */

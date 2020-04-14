@@ -1,12 +1,14 @@
 #include "PluginLoader.h"
 #include "PluginBase.h"
 #include <iostream>
+#include "ConfigDirectories.h"
 
 using namespace std::filesystem;
 using std::cout;
 using std::endl;
 
-PluginLoader::PluginLoader()
+PluginLoader::PluginLoader(std::shared_ptr<ConfigDirectories> _directories) :
+	directories(_directories)
 {
 }
 
@@ -15,9 +17,9 @@ PluginLoader::~PluginLoader()
 {
 }
 
-void PluginLoader::LoadPlugins(const path& PluginFolder)
+void PluginLoader::LoadPlugins()
 {
-	for (auto p : directory_iterator(PluginFolder))
+	for (auto p : directory_iterator(directories->PluginSourceDirectory))
 	{
 		if(!is_directory(p))
 		{
@@ -67,8 +69,8 @@ void PluginLoader::Delete()
 
 bool PluginLoader::LoadDLL(std::string aDLLName)
 {
-	const std:: string dll = std::string(OUTPUT_DIRECTORY + std::string(CMAKE_INTDIR) + std::string("/") + aDLLName + ".dll");
-	HINSTANCE tempDLL = LoadLibraryA(dll.c_str());
+	const path dll = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
+	HINSTANCE tempDLL = LoadLibraryA(dll.string().c_str());
 	if (tempDLL == nullptr)
 	{
 		const int errorCode = GetLastError();

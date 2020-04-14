@@ -1,6 +1,8 @@
 project(Main VERSION 1.0.0)
 
-add_executable("Main" "main.cpp")
+add_executable("Main" 
+    "main.cpp")
+
 target_link_libraries("Main" "EngineBase")
 target_link_libraries("Main" "Core")
 target_link_libraries("Main" "PluginCore")
@@ -9,6 +11,8 @@ target_link_libraries("Main" "Input")
 
 #set the source dir for use in the engine.
 target_compile_definitions("Main" PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions("Main" PRIVATE BINARY_DIR="${CMAKE_BINARY_DIR}")
+target_compile_definitions("Main" PRIVATE GAME_NAME="${GAME_NAME}")
 
 #copy the sfml dlls from the extern folder to the output folder
 add_custom_command(TARGET Main POST_BUILD 
@@ -16,24 +20,8 @@ add_custom_command(TARGET Main POST_BUILD
     "${CMAKE_SOURCE_DIR}/Engine/Extern/SFML/bin" #from
     "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)") #to
 
-#create a debug command line option to poin to the correct path.
-FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/Main.vcxproj.user"
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-"<Project ToolsVersion=\"Current\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n"
-"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\n"
-"    <LocalDebuggerCommandArguments>${CMAKE_BINARY_DIR}/${GAME_NAME}</LocalDebuggerCommandArguments>\n"
-"    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n"
-"  </PropertyGroup>\n"
-"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='MinSizeRel|x64'\">\n"
-"    <LocalDebuggerCommandArguments>${CMAKE_BINARY_DIR}/${GAME_NAME}</LocalDebuggerCommandArguments>\n"
-"    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n"
-"  </PropertyGroup>\n"
-"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\n"
-"    <LocalDebuggerCommandArguments>${CMAKE_BINARY_DIR}/${GAME_NAME}</LocalDebuggerCommandArguments>\n"
-"    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n"
-"  </PropertyGroup>\n"
-"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'\">\n"
-"    <LocalDebuggerCommandArguments>${CMAKE_BINARY_DIR}/${GAME_NAME}</LocalDebuggerCommandArguments>\n"
-"    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n"
-"  </PropertyGroup>\n"
-"</Project>\n")
+#copy the vswhere tools from the source folder to the ouput folder
+add_custom_command(TARGET Main POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_directory 
+    "${CMAKE_SOURCE_DIR}/Engine/Extern/VSWhere" #from
+    "${CMAKE_BINARY_DIR}/Engine/Extern/VSWhere") #to

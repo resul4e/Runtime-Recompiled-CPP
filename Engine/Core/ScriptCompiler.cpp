@@ -19,25 +19,14 @@
 
 using namespace std::filesystem;
 
-ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, path aGamePath, path aWorkingPath) :
+ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<ConfigDirectories> aDirectories) :
 	script(aScript),
-	gamePath(aGamePath),
-	workingPath(aWorkingPath),
+	directories(aDirectories),
 	dllHandle(nullptr),
 	storage(new Storage())
 {
 
 	loggerHandle = Logger::Get("core");
-
-	//create lowercase gamePath
-	std::string tempPathString;
-	tempPathString.resize(aGamePath.string().length());
-	for(int i=0; i < aGamePath.string().length(); i++)
-	{
-		tempPathString[i] = static_cast<char>(tolower(aGamePath.string()[i]));
-		
-	}
-	lowerGamePath = path(tempPathString);
 }
 
 void ScriptCompiler::Compile()
@@ -200,9 +189,10 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	}
 	
 #ifdef SEPARATE_LINKING
+	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/Scripts"+std::to_string(script->level->scriptLoader->DLLID)+".dll"));	///\todo(Resul) dlls are windows specific
+	path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));	///\todo(Resul) dlls are windows specific
 #endif
 	file_time_type DLLresult = last_write_time(dllPath, err);
 	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
@@ -248,8 +238,8 @@ void ScriptCompiler::CompileInternal()
 {
 	FILE *in;
 	//create the command line to compile the script, the python file automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
-	std::string commandLine("py " + workingPath.string() + "\\Tools\\Compile.py " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
-	commandLine.append(" " + gamePath.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + workingPath.string());	//the gamePath, scriptPath and the scriptName
+	std::string commandLine("py " + (directories->EngineSourceDirectory / "Tools\\Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + directories->EngineSourceDirectory.string());	//the gamePath, scriptPath and the scriptName
 	//compile the script using a python script, found in the tools folder
 	if((in = _popen(commandLine.c_str(), "rt")) == NULL)
 	{
@@ -311,11 +301,12 @@ void ScriptCompiler::CompileInternal()
 void ScriptCompiler::LoadDLLInternal()
 {
 #ifdef SEPARATE_LINKING
+	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	std::string dll(gamePath.string() + "\\bin\\" + PROJECT_PLATFORM + "\\"  + PROJECT_CONFIGURATION + "\\" + script->scriptType + scriptID + ".dll");
 #else
-	std::string dll(gamePath.string() + "\\bin\\" + PROJECT_PLATFORM + "\\" + PROJECT_CONFIGURATION + "\\Scripts"+std::to_string(script->level->scriptLoader->DLLID)+".dll");
+	path dll = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));
 #endif
-	dllHandle = LoadLibraryA(dll.c_str());
+	dllHandle = LoadLibraryA(dll.string().c_str());
 	if(dllHandle == nullptr)
 	{
 		DWORD err = GetLastError();
@@ -354,7 +345,7 @@ bool ScriptCompiler::GetInclude(std::string aIn, path& aOutPath)
 {
 	const std::string noteString("Note: including file: ");
 
-	const size_t gamePathFound = aIn.find(lowerGamePath.string());
+	const size_t gamePathFound = aIn.find(script->GetTypeName());
 	const size_t noteFound = aIn.find(noteString);								/// /showIncludes adds "Note: including file: " in front of the include, we check if we have found this.
 	const size_t scriptNameFound = aIn.find(script->scriptType);				/// we don't want a dependency on ourselves so we filter this scripts type out
 	

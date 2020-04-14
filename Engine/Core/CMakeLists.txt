@@ -22,6 +22,7 @@ add_library("Core" SHARED
     "stdafx.cpp"
     "Storage.h"
     "Storage.cpp"
-    "targetver.h")
+    "targetver.h"
+    "ConfigDirectories.h")
 target_link_libraries("Core" "EngineBase")
 target_compile_definitions("Core" PRIVATE CORE_DLL)

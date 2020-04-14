@@ -35,6 +35,13 @@ add_library("EngineBase" INTERFACE)
 target_link_libraries("EngineBase" INTERFACE "Base")
 target_compile_definitions("EngineBase" INTERFACE ENGINE_PROJECT)
 
+#enable more rigorous warnings than the default.
+target_compile_options(EngineBase INTERFACE
+     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+          -Wall>
+     $<$<CXX_COMPILER_ID:MSVC>:
+          /W4>)
+
 #the subdirectories of this project
 add_subdirectory("Main")
 add_subdirectory("Core")

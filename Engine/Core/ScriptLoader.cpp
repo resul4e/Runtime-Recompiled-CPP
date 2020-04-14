@@ -19,20 +19,19 @@ using namespace std::filesystem;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
-	DLLID(aDLL)
+	DLLID(aDLL),
+	directories(level->directories)
 {
 }
 
-void ScriptLoader::Start(path aGamePath, path aWorkingPath)
+void ScriptLoader::Start()
 {
-	workingPath = aWorkingPath;
 	loggerHandle = Logger::Get("core");
 
-	gamePath = aGamePath;
-	LoadScripts(aGamePath, aWorkingPath);
+	LoadScripts();
 	if(scriptList.empty())
 	{
-		LOG_WARN(loggerHandle,"No scripts detected in the folder {}/Scripts", aGamePath.string())
+		LOG_WARN(loggerHandle,"No scripts detected in the folder {}/Scripts", directories->RootGameSourceDirectory.string())
 		return;
 	}
 	CompileScripts();
@@ -90,20 +89,17 @@ void ScriptLoader::StartScripts()
 	}
 }
 
-void ScriptLoader::LoadScripts(path aGamePath, path aWorkingPath)
+void ScriptLoader::LoadScripts()
 {
-	path scriptPath = aGamePath;
-	scriptPath += path("\\Scripts");
-	
 	//recursively go through all of the scripts and create a script class for them
-	for (auto p : recursive_directory_iterator(scriptPath))
+	for (auto p : recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
 	{
 		if (p.path().extension() == ".cpp")
 		{
 			//create script and insert it in the scriptList
 			std::shared_ptr<Script> tempScript = std::make_shared<Script>(p.path(), level);
 			scriptList.insert(std::pair<std::string, std::shared_ptr<Script>>(tempScript->GetTypeName(), tempScript));
-			scriptList.at(tempScript->GetTypeName())->CreateScriptCompiler(aGamePath, aWorkingPath);
+			scriptList.at(tempScript->GetTypeName())->CreateScriptCompiler();
 		}
 	}
 }
@@ -131,8 +127,8 @@ void ScriptLoader::LinkScripts()
 
 	FILE *in;
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
-	std::string commandLine("py " + std::string(workingPath.string()) + "\\Tools\\Link.py " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
-	commandLine.append(" " + gamePath.string() +" "+ std::to_string(DLLID) + " " + workingPath.string());	//the gamePath and the DLLID
+	std::string commandLine("py " + (directories->PythonToolsDirectory / "Link.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(DLLID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the DLLID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{

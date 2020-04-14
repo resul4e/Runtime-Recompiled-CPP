@@ -1,7 +1,9 @@
 #pragma once
 #include <filesystem>
-#include "ForwardDecl.h"
 #include <unordered_map>
+#include "ForwardDecl.h"
+
+#include "ConfigDirectories.h"
 
 /** \brief Processes all of the script files in the GamePath.
 *	
@@ -21,7 +23,7 @@ public:
 	 * \brief	Compiles, creates dependecies, links and loads all of the DLLs of all of the Scripts
 	 * \param gamePath				The path of the game where the Scripts folder is located
 	 */
-	void Start(path gamePath, path aWorkingPath);
+	void Start();
 	/**
 	 * \brief Updates each script.
 	 * \param deltatime				The time passed between the last frame and this frame.
@@ -42,7 +44,7 @@ private:
 	/** Goes through all of the files with the .cpp extension and creates a Script for them
 	*	@param[in]	gamePath		The path of the game where the Scripts folder is located
 	*/
-	void LoadScripts(path gamePath, path aWorkingPath);
+	void LoadScripts();
 	/**
 	* \brief goes through each script and compiles them and finds the dependencies.
 	* \see ScriptCompiler::Compile()
@@ -67,9 +69,6 @@ private:
 	///unordered_map that holds all of the Script classes and their typeName
 	std::unordered_map<std::string, std::shared_ptr<Script>> scriptList;
 
-	///path to game folder
-	std::filesystem::path gamePath;
-
 	///the unique ID of the DLL currently in use
 	unsigned long long DLLID;
 
@@ -78,6 +77,6 @@ private:
 
 	LoggerHandle loggerHandle;
 
-	path workingPath;
+	std::shared_ptr<ConfigDirectories> directories;
 };
 

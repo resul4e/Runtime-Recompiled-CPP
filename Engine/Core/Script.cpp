@@ -23,9 +23,9 @@ Script::Script(path aScriptPath, std::shared_ptr<Level> aLevel) :
 	SetScriptType();
 }
 
-void Script::CreateScriptCompiler(path aGamePath, path aWorkingPath)
+void Script::CreateScriptCompiler()
 {
-	scriptCompiler = std::make_unique<ScriptCompiler>(shared_from_this(), aGamePath, aWorkingPath);
+	scriptCompiler = std::make_unique<ScriptCompiler>(shared_from_this(), level->directories);
 }
 
 void Script::Start()

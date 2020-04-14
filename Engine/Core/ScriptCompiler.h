@@ -5,6 +5,7 @@
 
 #include "Handle.h"
 #include "ForwardDecl.h"
+#include "ConfigDirectories.h"
 
 
 using std::filesystem::path;
@@ -18,7 +19,7 @@ class Storage;
 class ScriptCompiler
 {
 public:
-	ScriptCompiler(std::shared_ptr<Script> aScript, path aGamePath, path aWorkingPath);
+	ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<ConfigDirectories> aDirectories);
 	~ScriptCompiler();
 
 	/**
@@ -96,11 +97,6 @@ private:
 
 	///used to check if script is up to date.
 	time_t lastScriptWriteTime = 0;
-	
-	///path to the game.
-	path gamePath;
-	///lowercase path to the game, \see GetIncludes
-	path lowerGamePath;
 
 	///dll handle.
 	HINSTANCE dllHandle;
@@ -111,6 +107,6 @@ private:
 	///the handle to the core logger
 	LoggerHandle loggerHandle;
 
-	path workingPath;
+	std::shared_ptr<ConfigDirectories> directories;
 	
 };
