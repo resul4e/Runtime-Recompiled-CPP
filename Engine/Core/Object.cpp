@@ -3,6 +3,13 @@
 
 #include "Level.h"
 
+Object::Object(const char* aName):
+lvl(nullptr),
+console({""}),
+name(aName)
+{
+}
+
 const char* Object::GetName() const
 {
 	return name.c_str();
