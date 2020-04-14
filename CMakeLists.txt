@@ -12,6 +12,7 @@ if(NOT "${GAME_NAME}" STREQUAL "")
     add_subdirectory("${GAME_DIRECTORY}")
 else()
     message("No game directory included, only building the engine.")
+    project("RRCPP")
 endif()
 
 add_subdirectory("Engine")
