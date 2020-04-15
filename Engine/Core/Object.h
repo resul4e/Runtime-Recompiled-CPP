@@ -42,10 +42,10 @@ struct x ## Interface\
 #define INTERFACE_END()\
 };
 
-#define PUBLIC_FUNCTION(name, x)\
+#define PUBLIC_FUNCTION(name, className)\
 template<class... Arg> static auto name(ObjectHandle aHandle, Arg&&... args)\
 {\
-	return dynamic_cast<x*>(lvl->GetObjectPointer(aHandle))->name(std::forward<Arg>(args)...);\
+	return dynamic_cast<className*>(lvl->GetObjectPointer(aHandle))->name(std::forward<Arg>(args)...);\
 }
 
 //return lvl->CallFunction<x>(&x::name, aHandle, std::forward<Arg>(args)...);
