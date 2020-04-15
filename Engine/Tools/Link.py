@@ -14,8 +14,7 @@ bin_path = game_path+"/Scripts/bin/"+project_configuration
 library_path = RootBinaryDir+"/bin/"+project_configuration
 library_includes = RootBinaryDir+"/Engine/Core/"+project_configuration+"/Core.lib "+RootBinaryDir+"/Engine/Plugins/Rendering/"+project_configuration+"/Rendering.lib "+ \
 	RootBinaryDir+"/Engine/Plugins/Input/"+project_configuration+"/Input.lib "+RootBinaryDir+"/Engine/Plugins/Transform/"+project_configuration+"/Transform.lib "+ \
-	RootBinaryDir+"/Engine/Plugins/Audio/"+project_configuration+"/Audio.lib "#+\
-#RootBinaryDir+"/Engine/Plugins/Physics/"+project_configuration+"/Physics.lib "
+	RootBinaryDir+"/Engine/Plugins/Audio/"+project_configuration+"/Audio.lib "+ RootBinaryDir+"/Engine/Plugins/Physics/"+project_configuration+"/Physics.lib "
 
 for i in range(7, len(sys.argv)):
     objects_to_link += game_path+"/Scripts/Intermediate/Objects/"+project_configuration+"/"+ sys.argv[i] + ".obj "
