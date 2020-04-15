@@ -10,7 +10,7 @@
 #define PLUGIN_END(className)\
 extern "C" __declspec(dllexport) PluginBase* CreatePlugin()\
 {\
-return new className();\
+	return new className();\
 }\
 extern "C" __declspec(dllexport) void DeletePlugin(PluginBase* plg)\
 {\

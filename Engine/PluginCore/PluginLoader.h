@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <Windows.h>
 #include <unordered_map>
-#include "../Core/PlatformDetails.h"
+
 #include "ConfigDirectories.h"
 
 //forward declaration
@@ -29,7 +29,6 @@ public:
 	 * 
 	 * \warning Will not recursively search nested folders.
 	 * \warning DLL name and Folder name should match!
-	 * \param PluginFolder the path to the Plugin folder, default values is "Plugins"
 	 */
 	void LoadPlugins();
 
