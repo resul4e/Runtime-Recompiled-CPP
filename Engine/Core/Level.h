@@ -34,7 +34,7 @@ public:
 	 * In scriptLoader it compiles and loads the necessary files and functions.
 	 * \see ScriptLoader::Start().
 	 */
-	CORE_API void Start(/*const char* aGamePath, const char* aGameScriptsPath, const char* aWorkingDir*/);
+	CORE_API void Start();
 	/**
 	 * \brief Calls ScriptLoader::Update()
 	 * \param aDeltatime the time between the last frame and this fram

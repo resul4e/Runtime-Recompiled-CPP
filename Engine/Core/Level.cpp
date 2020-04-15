@@ -17,7 +17,7 @@ using namespace std::filesystem;
 using std::cout;
 using std::endl;
 
-//#define FULL_RECOMPILE
+#define FULL_RECOMPILE
 
 Level::Level(std::shared_ptr<ConfigDirectories> _directories) :
 scriptConsole({ "" }),
@@ -26,10 +26,10 @@ directories(_directories)
 {
 }
 
-void Level::Start(/*const char* aGamePath, const char* aGameScriptsPath, const char* aWorkingDir*/)
+void Level::Start()
 {
 	//setup compile and link tools
-	std::string setupCommand = "py " + (directories->EngineSourceDirectory / "Tools" / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM + " " + directories->RootGameBinaryDirectory.string();
+	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
 	system(setupCommand.c_str());
 
 	scriptConsole = Logger::Add("script");
@@ -39,7 +39,7 @@ void Level::Start(/*const char* aGamePath, const char* aGameScriptsPath, const c
 #ifdef FULL_RECOMPILE
 	//removes all of the files from the game bin and Intermediate files
 	//to be sure that we are building the most up to date scripts
-	std::string deleteCommand("del /S /Q " + gamePath.string() + "\\bin " + gamePath.string() + "\\Intermediate");
+	std::string deleteCommand("del /S /Q \"" + (directories->RootGameBinaryDirectory / "Scripts" / "bin").string() + "\" \"" + (directories->RootGameBinaryDirectory / "Scripts" / "Intermediate").string() + "\"");
 	system(deleteCommand.c_str());
 #endif
 	unsigned long long ID = RemoveOldDLL();
