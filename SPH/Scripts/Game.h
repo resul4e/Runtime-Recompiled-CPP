@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Object.h"
+#include "Particle.h"
 
 class Game : public Object
 {
@@ -13,6 +14,8 @@ public:
 	void Update(float aDeltatime) override;
 	void Delete() override;
 	void Serialize(Storage& storage) override;
+
+	std::vector<ObjectHandle> m_particles;
 };
 
 INTERFACE_START(Game)

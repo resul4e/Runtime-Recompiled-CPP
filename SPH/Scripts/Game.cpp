@@ -19,9 +19,16 @@ Game::~Game()
 void Game::Start()
 {
 	WindowComponent::SetVerticalSync(true);
-	for(int i = 0; i < 100; i++)
+	for(int i = 0; i < 500; i++)
 	{
-		lvl->CreateObject("Particle", "particle");
+		ObjectHandle particle = lvl->CreateObject("Particle", "particle");
+		ParticleInterface::SetObjectHandle(particle, particle);
+		m_particles.push_back(particle);
+	}
+
+	for (auto part : m_particles)
+	{
+		ParticleInterface::SetParticles(part, m_particles);
 	}
 }
 
