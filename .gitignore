@@ -1,6 +1,7 @@
 **/.vs
 
 **/build
+**/Doxygen
 
 *.vcxproj.user
 *.vcxproj.filters
