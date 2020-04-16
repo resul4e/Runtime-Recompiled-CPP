@@ -34,9 +34,9 @@ public:
 	 */
 	enum class AudioStatus
 	{
-		Stopped, ///<The audio is reset to the start of audio file and not playing.
-		Paused,	///<The audio is not playing, but will continue from the stopped point.
-		Playing ///< The audio is playing.
+		Stopped,	///<The audio is reset to the start of audio file and not playing.
+		Paused,		///<The audio is not playing, but will continue from the stopped point.
+		Playing		///<The audio is playing.
 	};
 
 	/**
