@@ -4,6 +4,7 @@
 #include "Handle.h"
 #include <unordered_map>
 #include <map>
+#include "Box2D/Box2D.h"
 
 typedef std::pair<size_t, size_t> CollisionPair;
 

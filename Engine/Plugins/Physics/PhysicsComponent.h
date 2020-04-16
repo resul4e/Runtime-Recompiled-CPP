@@ -1,8 +1,10 @@
 #pragma once
-
 #include "ExportDetails.h"
-#include <vector>
 
+#include <vector>
+#include <memory>
+
+#include "glm/glm.hpp"
 
 struct PhysicsCompHandle;
 class b2World;

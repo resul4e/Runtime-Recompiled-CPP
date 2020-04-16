@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "ContactListener.h"
 #include "Logger.h"
+#include "Box2D/Box2D.h"
 
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 

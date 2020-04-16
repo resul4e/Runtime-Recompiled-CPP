@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Handle.h"
 #include "Logger.h"
 

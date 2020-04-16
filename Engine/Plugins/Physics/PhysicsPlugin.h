@@ -1,6 +1,7 @@
 #pragma once
 #include "PluginBase.h"
 #include <memory>
+#include "Box2D/Box2D.h"
 
 class PairContactListener;
 

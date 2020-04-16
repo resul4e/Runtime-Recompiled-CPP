@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include "ForwardDecl.h"
+#include "Handle.h"
 
 #include "ConfigDirectories.h"
 

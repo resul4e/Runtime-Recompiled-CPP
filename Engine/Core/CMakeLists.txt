@@ -18,8 +18,6 @@ add_library("Core" SHARED
     "ScriptCompiler.cpp"
     "ScriptLoader.h"
     "ScriptLoader.cpp"
-    "stdafx.h"
-    "stdafx.cpp"
     "Storage.h"
     "Storage.cpp"
     "targetver.h"

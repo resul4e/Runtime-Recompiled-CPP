@@ -1,17 +1,15 @@
-#include "stdafx.h"
 #include "ScriptCompiler.h"
-
 
 #include <filesystem>
 
 #include "PlatformDetails.h"
-
 #include "Level.h"
 #include "Object.h"
-
 #include "Logger.h"
-
 #include "Storage.h"
+#include "Script.h"
+#include "ScriptLoader.h"
+#include "Handle.h"
 
 #ifdef _DEBUG
 #define COMPILER_OUTPUT

@@ -9,8 +9,6 @@ add_library("Physics" SHARED
     "PhysicsComponent.cpp"
     "PhysicsPlugin.h"
     "PhysicsPlugin.cpp"
-    "stdafx.h"
-    "stdafx.cpp"
     "targetver.h")
 set_target_properties("Physics" PROPERTIES FOLDER Plugins)
 #find_package(Box2D REQUIRED)

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ScriptLoader.h"
 
 #include <memory>
@@ -6,12 +5,11 @@
 #include "Level.h"
 #include "Object.h"
 #include "Logger.h"
-
-
+#include "Script.h"
+#include "ScriptCompiler.h"
 
 //TESTING
 #include <chrono>
-#include <ctime>
 #include "PlatformDetails.h"
 
 typedef std::chrono::system_clock Clock;

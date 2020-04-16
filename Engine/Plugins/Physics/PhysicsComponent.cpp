@@ -1,8 +1,9 @@
-#include "stdafx.h"
 #include "PhysicsComponent.h"
 #include "Handle.h"
 #include "Logger.h"
 #include "ContactListener.h"
+#include "Box2D/Box2D.h"
+#include "glm/glm.hpp"
 
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 

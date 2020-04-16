@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Script.h"
 
 #include "Level.h"

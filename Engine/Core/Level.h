@@ -10,10 +10,6 @@
 #include <functional>
 #include <filesystem>
 
-#include "Windows.h"
-
-
-
 //forward declarations
 class LevelRoot;
 class ScriptLoader;

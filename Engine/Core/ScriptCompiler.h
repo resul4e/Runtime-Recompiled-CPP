@@ -1,4 +1,8 @@
 #pragma once
+#if defined(WIN32) || defined(_WIN32)
+#include <Windows.h>
+#endif
+
 #include <memory>
 #include <filesystem>
 #include <unordered_map>
@@ -6,6 +10,7 @@
 #include "Handle.h"
 #include "ForwardDecl.h"
 #include "ConfigDirectories.h"
+
 
 
 using std::filesystem::path;

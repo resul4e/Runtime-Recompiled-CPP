@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Level.h"
 
 #include <cstring>
@@ -7,11 +6,11 @@
 #include <filesystem>
 
 #include "Object.h"
-#include "Transform/Vector.h"
 #include "Logger.h"
 #include "PlatformDetails.h"
 #include "ConfigDirectories.h"
-
+#include "Script.h"
+#include "ScriptLoader.h"
 
 using namespace std::filesystem;
 using std::cout;
