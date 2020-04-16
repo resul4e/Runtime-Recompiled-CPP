@@ -1,12 +1,13 @@
 #pragma once
 #include <memory>
-#include "../Core/Handle.h"
+#include "Handle.h"
 #include "ExportDetails.h"
 
 /**
  * \brief This Macro makes sure that the engine can access your plugin.
  * \param className The name of the class that you want to export
  */
+#if defined(WIN32) || defined(_WIN32)
 #define PLUGIN_END(className)\
 extern "C" __declspec(dllexport) PluginBase* CreatePlugin()\
 {\
@@ -16,7 +17,11 @@ extern "C" __declspec(dllexport) void DeletePlugin(PluginBase* plg)\
 {\
 	delete plg;\
 	plg = nullptr;\
-}\
+}
+#else
+//TODO(Resul): make this work for linux
+#define PLUGIN_END(className)
+#endif
 
 class Object;
 
