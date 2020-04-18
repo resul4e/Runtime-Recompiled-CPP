@@ -18,7 +18,9 @@ include_directories(BEFORE "Extern/glm")
 include_directories(BEFORE "Extern/Box2DProj/Box2D")
 include_directories(BEFORE "Extern/SFML/include")
 
-set(SFML_STATIC_LIBRARIES TRUE)
+if(WIN32)
+     set(SFML_STATIC_LIBRARIES TRUE)
+endif()
 
 #indicate where external dependencies can be found
 set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
