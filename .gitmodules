@@ -1,3 +1,0 @@
-[submodule "Engine/Extern/Box2DProj"]
-	path = Engine/Extern/Box2DProj
-	url = https://github.com/tobanteGaming/Box2D-cmake.git
