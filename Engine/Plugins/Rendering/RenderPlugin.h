@@ -34,6 +34,8 @@ public:
 	 */
 	RENDERING_API void Delete() override;
 
+	RENDERING_API void SetConfigDirectories(std::shared_ptr<ConfigDirectories> aDirectories) override;
+
 private:
 	///the window that gets created
 	std::shared_ptr<Window> window;

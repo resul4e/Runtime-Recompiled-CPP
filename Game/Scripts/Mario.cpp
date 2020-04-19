@@ -48,13 +48,13 @@ void Mario::Start()
 	marioCollider = PhysicsComponent::AddDynamic(dynPos, marioColliderSize, 0, 1, 1, 0, 0.05f);
 
 	//jumping sound
-	jumpingSmallSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_jump-small.wav");
-	jumpingPoweredSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_jump-super.wav");
+	jumpingSmallSound = AudioComponent::AddSound("Assets/Audio/smb/sound effects/smb_jump-small.wav");
+	jumpingPoweredSound = AudioComponent::AddSound("Assets/Audio/smb/sound effects/smb_jump-super.wav");
 	//powerup sound
-	powerUpSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_powerup.wav");
-	powerDownSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_pipe.wav");
+	powerUpSound = AudioComponent::AddSound("Assets/Audio/smb/sound effects/smb_powerup.wav");
+	powerDownSound = AudioComponent::AddSound("Assets/Audio/smb/sound effects/smb_pipe.wav");
 	//death sound
-	dieSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_mariodie.wav");
+	dieSound = AudioComponent::AddSound("Assets/Audio/smb/sound effects/smb_mariodie.wav");
 
 	isDead = false;
 	transitioning = false;
@@ -332,35 +332,35 @@ std::string Mario::SelectAnimation(float aDeltatime)
 void Mario::AddAnimations()
 {
 	mario = AnimationComponent::AddSprite(80);
-	AnimationComponent::AddAnimation("Walking", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Walking", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Walking", glm::ivec2(194, 3/*68*/), glm::ivec2(32, 64/*32*/));
 	AnimationComponent::AddAnimationFrame("Walking", glm::ivec2(228, 3/*68*/), glm::ivec2(32, 64/*32*/));
 	AnimationComponent::AddAnimationFrame("Walking", glm::ivec2(262, 3/*68*/), glm::ivec2(32, 64/*32*/));
 
-	AnimationComponent::AddAnimation("Walking small", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Walking small", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Walking small", glm::ivec2(194, 68), glm::ivec2(32, 32));
 	AnimationComponent::AddAnimationFrame("Walking small", glm::ivec2(228, 68), glm::ivec2(32, 32));
 	AnimationComponent::AddAnimationFrame("Walking small", glm::ivec2(262, 68), glm::ivec2(32, 32));
 
-	AnimationComponent::AddAnimation("Idle", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Idle", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Idle", glm::ivec2(160, 3), glm::ivec2(32, 64));
 
-	AnimationComponent::AddAnimation("Idle small", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Idle small", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Idle small", glm::ivec2(160, 68), glm::ivec2(32, 32));
 
-	AnimationComponent::AddAnimation("Slide", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Slide", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Slide", glm::ivec2(296, 3), glm::ivec2(32, 64));
 
-	AnimationComponent::AddAnimation("Slide small", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Slide small", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Slide small", glm::ivec2(296, 68), glm::ivec2(32, 32));
 
-	AnimationComponent::AddAnimation("Jumping", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Jumping", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Jumping", glm::ivec2(330, 3), glm::ivec2(32, 64));
 
-	AnimationComponent::AddAnimation("Jumping small", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("Jumping small", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("Jumping small", glm::ivec2(330, 68), glm::ivec2(32, 32));
 
-	AnimationComponent::AddAnimation("MarioDeath", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Mario & Luigi (1).png");
+	AnimationComponent::AddAnimation("MarioDeath", "../Game/Assets/Sprites/NES - Super Mario Bros - Mario & Luigi (1).png");
 	AnimationComponent::AddAnimationFrame("MarioDeath", glm::ivec2(364, 68), glm::ivec2(32, 32));
 }
 

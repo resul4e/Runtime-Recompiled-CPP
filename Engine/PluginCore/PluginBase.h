@@ -23,6 +23,7 @@ extern "C" __declspec(dllexport) void DeletePlugin(PluginBase* plg)\
 #define PLUGIN_END(className)
 #endif
 
+struct ConfigDirectories;
 class Object;
 
 /**
@@ -62,5 +63,11 @@ public:
 	 * \brief This method is called when the game is reset and when the engine closes down.
 	 */
 	virtual void Delete() = 0;
+
+	/**
+	 * \brief This function can be overridden if the plugin needs to know important directories.
+	 * \param aDirectories The struct that contains all directories to important directories
+	 */
+	virtual void SetConfigDirectories(std::shared_ptr<ConfigDirectories> aDirectories);
 };
 

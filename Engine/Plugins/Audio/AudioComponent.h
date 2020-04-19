@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "ExportDetails.h"
-#include "Transform/Vector.h"
 
 #include <memory>
 #include <unordered_map>
@@ -15,6 +14,7 @@ namespace sf
 	class SoundSource;
 }
 
+struct ConfigDirectories;
 struct AudioCompHandle;
 
 /**
@@ -121,8 +121,12 @@ private:
 public:
 private:
 	friend class AudioPlugin;
+
 	///The SoundBuffers
 	static std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> soundBufferList;
 	///The SoundSources, this includes both the music and the sounds
 	static std::vector<std::shared_ptr<sf::SoundSource>> soundSourceList;
+
+	///The list of important directories.
+	static std::shared_ptr<ConfigDirectories> configDirectories;
 };

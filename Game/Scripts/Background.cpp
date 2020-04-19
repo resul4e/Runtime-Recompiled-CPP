@@ -24,8 +24,13 @@ Background::~Background()
 void Background::Start()
 {
 	std::ifstream worldMap;
-	worldMap.open("..\\Game\\Assets\\Map\\World1-1.mariomap");
-
+	worldMap.open("..\\..\\..\\Game\\Assets\\Map\\World1-1.mariomap");
+	if(!worldMap.is_open())
+	{
+		LOG_ERROR(Logger::Get("scripts"), "Could not open map!");
+		throw std::exception();
+	}
+	
 	for (size_t y = 0; y < 28; y++)
 	{
 		for (size_t x = 0; x < 33; x++)

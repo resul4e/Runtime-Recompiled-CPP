@@ -29,4 +29,10 @@ public:
 	 * \brief Clears the AudioLists in the AudioComponent class
 	 */
 	void Delete() override;
+
+	/**
+	 * \brief Set the ConfigDirectories in the AudioComponent.
+	 * \param aDirectories The list important directories.
+	 */
+	void SetConfigDirectories(std::shared_ptr<ConfigDirectories> aDirectories) override;
 };

@@ -6,12 +6,14 @@
 #include "AnimatedSprite.h"
 #include "Animation.h"
 
+#include "ConfigDirectories.h"
 #include "Handle.h"
 #include "Logger.h"
 #include "RenderEngineAPI.h"
 
 std::unordered_map<std::string, std::shared_ptr<Animation>> AnimationComponent::animationList;
 std::vector<std::shared_ptr<AnimatedSprite>> AnimationComponent::animatedSpriteList;
+std::shared_ptr<ConfigDirectories> AnimationComponent::directories;
 
 extern "C" RENDERING_API AnimationCompHandle AnimationComponent::AddSprite(int aFrameTime, bool aStopped, bool aLooped)
 {
@@ -26,8 +28,10 @@ extern "C" RENDERING_API void AnimationComponent::AddAnimation(const char* aAnim
 	std::shared_ptr<sf::Texture> tempTexture;
 	if (SpriteComponent::textureList.find(aSpriteSheet) == SpriteComponent::textureList.end())
 	{
+		std::string filePath = (directories->RootGameSourceDirectory / aSpriteSheet).string();
+		
 		tempTexture = std::make_shared<sf::Texture>();
-		tempTexture->loadFromFile(aSpriteSheet);
+		tempTexture->loadFromFile(filePath);
 		SpriteComponent::textureList.insert(std::pair<std::string, std::shared_ptr<sf::Texture>>(aSpriteSheet, tempTexture));
 	}
 	else

@@ -4,9 +4,11 @@
 #include "Logger.h"
 
 #include "SFML/Audio.hpp"
+#include "ConfigDirectories.h"
 
 std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> AudioComponent::soundBufferList;
 std::vector<std::shared_ptr<sf::SoundSource>> AudioComponent::soundSourceList;
+std::shared_ptr<ConfigDirectories> AudioComponent::configDirectories;
 
 extern "C" AUDIO_API AudioCompHandle AudioComponent::AddSound(const char* aAudioFile)
 {
@@ -18,11 +20,12 @@ extern "C" AUDIO_API AudioCompHandle AudioComponent::AddSound(const char* aAudio
 	//if it is already in the list use the one stored
 	if(soundBufferList.find(aAudioFile) == soundBufferList.end())
 	{
+		std::string filePath = (configDirectories->RootGameSourceDirectory / aAudioFile).string();
 		//check if there is an audiofile
 		//if not return an error
-		if (!tempBuffer->loadFromFile(aAudioFile))
+		if (!tempBuffer->loadFromFile(filePath))
 		{
-			LOG_ERROR(Logger::Get("Audio"), "No compatible audio file was found at {}", aAudioFile);
+			LOG_ERROR(Logger::Get("Audio"), "No compatible audio file was found at {}", filePath);
 			return { 1231234 , "ERROR"};
 		}
 
@@ -41,10 +44,12 @@ extern "C" AUDIO_API AudioCompHandle AudioComponent::AddSound(const char* aAudio
 
 extern "C" AUDIO_API AudioCompHandle AudioComponent::AddMusic(const char* aAudioFile)
 {
+	std::string filePath = (configDirectories->RootGameSourceDirectory / aAudioFile).string();
+	
 	std::shared_ptr<sf::Music> tempMusic = std::make_shared<sf::Music>();
-	if(!tempMusic->openFromFile(aAudioFile))
+	if(!tempMusic->openFromFile(filePath))
 	{
-		LOG_ERROR(Logger::Get("Audio"), "No compatible audio file was found at {}", aAudioFile);
+		LOG_ERROR(Logger::Get("Audio"), "No compatible audio file was found at {}", filePath);
 		return { 1231234 };
 	}
 

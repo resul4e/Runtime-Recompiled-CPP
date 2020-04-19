@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 //forward declaration
+struct ConfigDirectories;
 struct AnimationCompHandle;
 class Animation;
 class AnimatedSprite;
@@ -175,9 +176,13 @@ private:
 public:
 private:
 	friend class Window;
+	friend class RenderPlugin;
 
 	///A list of all of the animations. These can be used on any of the AnimationSprites.
 	static std::unordered_map<std::string, std::shared_ptr<Animation>> animationList;
 	///A list of all of the AnimationSprites. 
 	static std::vector<std::shared_ptr<AnimatedSprite>> animatedSpriteList;
+
+	///
+	static std::shared_ptr<ConfigDirectories> directories;
 };

@@ -20,10 +20,10 @@ void BrickBlock::Setup(glm::vec2 aPos)
 
 	//block
 	block = AnimationComponent::AddSprite(180);
-	AnimationComponent::AddAnimation("BrickIdle", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
+	AnimationComponent::AddAnimation("BrickIdle", "Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
 	AnimationComponent::AddAnimationFrame("BrickIdle", glm::ivec2(544, 384), glm::ivec2(32, 32));
 
-	AnimationComponent::AddAnimation("BrickHit", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
+	AnimationComponent::AddAnimation("BrickHit", "Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
 	AnimationComponent::AddAnimationFrame("BrickHit", glm::ivec2(576, 384), glm::ivec2(32, 32));
 
 	AnimationComponent::SetAnimation(block, "BrickIdle");
@@ -34,10 +34,10 @@ void BrickBlock::Setup(glm::vec2 aPos)
 	blockCollider = PhysicsComponent::AddDynamic((aPos+glm::vec2(16,27))/100.f, glm::vec2(0.10, 0.05f), 0, 0.5f, 1, 0, 0.07f);
 	PhysicsComponent::PrismaticJoint(anchor, blockCollider, glm::vec2(0, 1), glm::vec2(-0.1f, 0.00f));
 
-	AnimationComponent::AddAnimation("DestroyedBlock", "..\\Game\\Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
+	AnimationComponent::AddAnimation("DestroyedBlock", "Assets\\Sprites\\NES - Super Mario Bros - Item and Brick Blocks.png");
 	AnimationComponent::AddAnimationFrame("DestroyedBlock", glm::ivec2(608, 224), glm::ivec2(16, 16));
 
-	bumpSound = AudioComponent::AddSound("..\\Game\\Assets\\Audio\\smb\\sound effects\\smb_bump.wav");
+	bumpSound = AudioComponent::AddSound("Assets\\Audio\\smb\\sound effects\\smb_bump.wav");
 	canBeHit = true;
 	marioPoweredUp = false;
 	destroyed = false;

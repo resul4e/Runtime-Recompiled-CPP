@@ -14,13 +14,18 @@ void AudioPlugin::FixedUpdate()
 
 void AudioPlugin::Update(float aDeltatime)
 {
-	UNREFERENCED_PARAMETER(aDeltatime);
+	__noop(aDeltatime);
 }
 
 void AudioPlugin::Delete()
 {
 	AudioComponent::soundSourceList.clear();
 	AudioComponent::soundBufferList.clear();
+}
+
+void AudioPlugin::SetConfigDirectories(std::shared_ptr<ConfigDirectories> aDirectories)
+{
+	AudioComponent::configDirectories = aDirectories;
 }
 
 PLUGIN_END(AudioPlugin)

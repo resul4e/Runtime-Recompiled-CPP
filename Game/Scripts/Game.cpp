@@ -40,13 +40,14 @@ void Game::Start()
 	}
 
 	
-	music = AudioComponent::AddMusic("..\\Game\\Assets\\Audio\\SuperMarioBros.ogg");
-	AudioComponent::Play(music);
+	music = AudioComponent::AddMusic("Assets\\Audio\\SuperMarioBros.ogg");
+	//Don't play music for now.
+	//AudioComponent::Play(music);
 	AudioComponent::SetVolume(music, 40);
 	WindowComponent::SetViewPosition(glm::vec2(224, 224));
 
 	std::ifstream worldMap;
-	worldMap.open("..\\Game\\Assets\\Map\\BoxMap.mariomap");
+	worldMap.open("..\\..\\..\\Game\\Assets\\Map\\BoxMap.mariomap");
 
 	std::string line;
 	int y = 0;

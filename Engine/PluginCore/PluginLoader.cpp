@@ -40,6 +40,7 @@ void PluginLoader::Start()
 	for (auto p : pluginList)
 	{
 		p.second->Start();
+		p.second->SetConfigDirectories(directories);
 	}
 }
 

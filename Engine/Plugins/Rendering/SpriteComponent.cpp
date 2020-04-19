@@ -4,10 +4,12 @@
 #include "AnimatedSprite.h"
 #include "Animation.h"
 
+#include "ConfigDirectories.h"
 #include "Handle.h"
 
 std::vector<std::unique_ptr<sf::Sprite>> SpriteComponent::spriteList;
 std::unordered_map<std::string, std::shared_ptr<sf::Texture>> SpriteComponent::textureList;
+std::shared_ptr<ConfigDirectories> SpriteComponent::directories;
 
 extern "C" RENDERING_API SpriteCompHandle SpriteComponent::AddSprite(const char* aImage, 
 	glm::ivec2 rectPos, glm::ivec2 rectSize)
@@ -16,8 +18,11 @@ extern "C" RENDERING_API SpriteCompHandle SpriteComponent::AddSprite(const char*
 	std::shared_ptr<sf::Texture> tempTexture;
 	if (textureList.find(aImage) == textureList.end())
 	{
+		std::string filePath = (directories->RootGameSourceDirectory / aImage).string();
+		
 		tempTexture = std::make_shared<sf::Texture>();
-		tempTexture->loadFromFile(aImage);
+		//TODO(Resul): Check if file has been found.
+		tempTexture->loadFromFile(filePath);
 		textureList.insert(std::pair<std::string, std::shared_ptr<sf::Texture>>(aImage, tempTexture));
 	}
 	else
@@ -60,8 +65,10 @@ extern "C" RENDERING_API void SpriteComponent::SetTexture(SpriteCompHandle& aHan
 	std::shared_ptr<sf::Texture> tempTexture;
 	if (textureList.find(aImage) == textureList.end())
 	{
+		std::string filePath = (directories->RootGameSourceDirectory / aImage).string();
+		
 		tempTexture = std::make_shared<sf::Texture>();
-		tempTexture->loadFromFile(aImage);
+		tempTexture->loadFromFile(filePath);
 		textureList.insert(std::pair<std::string, std::shared_ptr<sf::Texture>>(aImage, tempTexture));
 	}
 	else

@@ -9,6 +9,7 @@
 //forward declare
 struct SpriteCompHandle;
 struct AnimationCompHandle;
+struct ConfigDirectories;
 class Animation;
 class AnimatedSprite;
 
@@ -123,11 +124,15 @@ private:
 public:
 private:
 	friend class Window;
+	friend class RenderPlugin;
 	friend class AnimationComponent;
 
 	///The sf::Textures that are stored, there shouldn't be any duplicates if implemented correctly.
 	static std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textureList;
 	/// The sf::Sprite that are stored.
 	static std::vector<std::unique_ptr<sf::Sprite>> spriteList;
+
+	///
+	static std::shared_ptr<ConfigDirectories> directories;
 };
 
