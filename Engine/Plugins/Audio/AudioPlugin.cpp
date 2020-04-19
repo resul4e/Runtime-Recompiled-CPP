@@ -4,7 +4,7 @@
 #include "Logger.h"
 
 #if !defined(WIN32) || !defined(_WIN32)
-#define __noop ((void)0)
+#define __noop(x) (void)(x)
 #endif
 
 void AudioPlugin::Start()
