@@ -1,6 +1,7 @@
 **/.vs
 
 **/build
+**/gameBuild
 **/Doxygen
 
 *.vcxproj.user
