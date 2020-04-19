@@ -3,6 +3,10 @@
 #include "SFML/Audio.hpp"
 #include "Logger.h"
 
+#if !defined(WIN32) || !defined(_WIN32)
+#define __noop ((void)0)
+#endif
+
 void AudioPlugin::Start()
 {
 	Logger::Add("Audio");
