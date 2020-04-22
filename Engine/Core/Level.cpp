@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <chrono>
-#include <filesystem>
+#include "FileSystem.h"
 
 #include "Object.h"
 #include "Logger.h"
@@ -12,7 +12,6 @@
 #include "Script.h"
 #include "ScriptLoader.h"
 
-using namespace std::filesystem;
 using std::cout;
 using std::endl;
 
@@ -112,7 +111,7 @@ void Level::Restart()
 
 unsigned long long Level::RemoveOldDLL()
 {
-	path binDirectory = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	RCP::path binDirectory = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
 	if(!exists(binDirectory) || !is_directory(binDirectory))
 	{
 		LOG_WARN(coreConsole, "The " + binDirectory.string() + " directory does not exist or is something other than a directory.")
@@ -120,7 +119,7 @@ unsigned long long Level::RemoveOldDLL()
 	}
 	
 	//remove all of the DLL files exept for the latest one
-	path latest;
+	RCP::path latest;
 	for (auto p : directory_iterator(binDirectory))
 	{
 		if (p.path().extension() == ".dll")

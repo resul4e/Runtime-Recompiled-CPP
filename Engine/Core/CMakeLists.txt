@@ -23,4 +23,6 @@ add_library("Core" SHARED
     "targetver.h"
     "ConfigDirectories.h")
 target_link_libraries("Core" "EngineBase")
+target_link_libraries("Core" "PIL")
+target_include_directories("Core" PRIVATE "${CMAKE_SOURCE_DIR}/Engine/PIL")
 target_compile_definitions("Core" PRIVATE CORE_DLL)

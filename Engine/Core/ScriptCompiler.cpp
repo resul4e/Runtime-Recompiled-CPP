@@ -1,6 +1,6 @@
 #include "ScriptCompiler.h"
 
-#include <filesystem>
+#include "Platform/Filesystem.h"
 
 #include "PlatformDetails.h"
 #include "Level.h"
@@ -14,8 +14,6 @@
 #ifdef _DEBUG
 #define COMPILER_OUTPUT
 #endif
-
-using namespace std::filesystem;
 
 ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<ConfigDirectories> aDirectories) :
 	script(aScript),

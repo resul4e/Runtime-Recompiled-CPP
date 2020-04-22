@@ -45,6 +45,7 @@ target_compile_options(EngineBase INTERFACE
           /W4>)
 
 #the subdirectories of this project
+add_subdirectory("PIL")
 add_subdirectory("Main")
 add_subdirectory("Core")
 add_subdirectory("PluginCore")
