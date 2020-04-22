@@ -120,7 +120,7 @@ unsigned long long Level::RemoveOldDLL()
 	
 	//remove all of the DLL files exept for the latest one
 	RCP::path latest;
-	for (auto p : directory_iterator(binDirectory))
+	for (auto p : RCP::directory_iterator(binDirectory))
 	{
 		if (p.path().extension() == ".dll")
 		{

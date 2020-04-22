@@ -17,6 +17,7 @@ include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
 include_directories(BEFORE "Extern/Box2DProj/Box2D")
 include_directories(BEFORE "Extern/SFML/include")
+include_directories(BEFORE "PIL")
 
 if(WIN32)
      set(SFML_STATIC_LIBRARIES TRUE)

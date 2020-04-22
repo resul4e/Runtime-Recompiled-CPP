@@ -1,6 +1,6 @@
 #include "ScriptCompiler.h"
 
-#include "Platform/Filesystem.h"
+#include "FileSystem.h"
 
 #include "PlatformDetails.h"
 #include "Level.h"
@@ -43,7 +43,7 @@ void ScriptCompiler::ReloadScript()
 	//if the script hasn't been resaved since the last failed recompile, 
 	//don't try to recompile, because it will fail again.
 	std::error_code err;
-	file_time_type result = last_write_time(script->scriptPath, err);
+	RCP::file_time_type result = last_write_time(script->scriptPath, err);
 	const time_t currentScriptWriteTime = result.time_since_epoch().count();
 	if (lastScriptWriteTime == currentScriptWriteTime)
 	{
@@ -170,7 +170,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	std::error_code err;		//used for error checking instead of triggering a breakpoint.
 
 	//Check if file is out of date
-	file_time_type result = last_write_time(script->scriptPath, err);
+	RCP::file_time_type result = last_write_time(script->scriptPath, err);
 	time_t localLastScriptWriteTime = result.time_since_epoch().count();
 	
 	/**
@@ -188,9 +188,9 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));	///\todo(Resul) dlls are windows specific
+	RCP::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));	///\todo(Resul) dlls are windows specific
 #endif
-	file_time_type DLLresult = last_write_time(dllPath, err);
+	RCP::file_time_type DLLresult = last_write_time(dllPath, err);
 	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
 	if (err.value() != 0)
 	{
@@ -225,7 +225,7 @@ void ScriptCompiler::LoadDLL()
 	if (script->isCompilerError)
 	{
 		std::error_code err;
-		file_time_type result = last_write_time(script->scriptPath, err);
+		RCP::file_time_type result = last_write_time(script->scriptPath, err);
 		lastScriptWriteTime = result.time_since_epoch().count();
 	}
 }
@@ -246,7 +246,7 @@ void ScriptCompiler::CompileInternal()
 
 	char buff[2048];
 	std::unordered_map<std::string, std::shared_ptr<Script>>& scriptList = script->level->scriptLoader->scriptList;
-	path dependencyPath;
+	RCP::path dependencyPath;
 	while (fgets(buff, sizeof(buff), in) != nullptr)
 	{
 
@@ -300,7 +300,7 @@ void ScriptCompiler::LoadDLLInternal()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	std::string dll(gamePath.string() + "\\bin\\" + PROJECT_PLATFORM + "\\"  + PROJECT_CONFIGURATION + "\\" + script->scriptType + scriptID + ".dll");
 #else
-	path dll = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));
+	RCP::path dll = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));
 #endif
 	dllHandle = LoadLibraryA(dll.string().c_str());
 	if(dllHandle == nullptr)
@@ -337,7 +337,7 @@ void ScriptCompiler::LoadDLLInternal()
 	script->SetLevel(script->level.get());
 }
 
-bool ScriptCompiler::GetInclude(std::string aIn, path& aOutPath)
+bool ScriptCompiler::GetInclude(std::string aIn, RCP::path& aOutPath)
 {
 	const std::string noteString("Note: including file: ");
 
@@ -349,7 +349,7 @@ bool ScriptCompiler::GetInclude(std::string aIn, path& aOutPath)
 	{
 		///\todo(Resul) find a way to also check the includes in the header file
 			aIn.erase(aIn.find(noteString), aIn.find(noteString) + noteString.size());		///remove the noteString from the string.
-			aOutPath = path(aIn);
+			aOutPath = RCP::path(aIn);
 			return true;
 	}
 	return false;
