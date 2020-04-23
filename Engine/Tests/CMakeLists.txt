@@ -34,8 +34,11 @@ endif()
 
 add_executable(Tests SharedLibraryTests.cpp)
 target_link_libraries(Tests gtest_main)
+target_link_libraries(Tests PIL)
+target_include_directories(Tests PRIVATE "${CMAKE_SOURCE_DIR}/Engine/PIL")
 add_test(NAME Tests COMMAND Tests)
 
+#add all testing related projects into one visual studio filter
 set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
 set_target_properties("gtest" PROPERTIES FOLDER Tests)
 set_target_properties("Tests" PROPERTIES FOLDER Tests)

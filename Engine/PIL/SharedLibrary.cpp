@@ -1,6 +1,10 @@
 #include "SharedLibrary.h"
 
-int SharedLibrary::Add(int a, int b)
+#if defined(WIN32) || defined(__WIN32)
+#elif __unix__
+
+#endif
+bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 {
-    return a+b;
+	return false;
 }
