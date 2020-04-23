@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+enable_testing()
 
 project("RRCPP")
+
+add_subdirectory("Tests")
 
 #set the output directory for all target to be bin
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
