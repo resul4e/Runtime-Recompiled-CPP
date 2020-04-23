@@ -1,3 +1,5 @@
+#from https://github.com/google/googletest/tree/master/googletest#incorporating-into-an-existing-cmake-project
+
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -32,7 +34,7 @@ endif()
 
 add_executable(Tests SharedLibraryTests.cpp)
 target_link_libraries(Tests gtest_main)
-add_test(NAME Tests COMMAND example)
+add_test(NAME Tests COMMAND Tests)
 
 set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
 set_target_properties("gtest" PROPERTIES FOLDER Tests)
