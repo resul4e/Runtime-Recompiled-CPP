@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
 
 	//restarting level
 	bool restartLevel = false;
+
+	Logger::Add("core");
 	
 	//load all of the plugins
 	PluginLoader pl{directories};

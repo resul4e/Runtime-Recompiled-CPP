@@ -3,6 +3,7 @@
 #include <iostream>
 #include "ConfigDirectories.h"
 #include "SharedLibrary.h"
+#include "Logger.h"
 
 using namespace std::filesystem;
 using std::cout;
@@ -22,13 +23,13 @@ void PluginLoader::LoadPlugins()
 {
 	for (auto p : directory_iterator(directories->PluginSourceDirectory))
 	{
-		if(!is_directory(p))
+		if (!is_directory(p))
 		{
 			continue;
 		}
-		
+
 		std::string DLLName = p.path().stem().string();
-		if(!LoadDLL(DLLName))
+		if (!LoadPlugin(DLLName))
 		{
 			continue;
 		}
@@ -69,42 +70,30 @@ void PluginLoader::Delete()
 	}
 }
 
-bool PluginLoader::LoadDLL(std::string aDLLName)
+bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	const path libraryPath = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
+	const RCP::path libraryPath = (RCP::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
 
-	SharedLibrary library;
+	SharedLibrary library(directories->RootBinaryDirectory.string());
 	library.LoadSharedLibrary(libraryPath.string());
-	CREATEFUNCTION tempCreate = library.GetExportedFunction<CREATEFUNCTION>("HelloWorld");
-	
-	return true;
-	/*
-	const path dll = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
-	HINSTANCE tempDLL = LoadLibraryA(dll.string().c_str());
-	if (tempDLL == nullptr)
-	{
-		const int errorCode = GetLastError();
-		cout << "Couldn't load the DLL of the plugin " << aDLLName << ". Exited with error code " << errorCode << endl;
-		return false;
-	}
-	
-	CREATEFUNCTION tempCreate = reinterpret_cast<CREATEFUNCTION>(GetProcAddress(tempDLL, "CreatePlugin"));
+
+	CREATEFUNCTION tempCreate = library.GetExportedFunction<CREATEFUNCTION>("CreatePlugin");
 	if (tempCreate == nullptr)
 	{
-		cout << "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " << aDLLName << endl;
+		LOG_ERROR(Logger::Get("core"), "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
-	
-	DELETEFUNCTION tempDelete = reinterpret_cast<DELETEFUNCTION>(GetProcAddress(tempDLL, "DeletePlugin"));
+
+	DELETEFUNCTION tempDelete = library.GetExportedFunction<DELETEFUNCTION>("DeletePlugin");
 	if (tempDelete == nullptr)
 	{
-		cout << "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " << aDLLName << endl;
+		LOG_ERROR(Logger::Get("core"), "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
-	
-	DLLList.insert(std::pair<std::string, HINSTANCE>(aDLLName, tempDLL));
-	CreatePluginList.insert(std::pair<std::string, CREATEFUNCTION>(aDLLName, tempCreate));
-	DeletePluginList.insert(std::pair<std::string, DELETEFUNCTION>(aDLLName, tempDelete));
+
+	SharedLibraryList.insert({ aSharedLibraryName, library });
+	CreatePluginList.insert({ aSharedLibraryName, tempCreate });
+	DeletePluginList.insert({ aSharedLibraryName, tempDelete });
+
 	return true;
-	*/
 }

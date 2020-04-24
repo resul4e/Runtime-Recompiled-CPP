@@ -1,15 +1,12 @@
 #pragma once
-#if defined(WIN32) || defined(_WIN32)
-#include <Windows.h>
-#endif
 
-#include "FileSystem.h"
 #include <unordered_map>
 
 #include "ConfigDirectories.h"
 
 //forward declaration
 class PluginBase;
+class SharedLibrary;
 
 //function definitions
 typedef PluginBase* (__cdecl *CREATEFUNCTION)();
@@ -55,9 +52,9 @@ public:
 private:
 	/**
 	 * \brief Loads the DLL for the plugin.
-	 * \param aDLLName The name of the DLL to load. It will search in the output directory of this VS project
+	 * \param aSharedLibraryName The name of the DLL to load. It will search in the output directory of this VS project
 	 */
-	bool LoadDLL(std::string aDLLName);
+	bool LoadPlugin(std::string aSharedLibraryName);
 
 //variables
 public:
@@ -66,7 +63,7 @@ private:
 	///A list of all of the loaded plugins.
 	std::unordered_map<std::string, std::shared_ptr<PluginBase>> pluginList;
 	///A list of all of the DLLs loaded. 
-	std::unordered_map<std::string, HINSTANCE> DLLList;
+	std::unordered_map<std::string, SharedLibrary> SharedLibraryList;
 
 	//Both of these functions gets plugged into a shared pointer.
 	///The function that returns a pointer to the script Plugin
@@ -74,6 +71,7 @@ private:
 	///The function that deletes a plugin using its pointer.
 	std::unordered_map<std::string, DELETEFUNCTION> DeletePluginList;
 
+	//A struct of all important directories
 	std::shared_ptr<ConfigDirectories> directories;
 };
 

@@ -31,7 +31,7 @@ void Level::Start()
 	system(setupCommand.c_str());
 
 	scriptConsole = Logger::Add("script");
-	coreConsole = Logger::Add("core");
+	coreConsole = Logger::Get("core");
 
 	//path gamePath(aGamePath);
 #ifdef FULL_RECOMPILE

@@ -42,3 +42,6 @@ add_test(NAME Tests COMMAND Tests)
 set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
 set_target_properties("gtest" PROPERTIES FOLDER Tests)
 set_target_properties("Tests" PROPERTIES FOLDER Tests)
+
+#set the root of the TestData folder where all data is located for testing purposes
+target_compile_definitions("Tests" PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/TestData")
