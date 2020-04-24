@@ -24,7 +24,7 @@ class SharedLibrary
 public:
 	//define the extension of the shared library.
 #if defined(WIN32) || defined(__WIN32)
-	static constexpr char* sharedLibraryExtension = ".dll";
+	static constexpr char* sharedLibraryExtension = ".dll";\
 #elif __unix__
 	static constexpr char* sharedLibraryExtension = ".so";
 #endif
