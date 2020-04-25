@@ -3,7 +3,7 @@
 #include "FunctionDefinition.h"
 
 std::string rootDirectory = TEST_DATA_DIR;
-typedef int (CDECL*TEST_FUNCTION)(int);
+typedef int (FUNCTION_CDECL *TEST_FUNCTION)(int);
 
 TEST(SharedLibraryTests, Constructor)
 {

@@ -38,6 +38,7 @@ public:
 	 * \param aRootDirectory The root from which shared libraries are searched for.
 	 */
 	SharedLibrary(const std::string& aRootDirectory);
+	~SharedLibrary();
 	
 	/**
 	 * \brief Loads the shared 
@@ -46,6 +47,11 @@ public:
 	 * \return 
 	 */
 	bool LoadSharedLibrary(const std::string& aSharedLibraryPath);
+
+	/**
+	 * \brief If the handle is not null unload the currently loaded library.
+	 */
+	void UnloadSharedLibrary();
 	
 	/**
 	 * \brief returns the SharedLibHandle which is platform specific (HINSTANCE or void*)

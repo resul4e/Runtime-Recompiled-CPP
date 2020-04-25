@@ -5,7 +5,6 @@
 #include "SharedLibrary.h"
 #include "Logger.h"
 
-using namespace std::filesystem;
 using std::cout;
 using std::endl;
 
@@ -21,7 +20,7 @@ PluginLoader::~PluginLoader()
 
 void PluginLoader::LoadPlugins()
 {
-	for (auto p : directory_iterator(directories->PluginSourceDirectory))
+	for (auto p : RCP::directory_iterator(directories->PluginSourceDirectory))
 	{
 		if (!is_directory(p))
 		{
@@ -74,24 +73,24 @@ bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
 	const RCP::path libraryPath = (RCP::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
 
-	SharedLibrary library(directories->RootBinaryDirectory.string());
-	library.LoadSharedLibrary(libraryPath.string());
+	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
+	library->LoadSharedLibrary(libraryPath.string());
 
-	CREATEFUNCTION tempCreate = library.GetExportedFunction<CREATEFUNCTION>("CreatePlugin");
+	CREATEFUNCTION tempCreate = library->GetExportedFunction<CREATEFUNCTION>("CreatePlugin");
 	if (tempCreate == nullptr)
 	{
 		LOG_ERROR(Logger::Get("core"), "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
 
-	DELETEFUNCTION tempDelete = library.GetExportedFunction<DELETEFUNCTION>("DeletePlugin");
+	DELETEFUNCTION tempDelete = library->GetExportedFunction<DELETEFUNCTION>("DeletePlugin");
 	if (tempDelete == nullptr)
 	{
 		LOG_ERROR(Logger::Get("core"), "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
 
-	SharedLibraryList.insert({ aSharedLibraryName, library });
+	SharedLibraryList.insert({ aSharedLibraryName, std::move(library) });
 	CreatePluginList.insert({ aSharedLibraryName, tempCreate });
 	DeletePluginList.insert({ aSharedLibraryName, tempDelete });
 

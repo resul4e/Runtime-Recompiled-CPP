@@ -1,5 +1,5 @@
 #if defined(WIN32) || defined(__WIN32)
-#define CDECL __cdecl
+#define FUNCTION_CDECL __cdecl
 #else
-#define CDECL
+#define FUNCION_CDECL
 #endif

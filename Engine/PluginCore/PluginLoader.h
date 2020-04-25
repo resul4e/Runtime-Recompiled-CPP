@@ -10,8 +10,8 @@ class PluginBase;
 class SharedLibrary;
 
 //function definitions
-typedef PluginBase* (CDECL *CREATEFUNCTION)();
-typedef void(CDECL *DELETEFUNCTION)(PluginBase*);
+typedef PluginBase* (__cdecl *CREATEFUNCTION)();
+typedef void(__cdecl*DELETEFUNCTION)(PluginBase*);
 
 /**
 *	\brief The class that loads all of the plugins.
@@ -64,7 +64,7 @@ private:
 	///A list of all of the loaded plugins.
 	std::unordered_map<std::string, std::shared_ptr<PluginBase>> pluginList;
 	///A list of all of the DLLs loaded. 
-	std::unordered_map<std::string, SharedLibrary> SharedLibraryList;
+	std::unordered_map<std::string, std::unique_ptr<SharedLibrary>> SharedLibraryList;
 
 	//Both of these functions gets plugged into a shared pointer.
 	///The function that returns a pointer to the script Plugin

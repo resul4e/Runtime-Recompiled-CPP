@@ -2,15 +2,22 @@
 
 //define the platform dependant function that loads the library
 #if defined(WIN32) || defined(__WIN32)
-#define LoadLibraryFunc(libraryPath) LoadLibraryA(libraryPath);
+#define LoadLibraryFunc(libraryPath) LoadLibraryA(libraryPath)
+#define FREE_SHARED_LIBRARY(aHandle) FreeLibrary(aHandle)
 #elif __unix__
 #define LoadLibraryFunc(libraryPath) dlopen(libraryPath, RTLD_NOW);
+#define FREE_SHARED_LIBRARY(aHandle) dlclose(aHandle)
 #endif
 
 SharedLibrary::SharedLibrary(const std::string& aRootDirectory):
 handle(nullptr),
 rootDirectory(aRootDirectory)
 {
+}
+
+SharedLibrary::~SharedLibrary()
+{
+	UnloadSharedLibrary();
 }
 
 bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
@@ -32,6 +39,14 @@ bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 		return false;
 	}
 	return true;
+}
+
+void SharedLibrary::UnloadSharedLibrary()
+{
+	if (handle != nullptr)
+	{
+		FREE_SHARED_LIBRARY(handle);
+	}
 }
 
 SharedLibHandle SharedLibrary::GetSharedLibraryHandle()

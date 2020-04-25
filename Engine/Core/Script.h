@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "FileSystem.h"
+#include "FunctionDefinition.h"
 
 #include "ForwardDecl.h"
 
