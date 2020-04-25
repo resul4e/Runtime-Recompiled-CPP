@@ -1,6 +1,7 @@
 #pragma once
-
 #include <unordered_map>
+
+#include "FunctionDefinition.h"
 
 #include "ConfigDirectories.h"
 
@@ -9,8 +10,8 @@ class PluginBase;
 class SharedLibrary;
 
 //function definitions
-typedef PluginBase* (__cdecl *CREATEFUNCTION)();
-typedef void(__cdecl *DELETEFUNCTION)(PluginBase*);
+typedef PluginBase* (CDECL *CREATEFUNCTION)();
+typedef void(CDECL *DELETEFUNCTION)(PluginBase*);
 
 /**
 *	\brief The class that loads all of the plugins.

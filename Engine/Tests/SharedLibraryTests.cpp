@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 #include "SharedLibrary.h"
+#include "FunctionDefinition.h"
 
 std::string rootDirectory = TEST_DATA_DIR;
-typedef int (__cdecl* TEST_FUNCTION)(int);
+typedef int (CDECL*TEST_FUNCTION)(int);
 
 TEST(SharedLibraryTests, Constructor)
 {

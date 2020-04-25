@@ -4,6 +4,8 @@
 
 #if defined(WIN32) || defined(__WIN32)
 #include <Windows.h>
+#elif defined(__unix)
+#include <dlfcn.h>
 #endif
 
 //define the function that imports the function.
