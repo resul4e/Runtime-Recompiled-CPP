@@ -40,8 +40,9 @@ void PluginLoader::LoadPlugins()
 			continue;
 		}
 
+		//Get the directory name as a string
 		std::string DLLName = p.path().stem().string();
-
+		//Check the whitelist and blacklist if this plugin is allowed
 		if(!IsPluginAllowed(DLLName))
 		{
 			continue;
@@ -88,6 +89,16 @@ void PluginLoader::Delete()
 	}
 }
 
+std::vector<std::string> PluginLoader::GetLoadedPlugins()
+{
+	std::vector<std::string> loadedPlugins;
+	for (auto plugin : pluginList)
+	{
+		loadedPlugins.push_back(plugin.first);
+	}
+	return loadedPlugins;
+}
+
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
 	const RCP::path libraryPath = (RCP::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
@@ -123,11 +134,15 @@ void PluginLoader::LoadBlackAndWhiteLists()
 	{
 		whitelistedPlugins.push_back("TestPlugin");
 	}
+	else
+	{
+		blackListedPlugins.push_back("TestPlugin");
+	}
 }
 
 bool PluginLoader::IsPluginAllowed(std::string aPluginName)
 {
 	bool allowedByWhitelist = whitelistedPlugins.empty() || std::find(whitelistedPlugins.begin(), whitelistedPlugins.end(), aPluginName) != whitelistedPlugins.end();
-	bool allowedByBlacklist = blackListedPlugins.empty() || std::find(blackListedPlugins.begin(), blackListedPlugins.end(), aPluginName) == whitelistedPlugins.end();
+	bool allowedByBlacklist = blackListedPlugins.empty() || std::find(blackListedPlugins.begin(), blackListedPlugins.end(), aPluginName) == blackListedPlugins.end();
 	return allowedByWhitelist && allowedByBlacklist;
 }

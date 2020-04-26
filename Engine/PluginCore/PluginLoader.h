@@ -50,6 +50,12 @@ public:
 	 */
 	void Delete();
 
+	/**
+	 * \brief Returns a vector of all currently loaded plugins.
+	 * \return The list of loaded plugins.
+	 */
+	std::vector<std::string> GetLoadedPlugins();
+
 private:
 	/**
 	 * \brief Loads the DLL for the plugin.

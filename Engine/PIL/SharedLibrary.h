@@ -37,7 +37,7 @@ public:
 	 * \brief Create a shared library object. Use LoadSharedLibrary() to load a shared library.
 	 * \param aRootDirectory The root from which shared libraries are searched for.
 	 */
-	SharedLibrary(const std::string& aRootDirectory);
+	SharedLibrary(const RCP::path& aRootDirectory);
 	~SharedLibrary();
 	
 	/**
@@ -74,7 +74,7 @@ private:
 	SharedLibHandle handle;
 
 	//The root of the directory to check for shared libraries
-	std::string rootDirectory;	
+	RCP::path rootDirectory;	
 };
 
 template <class Func>
