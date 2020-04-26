@@ -106,14 +106,14 @@ bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
 	library->LoadSharedLibrary(libraryPath.string());
 
-	CREATEFUNCTION tempCreate = library->GetExportedFunction<CREATEFUNCTION>("CreatePlugin");
+	CREATE_FUNCTION tempCreate = library->GetExportedFunction<CREATE_FUNCTION>("CreatePlugin");
 	if (tempCreate == nullptr)
 	{
 		LOG_ERROR(Logger::Get("core"), "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
 
-	DELETEFUNCTION tempDelete = library->GetExportedFunction<DELETEFUNCTION>("DeletePlugin");
+	DELETE_FUNCTION tempDelete = library->GetExportedFunction<DELETE_FUNCTION>("DeletePlugin");
 	if (tempDelete == nullptr)
 	{
 		LOG_ERROR(Logger::Get("core"), "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);

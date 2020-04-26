@@ -10,8 +10,8 @@ class PluginBase;
 class SharedLibrary;
 
 //function definitions
-typedef PluginBase* (FUNCTION_CDECL *CREATEFUNCTION)();
-typedef void(FUNCTION_CDECL *DELETEFUNCTION)(PluginBase*);
+typedef PluginBase* (FUNCTION_CDECL *CREATE_FUNCTION)();
+typedef void(FUNCTION_CDECL *DELETE_FUNCTION)(PluginBase*);
 
 /**
 *	\brief The class that loads all of the plugins.
@@ -86,13 +86,14 @@ private:
 
 	//Both of these functions gets plugged into a shared pointer.
 	///The function that returns a pointer to the script Plugin
-	std::unordered_map<std::string, CREATEFUNCTION> CreatePluginList;
+	std::unordered_map<std::string, CREATE_FUNCTION> CreatePluginList;
 	///The function that deletes a plugin using its pointer.
-	std::unordered_map<std::string, DELETEFUNCTION> DeletePluginList;
+	std::unordered_map<std::string, DELETE_FUNCTION> DeletePluginList;
 
 	//A struct of all important directories
 	std::shared_ptr<ConfigDirectories> directories;
 
+	//A list of plugins that are allowed(whitelist) or not allowed(blacklist)
 	std::vector<std::string> blackListedPlugins;
 	std::vector<std::string> whitelistedPlugins;
 };
