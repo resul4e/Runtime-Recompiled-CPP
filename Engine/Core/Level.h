@@ -67,6 +67,7 @@ public:
 	 */
 	CORE_API Object* GetObjectPointer(ObjectHandle obj);
 
+	///TODO(Resul) Implement these.
 	CORE_API ObjectHandleList GetObjects();
 	CORE_API ObjectHandleList GetObjectsWithName(const char* name);
 	CORE_API ObjectHandle GetObjectWithName(const char* name);
