@@ -49,7 +49,7 @@ public:
 	bool LoadSharedLibrary(const std::string& aSharedLibraryPath);
 
 	/**
-	 * \brief If the handle is not null unload the currently loaded library.
+	 * \brief If the handle is not nullptr unload the currently loaded library and set it to nullptr.
 	 */
 	void UnloadSharedLibrary();
 	
@@ -69,7 +69,11 @@ public:
 	Func GetExportedFunction(const std::string& aFunctionName);
 
 private:
+
+	//The handle to the shared library 
 	SharedLibHandle handle;
+
+	//The root of the directory to check for shared libraries
 	std::string rootDirectory;	
 };
 

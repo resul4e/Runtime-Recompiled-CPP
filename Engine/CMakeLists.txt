@@ -4,16 +4,18 @@ enable_testing()
 
 project("RRCPP")
 
-add_subdirectory("Tests")
-
 #set the output directory for all target to be bin
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
 
 #includes from within the project
 include_directories(BEFORE "Core")
 include_directories(BEFORE "PluginCore")
 include_directories(BEFORE "Plugins")
+
+add_subdirectory("Tests")
 
 #external includes
 include_directories(BEFORE "Extern/spdLog/include")

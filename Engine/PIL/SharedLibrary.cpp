@@ -46,6 +46,7 @@ void SharedLibrary::UnloadSharedLibrary()
 	if (handle != nullptr)
 	{
 		FREE_SHARED_LIBRARY(handle);
+		handle = nullptr;
 	}
 }
 

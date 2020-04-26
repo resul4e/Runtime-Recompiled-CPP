@@ -7,4 +7,5 @@ add_subdirectory(Rendering)
 add_subdirectory(Input)
 add_subdirectory(Physics)
 add_subdirectory(Audio)
+add_subdirectory(TestPlugin)
 

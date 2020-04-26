@@ -82,3 +82,22 @@ TEST(SharedLibraryTests, GetSharedLibraryHandleWhereLibraryDoesNotExist)
 	SharedLibHandle handle = lib.GetSharedLibraryHandle();
 	EXPECT_EQ(handle, nullptr);
 }
+
+TEST(SharedLibraryTests, UnloadSharedLibraryWhereHandleIsNotLoaded)
+{
+	SharedLibrary lib(rootDirectory);
+	std::string libraryPath = std::string("DOESNOTEXIST");
+	EXPECT_NO_FATAL_FAILURE(lib.UnloadSharedLibrary());
+}
+
+TEST(SharedLibraryTests, UnloadSharedLibraryWhereHandleIsLoaded)
+{
+	SharedLibrary lib(rootDirectory);
+	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64.dll");
+	lib.LoadSharedLibrary(libraryPath);
+	SharedLibHandle handle = lib.GetSharedLibraryHandle();
+	EXPECT_NE(handle, nullptr);
+	lib.UnloadSharedLibrary();
+	handle = lib.GetSharedLibraryHandle();
+	EXPECT_EQ(handle, nullptr);
+}

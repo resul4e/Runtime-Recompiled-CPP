@@ -10,8 +10,8 @@ class PluginBase;
 class SharedLibrary;
 
 //function definitions
-typedef PluginBase* (__cdecl *CREATEFUNCTION)();
-typedef void(__cdecl*DELETEFUNCTION)(PluginBase*);
+typedef PluginBase* (FUNCTION_CDECL *CREATEFUNCTION)();
+typedef void(FUNCTION_CDECL *DELETEFUNCTION)(PluginBase*);
 
 /**
 *	\brief The class that loads all of the plugins.
@@ -57,6 +57,9 @@ private:
 	 */
 	bool LoadPlugin(std::string aSharedLibraryName);
 
+	void LoadBlackAndWhiteLists();
+	bool IsPluginAllowed(std::string aPluginName);
+
 //variables
 public:
 private:
@@ -74,5 +77,8 @@ private:
 
 	//A struct of all important directories
 	std::shared_ptr<ConfigDirectories> directories;
+
+	std::vector<std::string> blackListedPlugins;
+	std::vector<std::string> whitelistedPlugins;
 };
 

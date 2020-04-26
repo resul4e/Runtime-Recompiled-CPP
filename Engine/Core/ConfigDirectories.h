@@ -10,5 +10,7 @@ struct ConfigDirectories
 	RCP::path RootGameBinaryDirectory;
 	RCP::path EngineSourceDirectory;
 	RCP::path PluginSourceDirectory;
-	RCP::path PythonToolsDirectory;
+	RCP::path PluginWhiteListDirectory;
+	RCP::path PluginBlackListDirectory;
+	RCP::path PythonToolsDirectory;	
 };

@@ -32,16 +32,25 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-add_executable(Tests SharedLibraryTests.cpp)
+
+add_executable(Tests 
+"SharedLibraryTests.cpp"
+"PluginLoaderTests.cpp")
+
 target_link_libraries(Tests gtest_main)
 target_link_libraries(Tests PIL)
+target_link_libraries(Tests PluginCore)
+target_link_libraries(Tests Core)
+
 target_include_directories(Tests PRIVATE "${CMAKE_SOURCE_DIR}/Engine/PIL")
 add_test(NAME Tests COMMAND Tests)
+
+#set the root of the TestData folder where all data is located for testing purposes
+target_compile_definitions("Tests" PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/TestData")
+target_compile_definitions("Tests" PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+target_compile_definitions("Tests" PRIVATE BINARY_DIR="${CMAKE_BINARY_DIR}")
 
 #add all testing related projects into one visual studio filter
 set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
 set_target_properties("gtest" PROPERTIES FOLDER Tests)
 set_target_properties("Tests" PROPERTIES FOLDER Tests)
-
-#set the root of the TestData folder where all data is located for testing purposes
-target_compile_definitions("Tests" PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/TestData")

@@ -11,11 +11,24 @@ using std::endl;
 PluginLoader::PluginLoader(std::shared_ptr<ConfigDirectories> _directories) :
 	directories(_directories)
 {
+	LoadBlackAndWhiteLists();
 }
 
 
 PluginLoader::~PluginLoader()
 {
+	for(auto plugin : pluginList)
+	{
+		plugin.second.reset();
+	}
+	pluginList.clear();
+
+	std::unordered_map<std::string, std::unique_ptr<SharedLibrary>>::iterator it = SharedLibraryList.begin();
+	while (it != SharedLibraryList.end())
+	{
+		it->second->UnloadSharedLibrary();
+		it++;
+	}
 }
 
 void PluginLoader::LoadPlugins()
@@ -28,6 +41,12 @@ void PluginLoader::LoadPlugins()
 		}
 
 		std::string DLLName = p.path().stem().string();
+
+		if(!IsPluginAllowed(DLLName))
+		{
+			continue;
+		}
+		
 		if (!LoadPlugin(DLLName))
 		{
 			continue;
@@ -95,4 +114,20 @@ bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 	DeletePluginList.insert({ aSharedLibraryName, tempDelete });
 
 	return true;
+}
+
+void PluginLoader::LoadBlackAndWhiteLists()
+{
+	//TODO(Resul): Load from file on disk instead of hard coding.
+	if(directories->PluginWhiteListDirectory.string() == "Test")
+	{
+		whitelistedPlugins.push_back("TestPlugin");
+	}
+}
+
+bool PluginLoader::IsPluginAllowed(std::string aPluginName)
+{
+	bool allowedByWhitelist = whitelistedPlugins.empty() || std::find(whitelistedPlugins.begin(), whitelistedPlugins.end(), aPluginName) != whitelistedPlugins.end();
+	bool allowedByBlacklist = blackListedPlugins.empty() || std::find(blackListedPlugins.begin(), blackListedPlugins.end(), aPluginName) == whitelistedPlugins.end();
+	return allowedByWhitelist && allowedByBlacklist;
 }
