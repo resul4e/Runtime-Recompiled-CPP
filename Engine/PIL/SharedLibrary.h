@@ -58,6 +58,12 @@ public:
 	 * \return The SharedLibHandle that is loaded by LoadSharedLibrary()
 	 */
 	SharedLibHandle GetSharedLibraryHandle();
+
+	/**
+	 * \brief Returns any error code from the last time we loaded.
+	 * \return The error code or a human readable error.
+	 */
+	std::string GetLoadingError();
 	
 	/**
 	 * \brief Gets the function contained by the shared library.
@@ -72,6 +78,9 @@ private:
 
 	//The handle to the shared library 
 	SharedLibHandle handle;
+
+	//The last error
+	std::string lastError;
 
 	//The root of the directory to check for shared libraries
 	RCP::path rootDirectory;	

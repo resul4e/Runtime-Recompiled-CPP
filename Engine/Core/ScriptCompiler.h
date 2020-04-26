@@ -12,9 +12,9 @@
 #include "ForwardDecl.h"
 #include "ConfigDirectories.h"
 
-
 class Script;
 class Storage;
+class SharedLibrary;
 
 /**
  * \brief Used to compile, link and load the DLLs for a particular Script
@@ -102,7 +102,7 @@ private:
 	time_t lastScriptWriteTime = 0;
 
 	///dll handle.
-	HINSTANCE dllHandle;
+	std::unique_ptr<SharedLibrary> sharedLibrary;
 
 	///This object stores all of the data the user doesn't want to lose during recompile.
 	Storage* storage;

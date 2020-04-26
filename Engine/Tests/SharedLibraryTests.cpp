@@ -68,7 +68,7 @@ TEST(SharedLibraryTests, GetExportedFunctionWhereFunctionDoesExist)
 TEST(SharedLibraryTests, GetSharedLibraryHandleWhereLibraryDoesExist)
 {
 	SharedLibrary lib(rootDirectory);
-	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64.dll");
+	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64");
 	lib.LoadSharedLibrary(libraryPath);
 	SharedLibHandle handle = lib.GetSharedLibraryHandle();
 	EXPECT_NE(handle, nullptr);
@@ -93,11 +93,27 @@ TEST(SharedLibraryTests, UnloadSharedLibraryWhereHandleIsNotLoaded)
 TEST(SharedLibraryTests, UnloadSharedLibraryWhereHandleIsLoaded)
 {
 	SharedLibrary lib(rootDirectory);
-	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64.dll");
+	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64");
 	lib.LoadSharedLibrary(libraryPath);
 	SharedLibHandle handle = lib.GetSharedLibraryHandle();
 	EXPECT_NE(handle, nullptr);
 	lib.UnloadSharedLibrary();
 	handle = lib.GetSharedLibraryHandle();
 	EXPECT_EQ(handle, nullptr);
+}
+
+TEST(SharedLibraryTests, GetLoadingErrorWhenNoError)
+{
+	SharedLibrary lib(rootDirectory);
+	std::string libraryPath = std::string("SharedLibrary/SharedLibraryTest64");
+	lib.LoadSharedLibrary(libraryPath);
+	EXPECT_STREQ(lib.GetLoadingError().c_str(), "");
+}
+
+TEST(SharedLibraryTests, GetLoadingErrorWhenError)
+{
+	SharedLibrary lib(rootDirectory);
+	std::string libraryPath = std::string("DOESNOTEXIST");
+	lib.LoadSharedLibrary(libraryPath);
+	EXPECT_STRNE(lib.GetLoadingError().c_str(), "");			//We can't really check what the error message should be because it differs between windows and linux. Maybe we can do a ifdef.
 }

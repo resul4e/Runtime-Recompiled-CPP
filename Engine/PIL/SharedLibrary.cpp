@@ -2,11 +2,13 @@
 
 //define the platform dependant function that loads the library
 #if defined(WIN32) || defined(__WIN32)
-#define LoadLibraryFunc(libraryPath) LoadLibraryA(libraryPath)
+#define LOAD_LIBRARY_FUNC(libraryPath) LoadLibraryA(libraryPath)
 #define FREE_SHARED_LIBRARY(aHandle) FreeLibrary(aHandle)
+#define GET_LAST_ERROR_FUNCTION() std::to_string(GetLastError())
 #elif __unix__
-#define LoadLibraryFunc(libraryPath) dlopen(libraryPath, RTLD_NOW);
+#define LOAD_LIBRARY_FUNC(libraryPath) dlopen(libraryPath, RTLD_NOW);
 #define FREE_SHARED_LIBRARY(aHandle) dlclose(aHandle)
+#define GET_LAST_ERROR_FUNCTION() std::string(dlerror())
 #endif
 
 SharedLibrary::SharedLibrary(const RCP::path& aRootDirectory):
@@ -22,6 +24,9 @@ SharedLibrary::~SharedLibrary()
 
 bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 {
+	//reset the error
+	lastError = std::string();
+	
 	//create full path to library.
 	RCP::path libraryPath = rootDirectory;
 	libraryPath /= aSharedLibraryPath;
@@ -33,9 +38,10 @@ bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 	}
 
 	//Load the library and store the handle.
-	handle = LoadLibraryFunc(libraryPath.string().c_str());
+	handle = LOAD_LIBRARY_FUNC(libraryPath.string().c_str());
 	if(handle == nullptr)
 	{
+		lastError = GET_LAST_ERROR_FUNCTION();
 		return false;
 	}
 	return true;
@@ -53,4 +59,9 @@ void SharedLibrary::UnloadSharedLibrary()
 SharedLibHandle SharedLibrary::GetSharedLibraryHandle()
 {
 	return handle;
+}
+
+std::string SharedLibrary::GetLoadingError()
+{
+	return lastError;
 }

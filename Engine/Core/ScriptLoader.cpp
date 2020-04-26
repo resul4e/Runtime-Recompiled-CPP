@@ -17,7 +17,7 @@ using namespace std::filesystem;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
-	DLLID(aDLL),
+	SharedLibraryID(aDLL),
 	directories(level->directories)
 {
 }
@@ -121,12 +121,12 @@ void ScriptLoader::CompileScripts()
 void ScriptLoader::LinkScripts()
 {
 	const auto now = Clock::now();
-	DLLID = std::chrono::system_clock::to_time_t(now);
+	SharedLibraryID = std::chrono::system_clock::to_time_t(now);
 
 	FILE *in;
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
 	std::string commandLine("py " + (directories->PythonToolsDirectory / "Link.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
-	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(DLLID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the DLLID
+	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(SharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the SharedLibraryID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{
