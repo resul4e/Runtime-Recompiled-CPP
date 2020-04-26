@@ -63,7 +63,16 @@ private:
 	 */
 	bool LoadPlugin(std::string aSharedLibraryName);
 
+	/**
+	 * \brief Loads the blacklist and whitelist.
+	 */
 	void LoadBlackAndWhiteLists();
+	
+	/**
+	 * \brief Checks if the plugin is allowed by the blacklist and whitelist.
+	 * \param aPluginName The plugin to check for validity.
+	 * \return If the plugin is valid or not.
+	 */
 	bool IsPluginAllowed(std::string aPluginName);
 
 //variables
