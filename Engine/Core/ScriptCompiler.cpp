@@ -1,7 +1,7 @@
 #include "ScriptCompiler.h"
 
 #include "FileSystem.h"
-#include "Process.h"
+#include "ProcessFunctions.h"
 
 #include "PlatformDetails.h"
 #include "Level.h"
@@ -239,7 +239,7 @@ void ScriptCompiler::CompileInternal()
 	std::string commandLine("py " + (directories->EngineSourceDirectory / "Tools\\Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + directories->EngineSourceDirectory.string());	//the gamePath, scriptPath and the scriptName
 	//compile the script using a python script, found in the tools folder
-	if((in = OPEN_PROCESS(commandLine.c_str(), "rt")) == NULL)
+	if((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == NULL)
 	{
 		assert(false && "file in commandLine could not be opened");
 		script->isCompilerError = true;
@@ -288,7 +288,7 @@ void ScriptCompiler::CompileInternal()
 		}
 	}
 
-	if(CLOSE_PROCESS(in)!=0)
+	if(CLOSE_SOME_PROCESS(in)!=0)
 	{
 		//assert(false && "error in compilation of script");
 		LOG_ERROR(loggerHandle, "error in compilation of script with type {}", script->scriptType);
