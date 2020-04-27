@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "ProcessFunctions.h"
+
 #include "Level.h"
 #include "Object.h"
 #include "Logger.h"
@@ -135,7 +137,7 @@ void ScriptLoader::LinkScripts()
 		}
 	}
 
-	if ((in = _popen(commandLine.c_str(), "rt")) == nullptr)
+	if ((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
 	{
 		assert(false && "file in commandLine could not be opened");
 		return;
@@ -167,7 +169,7 @@ void ScriptLoader::LinkScripts()
 #endif
 	}
 
-	if (_pclose(in) != 0)
+	if (CLOSE_SOME_PROCESS(in) != 0)
 	{
 		LOG_ERROR(loggerHandle, "error in linking")
 	}
