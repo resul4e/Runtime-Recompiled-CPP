@@ -13,7 +13,6 @@
 #include "PlatformDetails.h"
 
 typedef std::chrono::system_clock Clock;
-using namespace std::filesystem;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
@@ -90,7 +89,7 @@ void ScriptLoader::StartScripts()
 void ScriptLoader::LoadScripts()
 {
 	//recursively go through all of the scripts and create a script class for them
-	for (auto p : recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
+	for (auto p : RCP::recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
 	{
 		if (p.path().extension() == ".cpp")
 		{
