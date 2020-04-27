@@ -119,7 +119,7 @@ void ScriptLoader::CompileScripts()
 	}
 }
 
-//#define LINKER_OUTPUT
+#define LINKER_OUTPUT
 void ScriptLoader::LinkScripts()
 {
 	const auto now = Clock::now();

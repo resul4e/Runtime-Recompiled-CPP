@@ -255,7 +255,7 @@ void ScriptCompiler::CompileInternal()
 	{
 
 		char* context[2048];
-		strtok_r(buff, "\n", context);
+		strtok_s(buff, "\n", context);
 		std::string buffstring(buff);
 		if(buffstring.find("error") != std::string::npos && buffstring.find("Note: including file: ") == std::string::npos)
 		{
