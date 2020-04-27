@@ -8,12 +8,21 @@
 #include "spdlog/spdlog.h"
 #include "Handle.h"
 
+#if defined(WIN32) || defined(__WIN32)
 #define LOG_TRACE(console,message, ...) Logger::Trace(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #define LOG_DEBUG(console,message, ...) Logger::Debug(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #define LOG_INFO(console,message, ...) Logger::Info(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #define LOG_WARN(console,message, ...) Logger::Warn(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #define LOG_ERROR(console,message, ...) Logger::Error(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #define LOG_CRITICAL(console,message, ...) Logger::Critical(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#else
+#define LOG_TRACE(console,message, 	  args...) Logger::Trace(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_DEBUG(console,message, 	  args...) Logger::Debug(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_INFO(console,message,  	  args...) Logger::Info(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_WARN(console,message,  	  args...) Logger::Warn(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_ERROR(console,message, 	  args...) Logger::Error(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_CRITICAL(console,message, args...) Logger::Critical(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#endif
 
 /**
  * \brief Class that makes it possible to log messages easily.
