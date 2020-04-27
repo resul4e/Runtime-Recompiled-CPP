@@ -4,6 +4,7 @@
 #include <memory>
 #include <limits>
 #include <iostream>
+#include <cmath>
 
 #include <SFML/Graphics.hpp>
 
@@ -174,7 +175,7 @@ extern "C" RENDERING_API void RenderComponent::SetUnsortedVertices(const RenderC
 	for (int i = 0; i < aUnsortedPointList.size(); i++)
 	{
 		sortedList.at(i).index = i;
-		sortedList.at(i).angle = atan2(aUnsortedPointList[i].y - centerPoint.y, aUnsortedPointList[i].x - centerPoint.x);
+		sortedList.at(i).angle = std::atan2(aUnsortedPointList[i].y - centerPoint.y, aUnsortedPointList[i].x - centerPoint.x);
 	}
 
 	qsort(&sortedList.front(), sortedList.size(), sizeof(Sorting), [](const void* a, const void* b) {if (((Sorting*)a)->angle < ((Sorting*)b)->angle)return -1; if (((Sorting*)a)->angle == ((Sorting*)b)->angle)return 0; return 1; });

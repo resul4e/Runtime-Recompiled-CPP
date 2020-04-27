@@ -8,7 +8,9 @@ project("RRCPP")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
+if(not WIN32)
+     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
 
 #includes from within the project
 include_directories(BEFORE "Core")

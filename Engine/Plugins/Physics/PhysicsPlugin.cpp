@@ -4,6 +4,7 @@
 #include "Logger.h"
 #include "PhysicsComponent.h"
 #include "ContactListener.h"
+#include "NoopFunctions.h"
 
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 
@@ -30,7 +31,7 @@ void PhysicsPlugin::FixedUpdate()
 
 void PhysicsPlugin::Update(float aDeltatime)
 {
-	_CRT_UNUSED(aDeltatime);
+	__noop(aDeltatime);
 }
 
 void PhysicsPlugin::Delete()
