@@ -1,6 +1,11 @@
+#pragma once
+
+/**
+ * \brief A mapping from filesystem and experimental/filesystem to the same namespace.
+ * \todo(Resul): Use https://stackoverflow.com/questions/53365538/how-to-determine-whether-to-use-filesystem-or-experimental-filesystem to improve this
+ */
 #if defined(WIN32) || defined(__WIN32)
 #include <filesystem>
-
 namespace RCP
 {
     typedef std::filesystem::path path;
