@@ -35,7 +35,8 @@ endif()
 
 add_executable(Tests 
 "SharedLibraryTests.cpp"
-"PluginLoaderTests.cpp")
+"PluginLoaderTests.cpp"
+"LevelTests.cpp")
 
 target_link_libraries(Tests gtest_main)
 target_link_libraries(Tests PIL)

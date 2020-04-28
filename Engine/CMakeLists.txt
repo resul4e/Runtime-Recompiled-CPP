@@ -19,8 +19,6 @@ include_directories(BEFORE "Core")
 include_directories(BEFORE "PluginCore")
 include_directories(BEFORE "Plugins")
 
-add_subdirectory("Tests")
-
 #external includes
 include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
@@ -34,6 +32,8 @@ endif()
 
 #indicate where external dependencies can be found
 set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+
+add_subdirectory("Tests")
 
 #base library that all other project depend on
 add_library("Base" INTERFACE)
