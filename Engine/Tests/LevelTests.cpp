@@ -3,7 +3,10 @@
 
 class LevelTests : public ::testing::Test {
 protected:
-	void SetUp() override {
+	void SetUp() override
+	{
+		Logger::AddOrGet("core");
+		
 		configDir = std::make_shared<ConfigDirectories>();
 		configDir->RootSourceDirectory = { std::string{ SOURCE_DIR } };
 		configDir->RootBinaryDirectory = { std::string{ BINARY_DIR } };

@@ -51,7 +51,7 @@ struct CORE_API InputCompHandle
 */
 struct CORE_API LoggerHandle
 {
-	const char* index;
+	const char* name;
 };
 
 /**

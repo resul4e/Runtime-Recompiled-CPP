@@ -22,6 +22,13 @@ scriptConsole({ "" }),
 coreConsole({ "" }),
 directories(_directories)
 {
+	if (directories == nullptr)
+	{
+		LOG_ERROR(coreConsole, "The directories struct has not been passed in. This is necessary to find a lot of important directories.\nThis will probably crash!");
+	}
+	
+	scriptConsole = Logger::Add("script");
+	coreConsole = Logger::Get("core");
 }
 
 void Level::Start()
@@ -29,9 +36,6 @@ void Level::Start()
 	//setup compile and link tools
 	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
 	system(setupCommand.c_str());
-
-	scriptConsole = Logger::Add("script");
-	coreConsole = Logger::Get("core");
 
 	//path gamePath(aGamePath);
 #ifdef FULL_RECOMPILE
@@ -77,9 +81,9 @@ ObjectHandle Level::CreateObject(const char* typeName, const char* aObjectName)
 	return { 1231234 };
 }
 
-Object* Level::GetObjectPointer(ObjectHandle obj)
+Object* Level::GetObjectPointer(ObjectHandle aObj)
 {
-	return objectList.at(obj.index).get();
+	return objectList.at(aObj.index).get();
 }
 
 Level::~Level()

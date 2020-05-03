@@ -4,7 +4,8 @@ include(LoadGTest.cmake)
 add_executable(Tests 
 "SharedLibraryTests.cpp"
 "PluginLoaderTests.cpp"
-"LevelTests.cpp")
+"LevelTests.cpp"
+"LoggerTests.cpp")
 
 target_link_libraries(Tests gtest_main)
 target_link_libraries(Tests PIL)
