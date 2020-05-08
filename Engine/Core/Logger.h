@@ -25,6 +25,8 @@
 #define LOG_CRITICAL(console,message, args...) Logger::Critical(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
 #endif
 
+struct LoggerData;
+
 /**
  * \brief Class that makes it possible to log messages easily.
  * Usage:
@@ -33,7 +35,7 @@
  *		LOG_DEBUG(console, "Position on screen X:{} and Y:{}", XPos, YPos);
  *		\endcode
  *	The macro will append the file name and number of itself automatically.
- *	
+ *
  *	-Using Logger
  *		\code{.cpp}
  *		Logger::Warn(Logger::Get("Core"), "An error occurred in script {} at line {} with message: {}", scriptName, lineNbr, msg);
@@ -42,20 +44,20 @@
 class Logger
 {
 	Logger() {};
-	~Logger(){};
+	~Logger() {};
 public:
-	
+
 	/**
 	 * \brief When the logger will throw an exception when logging a message with a particular severity.
 	 */
 	enum class ExceptionThreshold
 	{
 		NEVER,					///< Never throw an exception
-		WARN_AND_ABOVE,			///< Throw an exception when logging a warning, error, or critical message.
+		CRITICAL_ONLY,			///< Throw an exception only when logging a critical message.
 		ERROR_AND_ABOVE,		///< Throw an exception when logging an error or critical message.
-		CRITICAL_ONLY			///< Throw an exception only when logging a critical message.
+		WARN_AND_ABOVE			///< Throw an exception when logging a warning, error, or critical message.	
 	};
-	
+
 	/**
 	 * \brief Creates a new logger with a specified name.
 	 * \note All scripts have a logger called "script". This can be accessed by the Get() method.
@@ -70,19 +72,41 @@ public:
 	 * \return the handle of the logger.
 	 */
 	CORE_API static LoggerHandle Get(const char* aConsoleName);
-	
+
+	/**
+	 * \brief Check if the logger exists or not.
+	 * \param aConsoleName The name of the logger to find
+	 * \return True if the logger is found, false if not.
+	 */
+	CORE_API static bool Find(const char* aConsoleName);
+
+	/**
+	* \brief Check if the logger exists and if so return the handle to it.
+	* \param aConsoleName The name of the logger to find
+	* \param oHandle The handle that belongs to the name.
+	* \return True if the logger is found, false if not.
+	*/
+	CORE_API static bool Find(const char* aConsoleName, LoggerHandle& oHandle);
+
 	/**
 	 * \brief Returns a handle to the requested logger either by getting it from the list of existing ones or creating a new one.
 	 * \param aConsoleName The name to look for or the name the new logger will have.
 	 * \return The handle to the logger.
 	 */
 	CORE_API static LoggerHandle AddOrGet(const char* aConsoleName);
-	
+
+	/**
+	 * \brief Removes the logger corresponding to the given handle.
+	 * \note After this call the given handle is no longer valid.
+	 * \param aHandle The handle to remove.
+	 */
+	CORE_API static void Remove(LoggerHandle aHandle);
+
 	/**
 	 * \brief Sets the threshold after which an exception will be thrown.
 	 * \param aThreshold The new threshold.
 	 */
-	CORE_API static void SetExceptionThreshold(ExceptionThreshold aThreshold);
+	CORE_API static void SetExceptionThreshold(LoggerHandle aHandle, ExceptionThreshold aThreshold);
 
 	/**
 	 * \brief A Message in a teal color. With the category Trace.
@@ -132,44 +156,42 @@ private:
 	 * \brief Throws a LoggerException
 	 * \param aMessage A custom message that is returned as the "what()" of the exception.
 	 */
-	CORE_API static void ThrowException(const std::string& aMessage = "Logger threw an exception. See message for more information!");
-	
-//variables
+	CORE_API static void ThrowException(const std::string& aMessage = "Logger threw an exception. See last message for more information!");
+
+	//variables
 public:
 
 private:
-	
-	///the list of logger handles with the name as the key.
-	CORE_API static std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> loggerHandleList;
 
-	///The threshold after which an exception will be thrown.
-	CORE_API static ExceptionThreshold threshold;
+	///the list of logger handles with the name as the key.
+	CORE_API static std::unordered_map<std::string, LoggerData> loggerHandleList;
 };
 
 template <typename ... Args>
 void Logger::Trace(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->trace(aMessage, std::forward<Args>(aVariables)...);
+	loggerHandleList.at(aHandle.name).logger->trace(aMessage, std::forward<Args>(aVariables)...);
 }
 
 template <typename ... Args>
 void Logger::Debug(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->debug(aMessage, std::forward<Args>(aVariables)...);
+	loggerHandleList.at(aHandle.name).logger->debug(aMessage, std::forward<Args>(aVariables)...);
 }
 
 template <typename ... Args>
 void Logger::Info(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->info(aMessage, std::forward<Args>(aVariables)...);
+	loggerHandleList.at(aHandle.name).logger->info(aMessage, std::forward<Args>(aVariables)...);
 }
 
 template <typename ... Args>
 void Logger::Warn(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->warn(aMessage, std::forward<Args>(aVariables)...);
-	
-	if(threshold >= ExceptionThreshold::WARN_AND_ABOVE)
+	const LoggerData data = loggerHandleList.at(aHandle.name);
+	data.logger->warn(aMessage, std::forward<Args>(aVariables)...);
+
+	if (data.threshold >= ExceptionThreshold::WARN_AND_ABOVE)
 	{
 		ThrowException();
 	}
@@ -178,9 +200,10 @@ void Logger::Warn(LoggerHandle aHandle, const char* aMessage, Args&&... aVariabl
 template <typename ... Args>
 void Logger::Error(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->error(aMessage, std::forward<Args>(aVariables)...);
+	const LoggerData data = loggerHandleList.at(aHandle.name);
+	data.logger->error(aMessage, std::forward<Args>(aVariables)...);
 
-	if (threshold >= ExceptionThreshold::ERROR_AND_ABOVE)
+	if (data.threshold >= ExceptionThreshold::ERROR_AND_ABOVE)
 	{
 		ThrowException();
 	}
@@ -189,11 +212,17 @@ void Logger::Error(LoggerHandle aHandle, const char* aMessage, Args&&... aVariab
 template <typename ... Args>
 void Logger::Critical(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
-	loggerHandleList.at(aHandle.name)->critical(aMessage, std::forward<Args>(aVariables)...);
+	const LoggerData data = loggerHandleList.at(aHandle.name);
+	data.logger->critical(aMessage, std::forward<Args>(aVariables)...);
 
-	if (threshold == ExceptionThreshold::CRITICAL_ONLY)
+	if (data.threshold == ExceptionThreshold::CRITICAL_ONLY)
 	{
 		ThrowException();
 	}
 }
 
+struct LoggerData
+{
+	std::shared_ptr<spdlog::logger> logger;
+	Logger::ExceptionThreshold threshold;
+};

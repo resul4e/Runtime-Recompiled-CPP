@@ -7,6 +7,13 @@ protected:
 		//If a logger can't find the requested name it defaults back to "core". Maybe not the best solution
 		//but for now we just add core to logger.
 		Logger::AddOrGet("core");
+		Logger::AddOrGet("loggerTest");
+	}
+
+	void TearDown() override
+	{
+		Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::NEVER);
+		Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::NEVER);
 	}
 };
 
@@ -65,5 +72,54 @@ TEST_F(LoggerTests, AddOrGetNullptr)
 
 TEST_F(LoggerTests, LOG_TRACE)
 {
-	LOG_TRACE(Logger::Get("core"), "SOME_{}_TRACE", "TEST");
+	EXPECT_NO_FATAL_FAILURE(LOG_TRACE(Logger::Get("loggerTest"), "SOME_{}_TRACE", "TEST"));
+}
+
+TEST_F(LoggerTests, LOG_INFO)
+{
+	EXPECT_NO_FATAL_FAILURE(LOG_INFO(Logger::Get("loggerTest"), "SOME_{}_INFO", "TEST"));
+}
+
+TEST_F(LoggerTests, LOG_DEBUG)
+{
+	EXPECT_NO_FATAL_FAILURE(LOG_DEBUG(Logger::Get("loggerTest"), "SOME_{}_DEBUG", "TEST"));
+}
+
+TEST_F(LoggerTests, LOG_WARN)
+{
+	EXPECT_NO_FATAL_FAILURE(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"));
+}
+
+TEST_F(LoggerTests, WarnWithThreshold)
+{
+	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
+	EXPECT_THROW(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"), LoggerException);
+}
+
+TEST_F(LoggerTests, LOG_ERROR)
+{
+	EXPECT_NO_FATAL_FAILURE(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"));
+}
+
+TEST_F(LoggerTests, ErrorWithThreshold)
+{
+	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
+	EXPECT_THROW(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException);
+}
+
+TEST_F(LoggerTests, ErrorWithWarnThreshold)
+{
+	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
+	EXPECT_THROW(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException);
+}
+
+TEST_F(LoggerTests, LOG_CRITICAL)
+{
+	EXPECT_NO_FATAL_FAILURE(LOG_CRITICAL(Logger::Get("loggerTest"), "SOME_{}_CRITICAL", "TEST"));
+}
+
+TEST_F(LoggerTests, CriticalWithThreshold)
+{
+	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::CRITICAL_ONLY);
+	EXPECT_THROW(LOG_CRITICAL(Logger::Get("loggerTest"), "SOME_{}_CRITICAL", "TEST"), LoggerException);
 }
