@@ -22,13 +22,14 @@ scriptConsole({ "" }),
 coreConsole({ "" }),
 directories(_directories)
 {
+	scriptConsole = Logger::Add("script");
+	coreConsole = Logger::Get("core");
+	
 	if (directories == nullptr)
 	{
 		LOG_ERROR(coreConsole, "The directories struct has not been passed in. This is necessary to find a lot of important directories.\nThis will probably crash!");
 	}
-	
-	scriptConsole = Logger::Add("script");
-	coreConsole = Logger::Get("core");
+
 }
 
 void Level::Start()
@@ -88,6 +89,7 @@ Object* Level::GetObjectPointer(ObjectHandle aObj)
 
 Level::~Level()
 {
+	Logger::Remove(Logger::Get("script"));
 }
 
 ObjectHandle Level::GetObjectWithName(const char* aName)
