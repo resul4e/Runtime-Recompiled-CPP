@@ -38,7 +38,7 @@ struct LoggerData;
  *
  *	-Using Logger
  *		\code{.cpp}
- *		Logger::Warn(Logger::Get("Core"), "An error occurred in script {} at line {} with message: {}", scriptName, lineNbr, msg);
+ *		Logger::Warn(Logger::Get("core"), "An error occurred in script {} at line {} with message: {}", scriptName, lineNbr, msg);
  *		\endcode
  */
 class Logger
@@ -52,10 +52,10 @@ public:
 	 */
 	enum class ExceptionThreshold
 	{
-		NEVER,					///< Never throw an exception
-		CRITICAL_ONLY,			///< Throw an exception only when logging a critical message.
-		ERROR_AND_ABOVE,		///< Throw an exception when logging an error or critical message.
-		WARN_AND_ABOVE			///< Throw an exception when logging a warning, error, or critical message.	
+		NEVER			=	0,	///< Never throw an exception
+		CRITICAL_ONLY	=	1,	///< Throw an exception only when logging a critical message.
+		ERROR_AND_ABOVE =	2,	///< Throw an exception when logging an error or critical message.
+		WARN_AND_ABOVE	=	3	///< Throw an exception when logging a warning, error, or critical message.	
 	};
 
 	/**
@@ -167,6 +167,12 @@ private:
 	CORE_API static std::unordered_map<std::string, LoggerData> loggerHandleList;
 };
 
+struct LoggerData
+{
+	std::shared_ptr<spdlog::logger> logger;
+	Logger::ExceptionThreshold threshold;
+};
+
 template <typename ... Args>
 void Logger::Trace(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
 {
@@ -220,9 +226,3 @@ void Logger::Critical(LoggerHandle aHandle, const char* aMessage, Args&&... aVar
 		ThrowException();
 	}
 }
-
-struct LoggerData
-{
-	std::shared_ptr<spdlog::logger> logger;
-	Logger::ExceptionThreshold threshold;
-};
