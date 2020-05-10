@@ -116,7 +116,7 @@ void Level::Restart()
 
 unsigned long long Level::RemoveOldDLL()
 {
-	RCP::path binDirectory = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	RCP::fs::path binDirectory = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
 	if(!exists(binDirectory) || !is_directory(binDirectory))
 	{
 		LOG_WARN(coreConsole, "The " + binDirectory.string() + " directory does not exist or is something other than a directory.")
@@ -124,8 +124,8 @@ unsigned long long Level::RemoveOldDLL()
 	}
 	
 	//remove all of the DLL files exept for the latest one
-	RCP::path latest;
-	for (auto p : RCP::directory_iterator(binDirectory))
+	RCP::fs::path latest;
+	for (auto p : RCP::fs::directory_iterator(binDirectory))
 	{
 		if (p.path().extension() == ".dll")
 		{

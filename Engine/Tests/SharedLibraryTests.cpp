@@ -2,7 +2,7 @@
 #include "SharedLibrary.h"
 #include "FunctionDefinition.h"
 
-RCP::path rootDirectory = TEST_DATA_DIR;
+RCP::fs::path rootDirectory = TEST_DATA_DIR;
 typedef int (FUNCTION_CDECL *TEST_FUNCTION)(int);
 
 TEST(SharedLibraryTests, Constructor)

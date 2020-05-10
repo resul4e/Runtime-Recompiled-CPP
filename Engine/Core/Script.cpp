@@ -6,7 +6,7 @@
 #include "Handle.h"
 #include "Logger.h"
 
-Script::Script(RCP::path aScriptPath, std::shared_ptr<Level> aLevel) :
+Script::Script(RCP::fs::path aScriptPath, std::shared_ptr<Level> aLevel) :
 	level(aLevel),
 	scriptPath(aScriptPath),
 	isRecompiling(false),

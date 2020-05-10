@@ -92,7 +92,7 @@ void ScriptLoader::StartScripts()
 void ScriptLoader::LoadScripts()
 {
 	//recursively go through all of the scripts and create a script class for them
-	for (auto p : RCP::recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
+	for (auto p : RCP::fs::recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
 	{
 		if (p.path().extension() == ".cpp")
 		{

@@ -33,7 +33,7 @@ PluginLoader::~PluginLoader()
 
 void PluginLoader::LoadPlugins()
 {
-	for (auto p : RCP::directory_iterator(directories->PluginSourceDirectory))
+	for (auto p : RCP::fs::directory_iterator(directories->PluginSourceDirectory))
 	{
 		if (!is_directory(p))
 		{
@@ -101,7 +101,7 @@ std::vector<std::string> PluginLoader::GetLoadedPlugins()
 
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	const RCP::path libraryPath = (RCP::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
+	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
 
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
 	library->LoadSharedLibrary(libraryPath.string());

@@ -11,7 +11,7 @@
 #define GET_LAST_ERROR_FUNCTION() std::string(dlerror())
 #endif
 
-SharedLibrary::SharedLibrary(const RCP::path& aRootDirectory):
+SharedLibrary::SharedLibrary(const RCP::fs::path& aRootDirectory):
 handle(nullptr),
 rootDirectory(aRootDirectory)
 {
@@ -28,7 +28,7 @@ bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 	lastError = std::string();
 	
 	//create full path to library.
-	RCP::path libraryPath = rootDirectory;
+	RCP::fs::path libraryPath = rootDirectory;
 	libraryPath /= aSharedLibraryPath;
 
 	//replace the current extension with the correct one (regardless if the old one was correct)

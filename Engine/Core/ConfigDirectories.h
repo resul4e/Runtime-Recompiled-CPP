@@ -4,13 +4,13 @@
 
 struct ConfigDirectories
 {
-	RCP::path RootSourceDirectory;
-	RCP::path RootBinaryDirectory;
-	RCP::path RootGameSourceDirectory;
-	RCP::path RootGameBinaryDirectory;
-	RCP::path EngineSourceDirectory;
-	RCP::path PluginSourceDirectory;
-	RCP::path PluginWhiteListDirectory;
-	RCP::path PluginBlackListDirectory;
-	RCP::path PythonToolsDirectory;	
+	RCP::fs::path RootSourceDirectory;
+	RCP::fs::path RootBinaryDirectory;
+	RCP::fs::path RootGameSourceDirectory;
+	RCP::fs::path RootGameBinaryDirectory;
+	RCP::fs::path EngineSourceDirectory;
+	RCP::fs::path PluginSourceDirectory;
+	RCP::fs::path PluginWhiteListDirectory;
+	RCP::fs::path PluginBlackListDirectory;
+	RCP::fs::path PythonToolsDirectory;	
 };

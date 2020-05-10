@@ -24,7 +24,7 @@ ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<
 	directories(aDirectories),
 	storage(new Storage())
 {
-	RCP::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	RCP::fs::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
 	sharedLibrary = std::make_unique<SharedLibrary>(gamePath);
 
 	loggerHandle = Logger::Get("core");
@@ -48,7 +48,7 @@ void ScriptCompiler::ReloadScript()
 	//if the script hasn't been resaved since the last failed recompile, 
 	//don't try to recompile, because it will fail again.
 	std::error_code err;
-	RCP::file_time_type result = last_write_time(script->scriptPath, err);
+	RCP::fs::file_time_type result = last_write_time(script->scriptPath, err);
 	const time_t currentScriptWriteTime = result.time_since_epoch().count();
 	if (lastScriptWriteTime == currentScriptWriteTime)
 	{
@@ -174,7 +174,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	std::error_code err;		//used for error checking instead of triggering a breakpoint.
 
 	//Check if file is out of date
-	RCP::file_time_type result = last_write_time(script->scriptPath, err);
+	RCP::fs::file_time_type result = last_write_time(script->scriptPath, err);
 	time_t localLastScriptWriteTime = result.time_since_epoch().count();
 	
 	/**
@@ -192,9 +192,9 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	RCP::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->SharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
+	RCP::fs::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->SharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
 #endif
-	RCP::file_time_type DLLresult = last_write_time(dllPath, err);
+	RCP::fs::file_time_type DLLresult = last_write_time(dllPath, err);
 	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
 	if (err.value() != 0)
 	{
@@ -229,7 +229,7 @@ void ScriptCompiler::LoadDLL()
 	if (script->isCompilerError)
 	{
 		std::error_code err;
-		RCP::file_time_type result = last_write_time(script->scriptPath, err);
+		RCP::fs::file_time_type result = last_write_time(script->scriptPath, err);
 		lastScriptWriteTime = result.time_since_epoch().count();
 	}
 }
@@ -250,7 +250,7 @@ void ScriptCompiler::CompileInternal()
 
 	char buff[2048];
 	std::unordered_map<std::string, std::shared_ptr<Script>>& scriptList = script->level->scriptLoader->scriptList;
-	RCP::path dependencyPath;
+	RCP::fs::path dependencyPath;
 	while (fgets(buff, sizeof(buff), in) != nullptr)
 	{
 
@@ -335,7 +335,7 @@ void ScriptCompiler::LoadDLLInternal()
 	script->SetLevel(script->level.get());	
 }
 
-bool ScriptCompiler::GetInclude(std::string aIn, RCP::path& aOutPath)
+bool ScriptCompiler::GetInclude(std::string aIn, RCP::fs::path& aOutPath)
 {
 	const std::string noteString("Note: including file: ");
 
@@ -347,7 +347,7 @@ bool ScriptCompiler::GetInclude(std::string aIn, RCP::path& aOutPath)
 	{
 		///\todo(Resul) find a way to also check the includes in the header file
 			aIn.erase(aIn.find(noteString), aIn.find(noteString) + noteString.size());		///remove the noteString from the string.
-			aOutPath = RCP::path(aIn);
+			aOutPath = RCP::fs::path(aIn);
 			return true;
 	}
 	return false;

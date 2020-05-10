@@ -33,7 +33,7 @@ public:
 	 * \param scriptPath	the path of the script
 	 * \param level			the level that spawned this script;
 	 */
-	Script(RCP::path scriptPath, std::shared_ptr<Level> level);
+	Script(RCP::fs::path scriptPath, std::shared_ptr<Level> level);
 	~Script();
 
 	/**
@@ -100,7 +100,7 @@ private:
 	std::vector<ObjectHandle> runningObjects;
 	
 	///path to the script and the name of the script
-	RCP::path scriptPath;
+	RCP::fs::path scriptPath;
 	std::string scriptType;
 	
 	/// All of the scripts that depend on this script.

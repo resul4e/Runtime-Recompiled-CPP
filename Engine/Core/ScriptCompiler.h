@@ -70,7 +70,7 @@ private:
 	 * \param[out] outPath	The path of the include.
 	 * \return				If an include is found, outPath is only valid if this is true.
 	 */
-	bool GetInclude(std::string in, RCP::path& outPath);
+	bool GetInclude(std::string in, RCP::fs::path& outPath);
 	/**
 	* \brief Calls Compile with the isRecompiling flag turned true
 	*/
