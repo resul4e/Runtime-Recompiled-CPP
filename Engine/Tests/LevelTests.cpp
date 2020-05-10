@@ -18,7 +18,7 @@ protected:
 		configDir->EngineSourceDirectory = { configDir->RootSourceDirectory / "Engine" };
 		configDir->PluginSourceDirectory = { configDir->EngineSourceDirectory / "Plugins" };
 		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
-		configDir->RootGameSourceDirectory = { RCP::path{TEST_DATA_DIR} / "Level" / "Game" };
+		configDir->RootGameSourceDirectory = { RCP::fs::path{TEST_DATA_DIR} / "Level" / "Game" };
 		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Game" };
 		configDir->PluginWhiteListDirectory = "Test";
 	}
@@ -40,16 +40,25 @@ protected:
 TEST_F(LevelTests, Creator)
 {
 	
-	EXPECT_NO_FATAL_FAILURE(std::shared_ptr<Level> lvl = CreateLevel(configDir.get()););
+	EXPECT_NO_FATAL_FAILURE(CreateLevel(configDir.get()););
 }
 
 TEST_F(LevelTests, CreatorNoConfigDirectory)
 {
-	EXPECT_THROW(std::shared_ptr<Level> lvl = CreateLevel(nullptr), LoggerException);
+	EXPECT_THROW(CreateLevel(nullptr), LoggerException);
 }
 
 TEST_F(LevelTests, Start)
 {
+	configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "GameStart" };
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
+}
+
+TEST_F(LevelTests, Update)
+{
+	configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "GameUpdate" };
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->Update(0.016f);
 }
