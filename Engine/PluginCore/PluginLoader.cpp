@@ -3,32 +3,52 @@
 #include <iostream>
 #include "ConfigDirectories.h"
 #include "SharedLibrary.h"
+#include "Logger.h"
 
-using namespace std::filesystem;
 using std::cout;
 using std::endl;
 
 PluginLoader::PluginLoader(std::shared_ptr<ConfigDirectories> _directories) :
 	directories(_directories)
 {
+	LoadBlackAndWhiteLists();
 }
 
 
 PluginLoader::~PluginLoader()
 {
+	for(auto plugin : pluginList)
+	{
+		plugin.second.reset();
+	}
+	pluginList.clear();
+
+	std::unordered_map<std::string, std::unique_ptr<SharedLibrary>>::iterator it = SharedLibraryList.begin();
+	while (it != SharedLibraryList.end())
+	{
+		it->second->UnloadSharedLibrary();
+		it++;
+	}
 }
 
 void PluginLoader::LoadPlugins()
 {
-	for (auto p : directory_iterator(directories->PluginSourceDirectory))
+	for (auto p : RCP::directory_iterator(directories->PluginSourceDirectory))
 	{
-		if(!is_directory(p))
+		if (!is_directory(p))
+		{
+			continue;
+		}
+
+		//Get the directory name as a string
+		std::string DLLName = p.path().stem().string();
+		//Check the whitelist and blacklist if this plugin is allowed
+		if(!IsPluginAllowed(DLLName))
 		{
 			continue;
 		}
 		
-		std::string DLLName = p.path().stem().string();
-		if(!LoadDLL(DLLName))
+		if (!LoadPlugin(DLLName))
 		{
 			continue;
 		}
@@ -69,42 +89,60 @@ void PluginLoader::Delete()
 	}
 }
 
-bool PluginLoader::LoadDLL(std::string aDLLName)
+std::vector<std::string> PluginLoader::GetLoadedPlugins()
 {
-	const path libraryPath = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
-
-	SharedLibrary library;
-	library.LoadSharedLibrary(libraryPath.string());
-	CREATEFUNCTION tempCreate = library.GetExportedFunction<CREATEFUNCTION>("HelloWorld");
-	
-	return true;
-	/*
-	const path dll = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
-	HINSTANCE tempDLL = LoadLibraryA(dll.string().c_str());
-	if (tempDLL == nullptr)
+	std::vector<std::string> loadedPlugins;
+	for (auto plugin : pluginList)
 	{
-		const int errorCode = GetLastError();
-		cout << "Couldn't load the DLL of the plugin " << aDLLName << ". Exited with error code " << errorCode << endl;
-		return false;
+		loadedPlugins.push_back(plugin.first);
 	}
-	
-	CREATEFUNCTION tempCreate = reinterpret_cast<CREATEFUNCTION>(GetProcAddress(tempDLL, "CreatePlugin"));
+	return loadedPlugins;
+}
+
+bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
+{
+	const RCP::path libraryPath = (RCP::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
+
+	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
+	library->LoadSharedLibrary(libraryPath.string());
+
+	CREATE_FUNCTION tempCreate = library->GetExportedFunction<CREATE_FUNCTION>("CreatePlugin");
 	if (tempCreate == nullptr)
 	{
-		cout << "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " << aDLLName << endl;
+		LOG_ERROR(Logger::Get("core"), "Couldn't load the CreatePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
-	
-	DELETEFUNCTION tempDelete = reinterpret_cast<DELETEFUNCTION>(GetProcAddress(tempDLL, "DeletePlugin"));
+
+	DELETE_FUNCTION tempDelete = library->GetExportedFunction<DELETE_FUNCTION>("DeletePlugin");
 	if (tempDelete == nullptr)
 	{
-		cout << "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " << aDLLName << endl;
+		LOG_ERROR(Logger::Get("core"), "Couldn't load the DeletePlugin() function make sure you have added the START_PLUGIN and END_PLUGIN macros to the plugin " + aSharedLibraryName);
 		return false;
 	}
-	
-	DLLList.insert(std::pair<std::string, HINSTANCE>(aDLLName, tempDLL));
-	CreatePluginList.insert(std::pair<std::string, CREATEFUNCTION>(aDLLName, tempCreate));
-	DeletePluginList.insert(std::pair<std::string, DELETEFUNCTION>(aDLLName, tempDelete));
+
+	SharedLibraryList.insert({ aSharedLibraryName, std::move(library) });
+	CreatePluginList.insert({ aSharedLibraryName, tempCreate });
+	DeletePluginList.insert({ aSharedLibraryName, tempDelete });
+
 	return true;
-	*/
+}
+
+void PluginLoader::LoadBlackAndWhiteLists()
+{
+	//TODO(Resul): Load from file on disk instead of hard coding.
+	if(directories->PluginWhiteListDirectory.string() == "Test")
+	{
+		whitelistedPlugins.push_back("TestPlugin");
+	}
+	else
+	{
+		blackListedPlugins.push_back("TestPlugin");
+	}
+}
+
+bool PluginLoader::IsPluginAllowed(std::string aPluginName)
+{
+	bool allowedByWhitelist = whitelistedPlugins.empty() || std::find(whitelistedPlugins.begin(), whitelistedPlugins.end(), aPluginName) != whitelistedPlugins.end();
+	bool allowedByBlacklist = blackListedPlugins.empty() || std::find(blackListedPlugins.begin(), blackListedPlugins.end(), aPluginName) == blackListedPlugins.end();
+	return allowedByWhitelist && allowedByBlacklist;
 }

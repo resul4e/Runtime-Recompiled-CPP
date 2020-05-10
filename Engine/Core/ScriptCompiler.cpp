@@ -1,6 +1,9 @@
 #include "ScriptCompiler.h"
 
+#include <string.h>
+
 #include "FileSystem.h"
+#include "ProcessFunctions.h"
 
 #include "PlatformDetails.h"
 #include "Level.h"
@@ -10,6 +13,7 @@
 #include "Script.h"
 #include "ScriptLoader.h"
 #include "Handle.h"
+#include "SharedLibrary.h"
 
 #ifdef _DEBUG
 #define COMPILER_OUTPUT
@@ -18,9 +22,10 @@
 ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<ConfigDirectories> aDirectories) :
 	script(aScript),
 	directories(aDirectories),
-	dllHandle(nullptr),
 	storage(new Storage())
 {
+	RCP::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	sharedLibrary = std::make_unique<SharedLibrary>(gamePath);
 
 	loggerHandle = Logger::Get("core");
 }
@@ -159,8 +164,7 @@ void ScriptCompiler::Unload()
 		script->level->objectList.at(p.index).reset();
 	}
 
-	FreeLibrary(dllHandle);
-	dllHandle = nullptr;
+	sharedLibrary->UnloadSharedLibrary();
 	script->CreateObject = nullptr;
 	script->DeleteObject = nullptr;
 }
@@ -188,7 +192,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	RCP::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));	///\todo(Resul) dlls are windows specific
+	RCP::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->SharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
 #endif
 	RCP::file_time_type DLLresult = last_write_time(dllPath, err);
 	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
@@ -237,7 +241,7 @@ void ScriptCompiler::CompileInternal()
 	std::string commandLine("py " + (directories->EngineSourceDirectory / "Tools\\Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + directories->EngineSourceDirectory.string());	//the gamePath, scriptPath and the scriptName
 	//compile the script using a python script, found in the tools folder
-	if((in = _popen(commandLine.c_str(), "rt")) == NULL)
+	if((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == NULL)
 	{
 		assert(false && "file in commandLine could not be opened");
 		script->isCompilerError = true;
@@ -286,7 +290,7 @@ void ScriptCompiler::CompileInternal()
 		}
 	}
 
-	if(_pclose(in)!=0)
+	if(CLOSE_SOME_PROCESS(in)!=0)
 	{
 		//assert(false && "error in compilation of script");
 		LOG_ERROR(loggerHandle, "error in compilation of script with type {}", script->scriptType);
@@ -296,45 +300,39 @@ void ScriptCompiler::CompileInternal()
 
 void ScriptCompiler::LoadDLLInternal()
 {
-#ifdef SEPARATE_LINKING
-	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
-	std::string dll(gamePath.string() + "\\bin\\" + PROJECT_PLATFORM + "\\"  + PROJECT_CONFIGURATION + "\\" + script->scriptType + scriptID + ".dll");
-#else
-	RCP::path dll = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->DLLID)+".dll"));
-#endif
-	dllHandle = LoadLibraryA(dll.string().c_str());
-	if(dllHandle == nullptr)
+
+	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->SharedLibraryID));
+	if (!sharedLibraryLoaded)
 	{
-		DWORD err = GetLastError();
+		std::string err = sharedLibrary->GetLoadingError();
 		script->isCompilerError = true;
-		LOG_ERROR(loggerHandle, "Couldn't load the DLL of the script {} with error code {}", script->scriptType, err);
+		LOG_ERROR(loggerHandle, "Couldn't load the DLL of the script \"{}\" with error code \"{}\"", script->scriptType, err);
 		return;
 	}
 
-	script->CreateObject = reinterpret_cast<CREATEFUNCTION>(GetProcAddress(dllHandle, (std::string("Create") + script->scriptType).c_str()));
-	if(script->CreateObject == nullptr)
+	script->CreateObject = sharedLibrary->GetExportedFunction<CREATEFUNCTION>(std::string("Create") + script->scriptType);
+	if (script->CreateObject == nullptr)
 	{
 		script->isCompilerError = true;
-		LOG_ERROR(loggerHandle, "Couldn't load the CreateObject() function make sure you have added the START_SCRIPT and END_SCRIPT macros to the script {}" , script->scriptType)
+		LOG_ERROR(loggerHandle, "Couldn't load the CreateObject() function make sure you have added the START_SCRIPT and END_SCRIPT macros to the script {}", script->scriptType)
 		return;
 	}
 
-	script->DeleteObject = reinterpret_cast<DELTEFUNCTION>(GetProcAddress(dllHandle, (std::string("Delete") + script->scriptType).c_str()));
-	if(script->DeleteObject == nullptr)
+	script->DeleteObject = sharedLibrary->GetExportedFunction<DELTEFUNCTION>(std::string("Delete") + script->scriptType);
+	if (script->DeleteObject == nullptr)
 	{
 		script->isCompilerError = true;
 		LOG_ERROR(loggerHandle, "Couldn't load the DeleteObject() function make sure you have added the START_SCRIPT and END_SCRIPT macros to the script {}", script->scriptType)
 		return;
 	}
 
-	script->SetLevel = reinterpret_cast<SETLEVELFUNCTION>(GetProcAddress(dllHandle, (std::string("SetLevel") + script->scriptType).c_str()));
+	script->SetLevel = sharedLibrary->GetExportedFunction<SET_LEVEL_FUNCTION>(std::string("SetLevel") + script->scriptType);
 	if (script->SetLevel == nullptr)
 	{
-		//script->isErrorInScript = true;
 		LOG_ERROR(loggerHandle, "Couldn't load the SetLevel() function make sure you have added the START_SCRIPT and END_SCRIPT macros to the script {}", script->scriptType)
 		return;
 	}
-	script->SetLevel(script->level.get());
+	script->SetLevel(script->level.get());	
 }
 
 bool ScriptCompiler::GetInclude(std::string aIn, RCP::path& aOutPath)
@@ -358,8 +356,7 @@ bool ScriptCompiler::GetInclude(std::string aIn, RCP::path& aOutPath)
 
 ScriptCompiler::~ScriptCompiler()
 {
-	FreeLibrary(dllHandle);
-	dllHandle = nullptr;
+	sharedLibrary->UnloadSharedLibrary();
 }
 
 

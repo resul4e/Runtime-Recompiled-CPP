@@ -1,6 +1,5 @@
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 
-#include <iostream>
 #include <direct.h>
 #include <filesystem>
 
@@ -11,9 +10,6 @@
 #include "Rendering/RenderEngineAPI.h"
 #include "Input/InputComponent.h"
 
-using std::cout;
-using std::endl;
-
 ///Changes the working directory to be the Engine folder
 std::string SetWorkingDirectory();
 //Set the directories needed throughout the project.
@@ -22,17 +18,16 @@ std::shared_ptr<ConfigDirectories> SetConfigDirectories();
 int main(int argc, char* argv[])
 {
 	std::shared_ptr<ConfigDirectories> directories = SetConfigDirectories();
-	
-	//deltatime
-	float oldTime = 0;
+
 	float newTime = 0.016f;
-	float deltaTime = 0;
 
 	float accumulatedTime = 0;
-	const double fixedTime = 1.f/60.f;
+	const double fixedTime = 1./60.;
 
 	//restarting level
 	bool restartLevel = false;
+
+	Logger::Add("core");
 	
 	//load all of the plugins
 	PluginLoader pl{directories};
@@ -62,9 +57,9 @@ int main(int argc, char* argv[])
 		
 
 		//calculate new deltatime
-		oldTime = newTime;
+		const float oldTime = newTime;
 		newTime = static_cast<float>(clock())/CLOCKS_PER_SEC;
-		deltaTime = newTime - oldTime;
+		float deltaTime = newTime - oldTime;
 
 		//check if deltatime is way too big, and if so just set it to 16 milliseconds
 		if(deltaTime > 0.128f)

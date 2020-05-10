@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "FileSystem.h"
+#include "FunctionDefinition.h"
 
 #include "ForwardDecl.h"
 
@@ -11,9 +12,9 @@ class ScriptCompiler;
 class ScriptLoader;
 
 //DLL function definitions
-typedef Object* (__cdecl *CREATEFUNCTION)();
-typedef void(__cdecl *DELTEFUNCTION)(Object*);
-typedef void(__cdecl *SETLEVELFUNCTION)(Level*);
+typedef Object* (FUNCTION_CDECL *CREATEFUNCTION)();
+typedef void(FUNCTION_CDECL *DELTEFUNCTION)(Object*);
+typedef void(FUNCTION_CDECL *SET_LEVEL_FUNCTION)(Level*);
 
 /**\brief Calls the functions of the script, holds one script
 *		
@@ -125,7 +126,7 @@ private:
 	DELTEFUNCTION DeleteObject;
 
 	//TEMP
-	SETLEVELFUNCTION SetLevel;
+	SET_LEVEL_FUNCTION SetLevel;
 
 };
 

@@ -1,4 +1,5 @@
 #include "TransformPlugin.h"
+#include "NoopFunctions.h"
 
 TransformPlugin::TransformPlugin()
 {
@@ -19,7 +20,7 @@ void TransformPlugin::FixedUpdate()
 
 void TransformPlugin::Update(float aDeltatime)
 {
-	_CRT_UNUSED(aDeltatime);
+	__noop(aDeltatime);
 }
 
 void TransformPlugin::Delete()

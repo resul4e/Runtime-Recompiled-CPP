@@ -4,11 +4,15 @@ enable_testing()
 
 project("RRCPP")
 
-add_subdirectory("Tests")
-
 #set the output directory for all target to be bin
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+if(WIN32)
+     #Do nothing
+else()
+     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
 
 #includes from within the project
 include_directories(BEFORE "Core")
@@ -28,6 +32,8 @@ endif()
 
 #indicate where external dependencies can be found
 set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+
+add_subdirectory("Tests")
 
 #base library that all other project depend on
 add_library("Base" INTERFACE)

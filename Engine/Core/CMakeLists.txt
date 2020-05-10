@@ -21,7 +21,12 @@ add_library("Core" SHARED
     "Storage.h"
     "Storage.cpp"
     "targetver.h"
-    "ConfigDirectories.h")
+    "ConfigDirectories.h"
+    "LoggerException.h"
+    "LoggerException.cpp")
 target_link_libraries("Core" "EngineBase")
 target_link_libraries("Core" "PIL")
 target_compile_definitions("Core" PRIVATE CORE_DLL)
+
+#move the loggerexceptions to a separate filter.
+source_group("Exceptions" FILES "LoggerException.h" "LoggerException.cpp")

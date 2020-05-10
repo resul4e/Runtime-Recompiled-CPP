@@ -28,5 +28,5 @@ private:
 public:
 private:
 	static bool isWindowClosed;
-	static sf::Window* window;			///has to be a raw pointer, because it is going through DLL boundary
+	static sf::Window* window;			///has to be a raw pointer, because it is going through shared library boundary
 };

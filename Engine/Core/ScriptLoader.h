@@ -1,5 +1,5 @@
 #pragma once
-#include "Filesystem.h"
+#include "FileSystem.h"
 #include <unordered_map>
 #include "ForwardDecl.h"
 #include "Handle.h"
@@ -71,7 +71,7 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Script>> scriptList;
 
 	///the unique ID of the DLL currently in use
-	unsigned long long DLLID;
+	unsigned long long SharedLibraryID;
 
 	///pointer to the Level class
 	std::shared_ptr<Level> level;

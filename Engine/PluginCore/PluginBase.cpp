@@ -1,8 +1,5 @@
 #include "PluginBase.h"
-
-#if !defined(WIN32) || !defined(_WIN32)
-#define __noop(x) (void)(x)
-#endif
+#include "NoopFunctions.h"
 
 PluginBase::PluginBase()
 {

@@ -4,6 +4,7 @@
 #include <memory>
 #include "Transform/Vector.h"
 #include <unordered_map>
+#include <vector>
 
 //forward declaration
 struct ConfigDirectories;

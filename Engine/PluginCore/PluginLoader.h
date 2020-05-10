@@ -1,19 +1,17 @@
 #pragma once
-#if defined(WIN32) || defined(_WIN32)
-#include <Windows.h>
-#endif
-
-#include "FileSystem.h"
 #include <unordered_map>
+
+#include "FunctionDefinition.h"
 
 #include "ConfigDirectories.h"
 
 //forward declaration
 class PluginBase;
+class SharedLibrary;
 
 //function definitions
-typedef PluginBase* (__cdecl *CREATEFUNCTION)();
-typedef void(__cdecl *DELETEFUNCTION)(PluginBase*);
+typedef PluginBase* (FUNCTION_CDECL *CREATE_FUNCTION)();
+typedef void(FUNCTION_CDECL *DELETE_FUNCTION)(PluginBase*);
 
 /**
 *	\brief The class that loads all of the plugins.
@@ -52,12 +50,30 @@ public:
 	 */
 	void Delete();
 
+	/**
+	 * \brief Returns a vector of all currently loaded plugins.
+	 * \return The list of loaded plugins.
+	 */
+	std::vector<std::string> GetLoadedPlugins();
+
 private:
 	/**
 	 * \brief Loads the DLL for the plugin.
-	 * \param aDLLName The name of the DLL to load. It will search in the output directory of this VS project
+	 * \param aSharedLibraryName The name of the DLL to load. It will search in the output directory of this VS project
 	 */
-	bool LoadDLL(std::string aDLLName);
+	bool LoadPlugin(std::string aSharedLibraryName);
+
+	/**
+	 * \brief Loads the blacklist and whitelist.
+	 */
+	void LoadBlackAndWhiteLists();
+	
+	/**
+	 * \brief Checks if the plugin is allowed by the blacklist and whitelist.
+	 * \param aPluginName The plugin to check for validity.
+	 * \return If the plugin is valid or not.
+	 */
+	bool IsPluginAllowed(std::string aPluginName);
 
 //variables
 public:
@@ -66,14 +82,19 @@ private:
 	///A list of all of the loaded plugins.
 	std::unordered_map<std::string, std::shared_ptr<PluginBase>> pluginList;
 	///A list of all of the DLLs loaded. 
-	std::unordered_map<std::string, HINSTANCE> DLLList;
+	std::unordered_map<std::string, std::unique_ptr<SharedLibrary>> SharedLibraryList;
 
 	//Both of these functions gets plugged into a shared pointer.
 	///The function that returns a pointer to the script Plugin
-	std::unordered_map<std::string, CREATEFUNCTION> CreatePluginList;
+	std::unordered_map<std::string, CREATE_FUNCTION> CreatePluginList;
 	///The function that deletes a plugin using its pointer.
-	std::unordered_map<std::string, DELETEFUNCTION> DeletePluginList;
+	std::unordered_map<std::string, DELETE_FUNCTION> DeletePluginList;
 
+	//A struct of all important directories
 	std::shared_ptr<ConfigDirectories> directories;
+
+	//A list of plugins that are allowed(whitelist) or not allowed(blacklist)
+	std::vector<std::string> blackListedPlugins;
+	std::vector<std::string> whitelistedPlugins;
 };
 

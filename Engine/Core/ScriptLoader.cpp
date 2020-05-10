@@ -1,6 +1,9 @@
 #include "ScriptLoader.h"
 
 #include <memory>
+#include <string>
+
+#include "ProcessFunctions.h"
 
 #include "Level.h"
 #include "Object.h"
@@ -13,11 +16,10 @@
 #include "PlatformDetails.h"
 
 typedef std::chrono::system_clock Clock;
-using namespace std::filesystem;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
-	DLLID(aDLL),
+	SharedLibraryID(aDLL),
 	directories(level->directories)
 {
 }
@@ -90,7 +92,7 @@ void ScriptLoader::StartScripts()
 void ScriptLoader::LoadScripts()
 {
 	//recursively go through all of the scripts and create a script class for them
-	for (auto p : recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
+	for (auto p : RCP::recursive_directory_iterator(directories->RootGameSourceDirectory / "Scripts"))
 	{
 		if (p.path().extension() == ".cpp")
 		{
@@ -121,12 +123,12 @@ void ScriptLoader::CompileScripts()
 void ScriptLoader::LinkScripts()
 {
 	const auto now = Clock::now();
-	DLLID = std::chrono::system_clock::to_time_t(now);
+	SharedLibraryID = std::chrono::system_clock::to_time_t(now);
 
 	FILE *in;
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
 	std::string commandLine("py " + (directories->PythonToolsDirectory / "Link.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
-	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(DLLID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the DLLID
+	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(SharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the SharedLibraryID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{
@@ -136,7 +138,7 @@ void ScriptLoader::LinkScripts()
 		}
 	}
 
-	if ((in = _popen(commandLine.c_str(), "rt")) == nullptr)
+	if ((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
 	{
 		assert(false && "file in commandLine could not be opened");
 		return;
@@ -168,7 +170,7 @@ void ScriptLoader::LinkScripts()
 #endif
 	}
 
-	if (_pclose(in) != 0)
+	if (CLOSE_SOME_PROCESS(in) != 0)
 	{
 		LOG_ERROR(loggerHandle, "error in linking")
 	}

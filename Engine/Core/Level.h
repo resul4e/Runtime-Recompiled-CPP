@@ -62,16 +62,17 @@ public:
 	/**
 	 * \brief Gets the raw Object pointer to be able to access 
 	 * \warning Do not use this unless you know what you are doing. Pointers can't be safely saved, as they might change during recompile!
-	 * \param obj the objectHandle of which you want the ObjectPointer
+	 * \param aObj the objectHandle of which you want the ObjectPointer
 	 * \return The raw Object pointer
 	 */
-	CORE_API Object* GetObjectPointer(ObjectHandle obj);
+	CORE_API Object* GetObjectPointer(ObjectHandle aObj);
 
+	///TODO(Resul) Implement these.
 	CORE_API ObjectHandleList GetObjects();
-	CORE_API ObjectHandleList GetObjectsWithName(const char* name);
-	CORE_API ObjectHandle GetObjectWithName(const char* name);
-	CORE_API ObjectHandleList GetObjectsWithType(const char* type);
-	CORE_API ObjectHandle GetObjectWithType(const char* type);
+	CORE_API ObjectHandleList GetObjectsWithName(const char* aName);
+	CORE_API ObjectHandle GetObjectWithName(const char* aName);
+	CORE_API ObjectHandleList GetObjectsWithType(const char* aType);
+	CORE_API ObjectHandle GetObjectWithType(const char* aType);
 
 private:
 
@@ -101,6 +102,7 @@ private:
 	///the coreLogger
 	LoggerHandle coreConsole;
 
+	///The list of important directories
 	std::shared_ptr<ConfigDirectories> directories;
 };
 
