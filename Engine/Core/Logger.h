@@ -167,9 +167,18 @@ private:
 	CORE_API static std::unordered_map<std::string, LoggerData> loggerHandleList;
 };
 
+/**
+ * \brief The data stored by Logger for each logger instance.
+ */
 struct LoggerData
 {
+	/**
+	 * \brief The underlying logging implementation.
+	 */
 	std::shared_ptr<spdlog::logger> logger;
+	/**
+	 * \brief When an exception will be thrown.
+	 */
 	Logger::ExceptionThreshold threshold;
 };
 
