@@ -1,6 +1,9 @@
 #pragma once
 #include <stdexcept>
 
+/**
+ * \brief An exception thrown by Logger if a severe enough message has been logged.
+ */
 class LoggerException : public std::runtime_error
 {
 public:
