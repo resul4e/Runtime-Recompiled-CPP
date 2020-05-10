@@ -12,5 +12,6 @@ set_target_properties("Audio" PROPERTIES FOLDER Plugins)
 
 target_link_libraries("Audio" "PluginBase")
 target_link_libraries("Audio" "Core")
+target_link_libraries("Audio" "PIL")
 target_link_libraries("Audio" sfml-audio)
 target_compile_definitions("Audio" PRIVATE AUDIO_DLL)

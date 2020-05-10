@@ -8,5 +8,7 @@ add_library("PluginCore" STATIC
     "PluginLoader.cpp"
 )
 target_link_libraries("PluginCore" "EngineBase")
+target_link_libraries("PluginCore" "PIL")
+target_include_directories("PluginCore" PRIVATE "${CMAKE_SOURCE_DIR}/Engine/PIL")
 target_compile_definitions("PluginCore" PRIVATE PLUGIN_DLL PRIVATE ENGINE_PROJECT)
 target_compile_definitions("PluginCore" PRIVATE OUTPUT_DIRECTORY="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/")

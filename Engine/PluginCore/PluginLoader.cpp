@@ -2,6 +2,7 @@
 #include "PluginBase.h"
 #include <iostream>
 #include "ConfigDirectories.h"
+#include "SharedLibrary.h"
 
 using namespace std::filesystem;
 using std::cout;
@@ -70,6 +71,14 @@ void PluginLoader::Delete()
 
 bool PluginLoader::LoadDLL(std::string aDLLName)
 {
+	const path libraryPath = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
+
+	SharedLibrary library;
+	library.LoadSharedLibrary(libraryPath.string());
+	CREATEFUNCTION tempCreate = library.GetExportedFunction<CREATEFUNCTION>("HelloWorld");
+	
+	return true;
+	/*
 	const path dll = (directories->RootBinaryDirectory / "bin" / std::string(CMAKE_INTDIR) / (aDLLName + ".dll"));
 	HINSTANCE tempDLL = LoadLibraryA(dll.string().c_str());
 	if (tempDLL == nullptr)
@@ -97,4 +106,5 @@ bool PluginLoader::LoadDLL(std::string aDLLName)
 	CreatePluginList.insert(std::pair<std::string, CREATEFUNCTION>(aDLLName, tempCreate));
 	DeletePluginList.insert(std::pair<std::string, DELETEFUNCTION>(aDLLName, tempDelete));
 	return true;
+	*/
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "SizeT.h"
 #include "ExportDetails.h"
 
 class Level;

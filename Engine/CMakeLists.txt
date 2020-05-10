@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+enable_testing()
 
 project("RRCPP")
+
+add_subdirectory("Tests")
 
 #set the output directory for all target to be bin
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -17,6 +20,7 @@ include_directories(BEFORE "Extern/spdLog/include")
 include_directories(BEFORE "Extern/glm")
 include_directories(BEFORE "Extern/Box2DProj/Box2D")
 include_directories(BEFORE "Extern/SFML/include")
+include_directories(BEFORE "PIL")
 
 if(WIN32)
      set(SFML_STATIC_LIBRARIES TRUE)
@@ -45,6 +49,7 @@ target_compile_options(EngineBase INTERFACE
           /W4>)
 
 #the subdirectories of this project
+add_subdirectory("PIL")
 add_subdirectory("Main")
 add_subdirectory("Core")
 add_subdirectory("PluginCore")

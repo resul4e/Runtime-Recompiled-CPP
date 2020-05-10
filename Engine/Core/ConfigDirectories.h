@@ -1,13 +1,14 @@
 #pragma once
-#include <filesystem>
+
+#include "FileSystem.h"
 
 struct ConfigDirectories
 {
-	std::filesystem::path RootSourceDirectory;
-	std::filesystem::path RootBinaryDirectory;
-	std::filesystem::path RootGameSourceDirectory;
-	std::filesystem::path RootGameBinaryDirectory;
-	std::filesystem::path EngineSourceDirectory;
-	std::filesystem::path PluginSourceDirectory;
-	std::filesystem::path PythonToolsDirectory;
+	RCP::path RootSourceDirectory;
+	RCP::path RootBinaryDirectory;
+	RCP::path RootGameSourceDirectory;
+	RCP::path RootGameBinaryDirectory;
+	RCP::path EngineSourceDirectory;
+	RCP::path PluginSourceDirectory;
+	RCP::path PythonToolsDirectory;
 };

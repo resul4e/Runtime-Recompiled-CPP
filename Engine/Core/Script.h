@@ -2,12 +2,10 @@
 #include <unordered_map>
 
 #include <memory>
-#include <filesystem>
+#include "FileSystem.h"
 
 #include "ForwardDecl.h"
 
-
-typedef std::filesystem::path fpath;
 
 class ScriptCompiler;
 class ScriptLoader;
@@ -34,7 +32,7 @@ public:
 	 * \param scriptPath	the path of the script
 	 * \param level			the level that spawned this script;
 	 */
-	Script(fpath scriptPath, std::shared_ptr<Level> level);
+	Script(RCP::path scriptPath, std::shared_ptr<Level> level);
 	~Script();
 
 	/**
@@ -101,7 +99,7 @@ private:
 	std::vector<ObjectHandle> runningObjects;
 	
 	///path to the script and the name of the script
-	fpath scriptPath;
+	RCP::path scriptPath;
 	std::string scriptType;
 	
 	/// All of the scripts that depend on this script.

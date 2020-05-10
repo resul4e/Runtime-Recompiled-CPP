@@ -4,16 +4,13 @@
 #endif
 
 #include <memory>
-#include <filesystem>
+#include "Filesystem.h"
 #include <unordered_map>
 
 #include "Handle.h"
 #include "ForwardDecl.h"
 #include "ConfigDirectories.h"
 
-
-
-using std::filesystem::path;
 
 class Script;
 class Storage;
@@ -72,7 +69,7 @@ private:
 	 * \param[out] outPath	The path of the include.
 	 * \return				If an include is found, outPath is only valid if this is true.
 	 */
-	bool GetInclude(std::string in, path& outPath);
+	bool GetInclude(std::string in, RCP::path& outPath);
 	/**
 	* \brief Calls Compile with the isRecompiling flag turned true
 	*/

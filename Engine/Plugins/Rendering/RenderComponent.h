@@ -1,7 +1,7 @@
 #pragma once
 #include "ExportDetails.h"
 #include "Enums.h"
-#include <filesystem>
+#include "FileSystem.h"
 #include <unordered_map>
 #include "Transform/Vector.h"
 
@@ -17,7 +17,6 @@ namespace sf
 	class Drawable;
 }
 
-using namespace std::filesystem;
 
 /**
  * \brief Class that holds all of the free-functions to be able to render things on screen.
