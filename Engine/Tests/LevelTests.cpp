@@ -9,14 +9,17 @@ protected:
 		Logger::AddOrGet("core");
 		Logger::AddOrGet("levelTest");
 
-		//make sure that if we get a warning or above, we throw an exception.
-		Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
+		//make sure that if we get a error or above, we throw an exception.
+		Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
 		
 		configDir = std::make_shared<ConfigDirectories>();
 		configDir->RootSourceDirectory = { std::string{ SOURCE_DIR } };
 		configDir->RootBinaryDirectory = { std::string{ BINARY_DIR } };
 		configDir->EngineSourceDirectory = { configDir->RootSourceDirectory / "Engine" };
 		configDir->PluginSourceDirectory = { configDir->EngineSourceDirectory / "Plugins" };
+		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
+		configDir->RootGameSourceDirectory = { RCP::path{TEST_DATA_DIR} / "Level" / "Game" };
+		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Game" };
 		configDir->PluginWhiteListDirectory = "Test";
 	}
 
@@ -47,6 +50,6 @@ TEST_F(LevelTests, CreatorNoConfigDirectory)
 
 TEST_F(LevelTests, Start)
 {
-	//std::shared_ptr<Level> lvl = CreateLevel(nullptr);
-	//lvl->Start();
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
 }

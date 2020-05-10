@@ -29,7 +29,6 @@ directories(_directories)
 	{
 		LOG_ERROR(coreConsole, "The directories struct has not been passed in. This is necessary to find a lot of important directories.\nThis will probably crash!");
 	}
-
 }
 
 void Level::Start()
