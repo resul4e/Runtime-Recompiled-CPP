@@ -53,7 +53,7 @@ void Window::Update(float aDeltatime)
 			LOG_DEBUG(Logger::Get("Rendering"), "new height: {}" , event.size.height);
 			sf::FloatRect visibleArea(0, 0, 448, 448);
 			std::shared_ptr<sf::View> newView = std::make_shared<sf::View>(visibleArea);
-			newView->setViewport(sf::FloatRect(0, 0.5 - (448.f / event.size.height)/2.f, 448.f / event.size.width, 448.f / event.size.height));
+			newView->setViewport(sf::FloatRect(0, 0.5f - (448.f / event.size.height)/2.f, 448.f / event.size.width, 448.f / event.size.height));
 			renderWindow->setView(*newView);
 			WindowComponent::view = newView;
 		}
