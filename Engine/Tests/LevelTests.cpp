@@ -19,7 +19,7 @@ protected:
 		configDir->PluginSourceDirectory = { configDir->EngineSourceDirectory / "Plugins" };
 		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
 		configDir->RootGameSourceDirectory = { RCP::fs::path{TEST_DATA_DIR} / "Level" / "Game" };
-		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Game" };
+		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Engine" / "Tests" / "Game" };
 		configDir->PluginWhiteListDirectory = "Test";
 	}
 
@@ -50,15 +50,40 @@ TEST_F(LevelTests, CreatorNoConfigDirectory)
 
 TEST_F(LevelTests, Start)
 {
-	configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "GameStart" };
+	//everything that calls Start() should have its own build directory to not step on anyones toes.
+	configDir->RootGameBinaryDirectory /= "Start";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 }
 
 TEST_F(LevelTests, Update)
 {
-	configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "GameUpdate" };
+	configDir->RootGameBinaryDirectory /= "Update";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->Update(0.016f);
+}
+
+TEST_F(LevelTests, UpdateWithNegativeDeltaTime)
+{
+	configDir->RootGameBinaryDirectory /= "UpdateWithNegativeDeltaTime";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->Update(-0.016f);
+}
+
+TEST_F(LevelTests, FixedUpdate)
+{
+	configDir->RootGameBinaryDirectory /= "FixedUpdate";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->FixedUpdate();
+}
+
+TEST_F(LevelTests, Delete)
+{
+	configDir->RootGameBinaryDirectory /= "Delete";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->Delete();
 }
