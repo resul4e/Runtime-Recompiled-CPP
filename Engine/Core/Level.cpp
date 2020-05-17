@@ -78,7 +78,7 @@ ObjectHandle Level::CreateObject(const char* typeName, const char* aObjectName)
 		return scriptLoader->scriptList.at(typeName)->CreateScriptObject(aObjectName);
 	}
 	LOG_ERROR(Logger::Get("core"), "Could not create object with type {}, because the type does not exist!", typeName);
-	return { 1231234 };
+	return { std::numeric_limits<size_t>::max() };
 }
 
 Object* Level::GetObjectPointer(ObjectHandle aObj)

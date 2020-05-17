@@ -90,10 +90,16 @@ TEST_F(LoggerTests, LOG_WARN)
 	EXPECT_NO_FATAL_FAILURE(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"));
 }
 
+TEST_F(LoggerTests, LOG_WARNWithThreshold)
+{
+	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
+	EXPECT_THROW(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_LOG_WARN", "TEST"), LoggerException);
+}
+
 TEST_F(LoggerTests, WarnWithThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
-	EXPECT_THROW(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"), LoggerException);
+	EXPECT_THROW(Logger::Warn(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"), LoggerException);
 }
 
 TEST_F(LoggerTests, LOG_ERROR)

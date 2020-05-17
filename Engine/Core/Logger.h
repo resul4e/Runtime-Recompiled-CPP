@@ -10,19 +10,19 @@
 #include "LoggerException.h"
 
 #if defined(WIN32) || defined(__WIN32)
-#define LOG_TRACE(console,message, ...) Logger::Trace(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
-#define LOG_DEBUG(console,message, ...) Logger::Debug(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
-#define LOG_INFO(console,message, ...) Logger::Info(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
-#define LOG_WARN(console,message, ...) Logger::Warn(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
-#define LOG_ERROR(console,message, ...) Logger::Error(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
-#define LOG_CRITICAL(console,message, ...) Logger::Critical(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_TRACE(console,message, ...) Logger::Trace(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_DEBUG(console,message, ...) Logger::Debug(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_INFO(console,message, ...) Logger::Info(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_WARN(console,message, ...) Logger::Warn(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_ERROR(console,message, ...) Logger::Error(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
+#define LOG_CRITICAL(console,message, ...) Logger::Critical(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, __VA_ARGS__);
 #else
-#define LOG_TRACE(console,message, args...) Logger::Trace(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
-#define LOG_DEBUG(console,message, args...) Logger::Debug(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
-#define LOG_INFO(console,message, args...) Logger::Info(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
-#define LOG_WARN(console,message, args...) Logger::Warn(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
-#define LOG_ERROR(console,message, args...) Logger::Error(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
-#define LOG_CRITICAL(console,message, args...) Logger::Critical(console, (std::string("{}({}) ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_TRACE(console,message, args...) Logger::Trace(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_DEBUG(console,message, args...) Logger::Debug(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_INFO(console,message, args...) Logger::Info(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_WARN(console,message, args...) Logger::Warn(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_ERROR(console,message, args...) Logger::Error(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
+#define LOG_CRITICAL(console,message, args...) Logger::Critical(console, (std::string("{}[{}]: ") + std::string(message)).c_str(), __FILE__, __LINE__, ##args);
 #endif
 
 struct LoggerData;
@@ -153,6 +153,16 @@ public:
 private:
 
 	/**
+	 * \brief Takes in the unformatted message and the set of variables to format with and returns the formatted messages 
+	 * \tparam Args A set of arguments that will replace all instances of "{}" in aMessage in order of occurence
+	 * \param aHandle The handle of the logger we want to format the message with.
+	 * \param aMessage The unformatted message we want to format.
+	 * \param aVariables The set of arguments to replace "{}" with.
+	 * \return The formatted message.
+	 */
+	template<typename... Args> static std::string FormatLogMessage(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables);
+	
+	/**
 	 * \brief Throws a LoggerException
 	 * \param aMessage A custom message that is returned as the "what()" of the exception.
 	 */
@@ -208,7 +218,8 @@ void Logger::Warn(LoggerHandle aHandle, const char* aMessage, Args&&... aVariabl
 
 	if (data.threshold >= ExceptionThreshold::WARN_AND_ABOVE)
 	{
-		ThrowException();
+		std::string msg = FormatLogMessage(aHandle, aMessage, std::forward<Args>(aVariables)...);
+		ThrowException(msg);
 	}
 }
 
@@ -220,7 +231,8 @@ void Logger::Error(LoggerHandle aHandle, const char* aMessage, Args&&... aVariab
 
 	if (data.threshold >= ExceptionThreshold::ERROR_AND_ABOVE)
 	{
-		ThrowException();
+		std::string msg = FormatLogMessage(aHandle, aMessage, std::forward<Args>(aVariables)...);
+		ThrowException(msg);
 	}
 }
 
@@ -232,6 +244,37 @@ void Logger::Critical(LoggerHandle aHandle, const char* aMessage, Args&&... aVar
 
 	if (data.threshold == ExceptionThreshold::CRITICAL_ONLY)
 	{
-		ThrowException();
+		std::string msg = FormatLogMessage(aHandle, aMessage, std::forward<Args>(aVariables)...);
+		ThrowException(msg);
 	}
 }
+
+template <typename ... Args>
+std::string Logger::FormatLogMessage(LoggerHandle aHandle, const char* aMessage, Args&&... aVariables)
+{
+	static const std::string marker("[FORMAT_MARKER]");
+	
+	std::string msg = aMessage;
+
+	//check if we have logged using LOG_* and if so add a marker to remove the part we are not interested in.
+	auto prefixEnd = msg.find("]: ");
+	if(prefixEnd != msg.npos)
+	{
+		msg = msg.insert(prefixEnd + 3, marker);
+	}
+
+	//format the message.
+	std::string loggerName = aHandle.name;
+	spdlog::details::log_msg log_msg(&loggerName, spdlog::level::level_enum::warn);
+	log_msg.raw.write(msg, std::forward<Args>(aVariables)...);
+	std::string formattedMsg = log_msg.raw.c_str();
+
+	//Find the marker if we used LOG_* and remove everything before it.
+	if (prefixEnd != msg.npos)
+	{
+		formattedMsg = formattedMsg.substr(formattedMsg.find(marker) + marker.size());
+	}
+	
+	return formattedMsg;
+}
+
