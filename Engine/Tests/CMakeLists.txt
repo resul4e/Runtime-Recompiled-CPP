@@ -14,6 +14,7 @@ target_link_libraries(Tests PluginCore)
 target_link_libraries(Tests Core)
 
 target_include_directories(Tests PRIVATE "${CMAKE_SOURCE_DIR}/Engine/PIL")
+target_include_directories(Tests PRIVATE "${CMAKE_SOURCE_DIR}/Engine")
 add_test(NAME Tests COMMAND Tests)
 
 #set the root of the TestData folder where all data is located for testing purposes

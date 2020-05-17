@@ -11,6 +11,7 @@ public:
 	void Update(float aDeltatime) override;
 	void Delete() override;
 	void Serialize(Storage& storage) override;
+	std::string TestFunction() { return "PROOF_OF_TEST_SCRIPT"; }
 };
 
 INTERFACE_START(TestScript)

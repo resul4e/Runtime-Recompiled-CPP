@@ -2,6 +2,8 @@
 #include "Level.h"
 #include "Logger.h"
 #include "CustomMacros.h"
+#include "Object.h"
+#include "TestData/Level/Game/Scripts/TestScript.h"
 
 
 class LevelTests : public ::testing::Test {
@@ -42,7 +44,7 @@ protected:
 TEST_F(LevelTests, Creator)
 {
 	
-	EXPECT_NO_FATAL_FAILURE(CreateLevel(configDir.get()););
+	EXPECT_NO_FATAL_FAILURE(CreateLevel(configDir.get()));
 }
 
 TEST_F(LevelTests, CreatorNoConfigDirectory)
@@ -119,4 +121,49 @@ TEST_F(LevelTests, CreateObjectThatDoesNotExistNoThrow)
 	EXPECT_EQ(hndl.index, std::numeric_limits<size_t>::max());
 
 	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
+}
+
+TEST_F(LevelTests, GetObjectPointer)
+{
+	configDir->RootGameBinaryDirectory /= "GetObjectPointer";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	ObjectHandle hndl = lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
+	Object* obj = lvl->GetObjectPointer(hndl);
+	EXPECT_STREQ(obj->GetName(), "SOME_TEST_SCRIPT_BY_POINTER");
+	std::string proof = dynamic_cast<TestScript*>(obj)->TestFunction();
+	EXPECT_STREQ(proof.c_str(), "PROOF_OF_TEST_SCRIPT");
+}
+
+TEST_F(LevelTests, GetObjectPointerNonExistentHandle)
+{
+	configDir->RootGameBinaryDirectory /= "GetObjectPointerNonExistentHandle";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
+	EXPECT_THROW_WITH_MESSAGE(lvl->GetObjectPointer({11111}), LoggerException, "Object not found returning nullptr!");
+}
+
+TEST_F(LevelTests, GetObjectWithName)
+{
+	const std::string name = "SOME_OBJECT_NAME";
+	
+	configDir->RootGameBinaryDirectory /= "GetObjectWithName";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->CreateObject("TestScript", name.c_str());
+	ObjectHandle obj = lvl->GetObjectWithName(name.c_str());
+}
+
+TEST_F(LevelTests, GetObjectWithNameThatDoesNotExist)
+{
+	const std::string name = "SOME_OBJECT_NAME";
+	const std::string nonExistentName = "SOME_OBJECT_NAME_THAT_DOES_NOT_EXIST";
+
+	configDir->RootGameBinaryDirectory /= "GetObjectWithNameThatDoesNotExist";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->CreateObject("TestScript", name.c_str());
+	ObjectHandle obj = lvl->GetObjectWithName(nonExistentName.c_str());
+	EXPECT_EQ(obj.index, std::numeric_limits<size_t>::max());
 }

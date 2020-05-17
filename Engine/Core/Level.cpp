@@ -83,6 +83,12 @@ ObjectHandle Level::CreateObject(const char* typeName, const char* aObjectName)
 
 Object* Level::GetObjectPointer(ObjectHandle aObj)
 {
+	if(aObj.index > objectList.size())
+	{
+		LOG_ERROR(coreConsole, "Object not found returning nullptr!");
+		return nullptr;
+	}
+	
 	return objectList.at(aObj.index).get();
 }
 
@@ -93,7 +99,7 @@ Level::~Level()
 
 ObjectHandle Level::GetObjectWithName(const char* aName)
 {
-	ObjectHandle temp = {1231234};
+	ObjectHandle temp = {std::numeric_limits<size_t>::max()};
 
 	for(size_t i=0; i < objectList.size(); i++)
 	{
