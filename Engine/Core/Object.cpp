@@ -2,6 +2,10 @@
 
 #include "Level.h"
 
+Object::Object() : Object("")
+{
+}
+
 Object::Object(const char* aName):
 lvl(nullptr),
 console({""}),

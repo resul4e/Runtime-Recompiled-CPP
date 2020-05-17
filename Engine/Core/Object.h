@@ -67,9 +67,9 @@ class Object
 {
 //functions
 public: 
-	CORE_API Object() = default;;
+	CORE_API Object();
 	CORE_API Object(const char* aName);
-	CORE_API virtual ~Object() {};
+	CORE_API virtual ~Object() = default;
 
 	CORE_API virtual void Start() = 0;
 	CORE_API virtual void Restart() = 0;
