@@ -19,6 +19,7 @@ typedef std::chrono::system_clock Clock;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
+	loggerHandle{},
 	SharedLibraryID(aDLL),
 	directories(level->directories)
 {
