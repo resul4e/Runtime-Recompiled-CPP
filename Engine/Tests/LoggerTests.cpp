@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Logger.h"
+#include "CustomMacros.h"
 
 class LoggerTests : public ::testing::Test {
 protected:
@@ -93,13 +94,13 @@ TEST_F(LoggerTests, LOG_WARN)
 TEST_F(LoggerTests, LOG_WARNWithThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
-	EXPECT_THROW(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_LOG_WARN", "TEST"), LoggerException);
+	EXPECT_THROW_WITH_MESSAGE(LOG_WARN(Logger::Get("loggerTest"), "SOME_{}_LOG_WARN", "TEST"), LoggerException, "SOME_TEST_LOG_WARN");
 }
 
 TEST_F(LoggerTests, WarnWithThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
-	EXPECT_THROW(Logger::Warn(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"), LoggerException);
+	EXPECT_THROW_WITH_MESSAGE(Logger::Warn(Logger::Get("loggerTest"), "SOME_{}_WARN", "TEST"), LoggerException, "SOME_TEST_WARN");
 }
 
 TEST_F(LoggerTests, LOG_ERROR)
@@ -110,13 +111,13 @@ TEST_F(LoggerTests, LOG_ERROR)
 TEST_F(LoggerTests, ErrorWithThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
-	EXPECT_THROW(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException);
+	EXPECT_THROW_WITH_MESSAGE(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException, "SOME_TEST_ERROR");
 }
 
 TEST_F(LoggerTests, ErrorWithWarnThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::WARN_AND_ABOVE);
-	EXPECT_THROW(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException);
+	EXPECT_THROW_WITH_MESSAGE(LOG_ERROR(Logger::Get("loggerTest"), "SOME_{}_ERROR", "TEST"), LoggerException, "SOME_TEST_ERROR");
 }
 
 TEST_F(LoggerTests, LOG_CRITICAL)
@@ -127,5 +128,5 @@ TEST_F(LoggerTests, LOG_CRITICAL)
 TEST_F(LoggerTests, CriticalWithThreshold)
 {
 	Logger::SetExceptionThreshold(Logger::Get("loggerTest"), Logger::ExceptionThreshold::CRITICAL_ONLY);
-	EXPECT_THROW(LOG_CRITICAL(Logger::Get("loggerTest"), "SOME_{}_CRITICAL", "TEST"), LoggerException);
+	EXPECT_THROW_WITH_MESSAGE(LOG_CRITICAL(Logger::Get("loggerTest"), "SOME_{}_CRITICAL", "TEST"), LoggerException, "SOME_TEST_CRITICAL");
 }
