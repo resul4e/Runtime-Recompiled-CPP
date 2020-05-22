@@ -146,15 +146,19 @@ void ScriptLoader::LinkScripts()
 	}
 
 	char buff[2048];
-	char* context[2048];
 	while (fgets(buff, sizeof(buff), in) != nullptr)
 	{
 #ifdef LINKER_OUTPUT
-		strtok_s(buff, "\n", context);
+		//throw buffer in string and remove trailing newline.
 		std::string buffstring(buff);
+		if(buffstring.find("\n") != buffstring.npos)
+		{
+			buffstring.erase(buffstring.find("\n"));
+		}
+		
 		if (buffstring.find("error") != std::string::npos)
 		{
-			LOG_ERROR(loggerHandle, buff);		//prints all of the compiler output, useful for debugging, red for errors
+			LOG_ERROR(loggerHandle, buffstring);		//prints all of the compiler output, useful for debugging, red for errors
 			for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 			{
 				it->second->isCompilerError = true;
@@ -162,11 +166,11 @@ void ScriptLoader::LinkScripts()
 		}
 		else if (buffstring.find("warning") != std::string::npos)
 		{
-			LOG_WARN(loggerHandle, buff);		//prints all of the compiler output, useful for debugging, yellow  for warnings
+			LOG_WARN(loggerHandle, buffstring);		//prints all of the compiler output, useful for debugging, yellow  for warnings
 		}
 		else
 		{
-			LOG_INFO(loggerHandle, buff);		//prints all of the compiler output, useful for debugging
+			LOG_INFO(loggerHandle, buffstring);		//prints all of the compiler output, useful for debugging
 		}
 #endif
 	}

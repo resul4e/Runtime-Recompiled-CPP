@@ -253,25 +253,28 @@ void ScriptCompiler::CompileInternal()
 	RCP::fs::path dependencyPath;
 	while (fgets(buff, sizeof(buff), in) != nullptr)
 	{
-
-		char* context[2048];
-		strtok_s(buff, "\n", context);
+		//Throw buffer in string and remove trailing newline.
 		std::string buffstring(buff);
+		if (buffstring.find("\n") != buffstring.npos)
+		{
+			buffstring.erase(buffstring.find("\n"));
+		}
+		
 		if(buffstring.find("error") != std::string::npos && buffstring.find("Note: including file: ") == std::string::npos)
 		{
 #ifdef COMPILER_OUTPUT
-			LOG_ERROR(loggerHandle, buff);		//prints all of the compiler output, useful for debugging
+			LOG_ERROR(loggerHandle, buffstring);		//prints all of the compiler output, useful for debugging
 #endif
 			script->isCompilerError = true;
 		}
 		else if(buffstring.find("warning") != std::string::npos && buffstring.find("Note: include file: ") == std::string::npos)
 		{
-			LOG_WARN(loggerHandle, buff);
+			LOG_WARN(loggerHandle, buffstring);
 		}
 		else
 		{
 #ifdef COMPILER_OUTPUT
-			LOG_INFO(loggerHandle, buff);		//prints all of the compiler output, useful for debugging
+			LOG_INFO(loggerHandle, buffstring);		//prints all of the compiler output, useful for debugging
 #endif
 		}	
 
