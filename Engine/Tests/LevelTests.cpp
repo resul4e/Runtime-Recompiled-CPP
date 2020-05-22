@@ -38,6 +38,8 @@ protected:
 		}
 	}
 
+	const std::string testObjectName = "SOME_OBJECT_NAME";
+	const std::string nonExistentObjectName = "SOME_OBJECT_NAME_THAT_DOES_NOT_EXIST";
 	std::shared_ptr<ConfigDirectories> configDir;
 };
 
@@ -146,24 +148,36 @@ TEST_F(LevelTests, GetObjectPointerNonExistentHandle)
 
 TEST_F(LevelTests, GetObjectWithName)
 {
-	const std::string name = "SOME_OBJECT_NAME";
-	
 	configDir->RootGameBinaryDirectory /= "GetObjectWithName";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
-	lvl->CreateObject("TestScript", name.c_str());
-	ObjectHandle obj = lvl->GetObjectWithName(name.c_str());
+	lvl->CreateObject("TestScript", testObjectName.c_str());
+	ObjectHandle obj = lvl->GetObjectWithName(testObjectName.c_str());
 }
 
 TEST_F(LevelTests, GetObjectWithNameThatDoesNotExist)
 {
-	const std::string name = "SOME_OBJECT_NAME";
-	const std::string nonExistentName = "SOME_OBJECT_NAME_THAT_DOES_NOT_EXIST";
-
 	configDir->RootGameBinaryDirectory /= "GetObjectWithNameThatDoesNotExist";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
-	lvl->CreateObject("TestScript", name.c_str());
-	ObjectHandle obj = lvl->GetObjectWithName(nonExistentName.c_str());
+	lvl->CreateObject("TestScript", testObjectName.c_str());
+	ObjectHandle obj;
+	std::string message = "Could not find object with name \"" + nonExistentObjectName + "\"";
+	EXPECT_THROW_WITH_MESSAGE(lvl->GetObjectWithName(nonExistentObjectName.c_str()), LoggerException, message.c_str());
+}
+
+TEST_F(LevelTests, GetObjectWithNameThatDoesNotExistNoThrow)
+{
+	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::NEVER);
+	
+	configDir->RootGameBinaryDirectory /= "GetObjectWithNameThatDoesNotExistNoThrow";
+	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+	lvl->Start();
+	lvl->CreateObject("TestScript", testObjectName.c_str());
+	ObjectHandle obj = {0};
+	std::string message = "Could not find object with name \"" + nonExistentObjectName + "\"";
+	EXPECT_NO_FATAL_FAILURE(obj = lvl->GetObjectWithName(nonExistentObjectName.c_str()), LoggerException, message.c_str());
 	EXPECT_EQ(obj.index, std::numeric_limits<size_t>::max());
+
+	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
 }

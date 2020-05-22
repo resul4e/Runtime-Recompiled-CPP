@@ -12,9 +12,6 @@
 #include "Script.h"
 #include "ScriptLoader.h"
 
-using std::cout;
-using std::endl;
-
 #define FULL_RECOMPILE
 
 Level::Level(std::shared_ptr<ConfigDirectories> _directories) :
@@ -108,6 +105,11 @@ ObjectHandle Level::GetObjectWithName(const char* aName)
 			temp = { i };
 			break;
 		}
+	}
+
+	if(temp.index == std::numeric_limits<size_t>::max())
+	{
+		LOG_ERROR(coreConsole, "Could not find object with name \"{}\"", aName);
 	}
 	
 	return temp;
