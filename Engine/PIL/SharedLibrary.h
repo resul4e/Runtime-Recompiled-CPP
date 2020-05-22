@@ -17,6 +17,11 @@ typedef void* SharedLibHandle;
 #define GET_EXPORTED_FUNCTION(aHandle, aName) dlsym(aHandle, aName)
 #endif
 
+#if !defined(NDEBUG)
+#define BUILD_CONFIG_NAME "Debug"
+#else
+#define BUILD_CONFIG_NAME "Release"
+#endif
 
 /**
  * \brief A class that abstracts away the platform dependant parts of loading shared libraries.

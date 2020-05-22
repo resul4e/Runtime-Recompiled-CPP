@@ -4,6 +4,7 @@
 #include "ConfigDirectories.h"
 #include "SharedLibrary.h"
 #include "Logger.h"
+#include "SharedLibrary.h"
 
 using std::cout;
 using std::endl;
@@ -101,7 +102,7 @@ std::vector<std::string> PluginLoader::GetLoadedPlugins()
 
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / std::string(CMAKE_INTDIR) / aSharedLibraryName);
+	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / std::string(BUILD_CONFIG_NAME) / aSharedLibraryName);
 
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
 	library->LoadSharedLibrary(libraryPath.string());

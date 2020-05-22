@@ -47,7 +47,7 @@ TEST_F(PluginLoaderTests, Start)
 
 	//load the shared lib separately so that we can call monitoring functions.
 	SharedLibrary lib(configDir->RootBinaryDirectory);
-	lib.LoadSharedLibrary(std::string("bin/")+CMAKE_INTDIR+"/TestPlugin");
+	lib.LoadSharedLibrary(std::string("bin/")+ BUILD_CONFIG_NAME +"/TestPlugin");
 	const auto StartCallAmount = lib.GetExportedFunction<START_CALL_AMOUNT_FUNCTION>("GetStartCallAmount");
 
 	//check that we have a valid connection to the shared lib.
@@ -68,7 +68,7 @@ TEST_F(PluginLoaderTests, Update)
 
 	//load the shared lib separately so that we can call monitoring functions.
 	SharedLibrary lib(configDir->RootBinaryDirectory);
-	lib.LoadSharedLibrary(std::string("bin/") + CMAKE_INTDIR + "/TestPlugin");
+	lib.LoadSharedLibrary(std::string("bin/") + BUILD_CONFIG_NAME + "/TestPlugin");
 	const auto LastDeltaTime = lib.GetExportedFunction<LAST_DELTA_TIME_FUNCTION>("GetLastDeltaTime");
 
 	//check that we have a valid connection to the shared lib.
