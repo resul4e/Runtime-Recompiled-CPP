@@ -35,7 +35,7 @@ struct CORE_API SpriteCompHandle
 struct CORE_API AnimationCompHandle
 {
 	size_t spriteIndex;
-	char currentAnimation[512];
+	const char* currentAnimation;
 };
 
 /**

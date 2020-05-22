@@ -63,7 +63,8 @@ extern "C" RENDERING_API void AnimationComponent::SetAnimation(AnimationCompHand
 		return;
 	}
 
-	strcpy_s(aHandle.currentAnimation, 512, aAnimationName);
+	//TODO(Resul): Find less ugly way to copy string.
+	aHandle.currentAnimation = std::string(aAnimationName).c_str();
 	animatedSpriteList.at(aHandle.spriteIndex)->setAnimation(*animationList.at(aAnimationName));
 }
 
