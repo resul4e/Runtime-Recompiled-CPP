@@ -19,10 +19,14 @@ typedef std::chrono::system_clock Clock;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
-	loggerHandle{},
-	SharedLibraryID(aDLL),
-	directories(level->directories)
+	sharedLibraryID(aDLL)
 {
+	if(level == nullptr)
+	{
+		LOG_ERROR(Logger::Get("core"), "The level pointer was null. This will probably crash!");
+	}
+
+	directories =  level->directories;
 }
 
 void ScriptLoader::Start()
@@ -124,12 +128,12 @@ void ScriptLoader::CompileScripts()
 void ScriptLoader::LinkScripts()
 {
 	const auto now = Clock::now();
-	SharedLibraryID = std::chrono::system_clock::to_time_t(now);
+	sharedLibraryID = std::chrono::system_clock::to_time_t(now);
 
 	FILE *in;
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
 	std::string commandLine("py " + (directories->PythonToolsDirectory / "Link.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
-	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(SharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the SharedLibraryID
+	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(sharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the sharedLibraryID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{

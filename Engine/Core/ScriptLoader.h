@@ -17,8 +17,9 @@
 class ScriptLoader
 {
 public:
-	ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL);
-	~ScriptLoader();
+	CORE_API ScriptLoader() = delete;
+	CORE_API ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL);
+	CORE_API ~ScriptLoader();
 
 	/**
 	 * \brief	Compiles, creates dependecies, links and loads all of the DLLs of all of the Scripts
@@ -71,12 +72,12 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Script>> scriptList;
 
 	///the unique ID of the DLL currently in use
-	unsigned long long SharedLibraryID;
+	unsigned long long sharedLibraryID;
 
 	///pointer to the Level class
 	std::shared_ptr<Level> level;
 
-	LoggerHandle loggerHandle;
+	LoggerHandle loggerHandle{};
 
 	std::shared_ptr<ConfigDirectories> directories;
 };

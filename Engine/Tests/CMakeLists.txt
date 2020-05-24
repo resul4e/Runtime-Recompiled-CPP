@@ -5,6 +5,7 @@ add_executable(Tests
 "SharedLibraryTests.cpp"
 "PluginLoaderTests.cpp"
 "LevelTests.cpp"
+"ScriptLoaderTests.cpp"
 "LoggerTests.cpp"
 "CustomMacros.h")
 

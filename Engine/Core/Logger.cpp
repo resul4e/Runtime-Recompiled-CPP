@@ -29,6 +29,9 @@ extern "C" CORE_API LoggerHandle Logger::Get(const char* aConsoleName)
 	
 	if(!Find(aConsoleName))
 	{
+		//make sure we don't end in an endless loop if "core" is not defined. This is only really the case when unit testing.
+		assert(strcmp(aConsoleName, "core") != 0);
+		
 		LOG_ERROR(Logger::Get("core"), "No logger found with the name {}. Returning the default LoggerHandle", aConsoleName);
 		return { "core" };
 	}

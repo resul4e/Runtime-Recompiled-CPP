@@ -24,7 +24,6 @@ protected:
 		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
 		configDir->RootGameSourceDirectory = { RCP::fs::path{TEST_DATA_DIR} / "Level" / "Game" };
 		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Engine" / "Tests" / "Game" };
-		configDir->PluginWhiteListDirectory = "Test";
 	}
 
 	void TearDown() override
@@ -45,7 +44,6 @@ protected:
 
 TEST_F(LevelTests, Creator)
 {
-	
 	EXPECT_NO_FATAL_FAILURE(CreateLevel(configDir.get()));
 }
 

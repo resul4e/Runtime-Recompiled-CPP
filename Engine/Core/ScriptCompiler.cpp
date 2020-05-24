@@ -192,7 +192,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	RCP::fs::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->SharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
+	RCP::fs::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
 #endif
 	RCP::fs::file_time_type DLLresult = last_write_time(dllPath, err);
 	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
@@ -304,7 +304,7 @@ void ScriptCompiler::CompileInternal()
 void ScriptCompiler::LoadDLLInternal()
 {
 
-	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->SharedLibraryID));
+	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->sharedLibraryID));
 	if (!sharedLibraryLoaded)
 	{
 		std::string err = sharedLibrary->GetLoadingError();
