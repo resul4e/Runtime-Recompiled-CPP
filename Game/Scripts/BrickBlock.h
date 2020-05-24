@@ -1,4 +1,7 @@
 #pragma once
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+
+
 #include "Core/Object.h"
 #include "Transform/Vector.h"
 #include "Block.h"

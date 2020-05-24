@@ -1,7 +1,7 @@
 #pragma once
+#include "Block.h"
 #include "Core/Object.h"
 #include "Transform/Vector.h"
-#include "Block.h"
 
 class CoinBlock : public Block
 {
