@@ -18,7 +18,7 @@ Game::~Game()
 
 void Game::Start()
 {
-	WindowComponent::SetVerticalSync(true);
+	WindowComponent::SetVerticalSync(true); 
 	for(int i = 0; i < 500; i++)
 	{
 		ObjectHandle particle = lvl->CreateObject("Particle", "particle");
@@ -33,11 +33,11 @@ void Game::Start()
 }
 
 void Game::Restart()
-{
+{  
 	
 }
 
-void Game::FixedUpdate()
+void Game::FixedUpdate()  
 { 
 }
 
@@ -54,7 +54,7 @@ void Game::Serialize(Storage& storage)
 {
 	//uncomment if you want to save something when recompiling
 	//place whatever you want to serialize inside of the Serialize() function
-	//storage.Serialize();
+	storage.Serialize(m_particles);
 }
 
 SCRIPT_END(Game)
