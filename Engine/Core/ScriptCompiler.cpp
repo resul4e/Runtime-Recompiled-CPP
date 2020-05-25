@@ -19,6 +19,8 @@
 #define COMPILER_OUTPUT
 #endif
 
+std::exception_ptr ScriptCompiler::expptr;
+
 ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<ConfigDirectories> aDirectories) :
 	script(aScript),
 	directories(aDirectories),
@@ -32,14 +34,21 @@ ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<
 
 void ScriptCompiler::Compile()
 {
-	script->isUpToDate = true;
-	script->isCompilerError = false;
-
-	//if the file is out of date compile it
-	if (script->isRecompiling || !CheckIfDLLIsUpToDate())
+	try
 	{
-		script->isUpToDate = false;
-		CompileInternal();
+		script->isUpToDate = true;
+		script->isCompilerError = false;
+
+		//if the file is out of date compile it
+		if (script->isRecompiling || !CheckIfDLLIsUpToDate())
+		{
+			script->isUpToDate = false;
+			CompileInternal();
+		}
+	}
+	catch(...)
+	{
+		expptr = std::current_exception();
 	}
 }
 
@@ -107,6 +116,13 @@ void ScriptCompiler::ReloadScript()
 			p.second->scriptCompiler->lastScriptWriteTime = currentScriptWriteTime;
 		}
 	}
+}
+
+std::exception_ptr ScriptCompiler::PopCompilerError()
+{
+	std::exception_ptr temp = expptr;
+	expptr = nullptr;
+	return temp;
 }
 
 void ScriptCompiler::GetIncludedScripts(std::unordered_map<std::string, std::shared_ptr<Script>>& aAllIncluded)
@@ -238,11 +254,12 @@ void ScriptCompiler::CompileInternal()
 {
 	FILE *in;
 	//create the command line to compile the script, the python file automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
-	std::string commandLine("py " + (directories->EngineSourceDirectory / "Tools\\Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	std::string commandLine("py " + (directories->PythonToolsDirectory / "Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + directories->EngineSourceDirectory.string());	//the gamePath, scriptPath and the scriptName
 	//compile the script using a python script, found in the tools folder
-	if((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == NULL)
+	if((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
 	{
+		//TODO(Resul): Investigate how we can actually check if a process has run successfully.
 		assert(false && "file in commandLine could not be opened");
 		script->isCompilerError = true;
 		return;
@@ -295,7 +312,6 @@ void ScriptCompiler::CompileInternal()
 
 	if(CLOSE_SOME_PROCESS(in)!=0)
 	{
-		//assert(false && "error in compilation of script");
 		LOG_ERROR(loggerHandle, "error in compilation of script with type {}", script->scriptType);
 		script->isCompilerError = true;
 	}
@@ -305,6 +321,7 @@ void ScriptCompiler::LoadDLLInternal()
 {
 
 	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->sharedLibraryID));
+	LOG_TRACE(loggerHandle, "Loaded!");
 	if (!sharedLibraryLoaded)
 	{
 		std::string err = sharedLibrary->GetLoadingError();

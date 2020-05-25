@@ -57,6 +57,12 @@ public:
 	 */
 	void ReloadScript();
 
+	/**
+	 * \brief Gets the last exception thrown in Compile() and resets it.
+	 * \return The last error or nullptr
+	 */
+	static std::exception_ptr PopCompilerError();
+
 private:
 	///\brief Unloads all of the data of the old Script
 	void Unload();
@@ -111,5 +117,8 @@ private:
 	LoggerHandle loggerHandle;
 
 	std::shared_ptr<ConfigDirectories> directories;
+
+	//the pointer to an exception
+	static std::exception_ptr expptr;
 	
 };

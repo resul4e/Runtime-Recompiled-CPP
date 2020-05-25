@@ -76,6 +76,11 @@ public:
 
 private:
 
+	/**
+	* \brief Creates the directories that we need whe compiling the scripts. 
+	*/
+	CORE_API void SetupDirectories();
+	
 	unsigned long long RemoveOldDLL();
 
 //variables
@@ -86,6 +91,17 @@ private:
 	friend class Script;
 	friend class ScriptLoader;
 	friend int main(int argc, char* args[]);
+
+	//TODO(Resul): Remove most of these friends using a ScriptManager
+	//Temp friend for testing
+	friend class ScriptLoaderTests_Start_Test;
+	friend class ScriptLoaderTests_StartWithEmptyDirectory_Test;
+	friend class ScriptLoaderTests;
+	friend class ScriptLoaderTests_Update_Test;
+	friend class ScriptLoaderTests_UpdateWithNegativeDeltaTime_Test;
+	friend class ScriptLoaderTests_Restart_Test;
+	friend class ScriptLoaderTests_StartWithWrongToolsFolder_Test;
+
 
 	///a list of all of the objects currently running
 	std::vector<std::shared_ptr<Object>> objectList;

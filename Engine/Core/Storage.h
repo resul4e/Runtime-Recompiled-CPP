@@ -226,7 +226,7 @@ void Storage::Load(std::vector<ValueType, AllocType>& aVector)
 	size_t vectorSize = savedVectors.top();
 	savedVectors.pop();
 
-	for(int i=0; i < vectorSize; i++)
+	for(int i= vectorSize - 1; i > 0; i--)
 	{
 		ValueType tempValue;
 		Load(tempValue);

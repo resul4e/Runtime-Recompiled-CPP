@@ -19,11 +19,12 @@ typedef std::chrono::system_clock Clock;
 
 ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDLL) :
 	level(aLevel),
-	sharedLibraryID(aDLL)
+	sharedLibraryID(aDLL),
+	loggerHandle(Logger::Get("core"))
 {
 	if(level == nullptr)
 	{
-		LOG_ERROR(Logger::Get("core"), "The level pointer was null. This will probably crash!");
+		LOG_ERROR(loggerHandle, "The level pointer was null. This will probably crash!");
 	}
 
 	directories =  level->directories;
@@ -31,8 +32,6 @@ ScriptLoader::ScriptLoader(std::shared_ptr<Level> aLevel, unsigned long long aDL
 
 void ScriptLoader::Start()
 {
-	loggerHandle = Logger::Get("core");
-
 	LoadScripts();
 	if(scriptList.empty())
 	{
@@ -122,6 +121,13 @@ void ScriptLoader::CompileScripts()
 	{
 		threads.at(i)->join();
 	}
+
+	//Check if any of the scripts did not compile and if so rethrow the exception (if there is any).
+	std::exception_ptr expptr = ScriptCompiler::PopCompilerError();
+	if(expptr != nullptr)
+	{
+		std::rethrow_exception(expptr);
+	}
 }
 
 #define LINKER_OUTPUT
@@ -130,9 +136,10 @@ void ScriptLoader::LinkScripts()
 	const auto now = Clock::now();
 	sharedLibraryID = std::chrono::system_clock::to_time_t(now);
 
-	FILE *in;
+
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
-	std::string commandLine("py " + (directories->PythonToolsDirectory / "Link.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	std::string linkString = (directories->PythonToolsDirectory / "Link.py").string();
+	std::string commandLine("py " + linkString + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(sharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the sharedLibraryID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
@@ -143,9 +150,10 @@ void ScriptLoader::LinkScripts()
 		}
 	}
 
+	FILE* in;
 	if ((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
 	{
-		assert(false && "file in commandLine could not be opened");
+		LOG_ERROR(loggerHandle, "Could not run {} to link files", linkString);
 		return;
 	}
 

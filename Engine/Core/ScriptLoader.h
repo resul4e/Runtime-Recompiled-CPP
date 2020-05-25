@@ -25,17 +25,17 @@ public:
 	 * \brief	Compiles, creates dependecies, links and loads all of the DLLs of all of the Scripts
 	 * \param gamePath				The path of the game where the Scripts folder is located
 	 */
-	void Start();
+	CORE_API void Start();
 	/**
 	 * \brief Updates each script.
 	 * \param deltatime				The time passed between the last frame and this frame.
 	 */
-	void Update(float aDeltatime);
+	CORE_API void Update(float aDeltatime);
 	/**
 	 * \brief Removes all of the objects currently running and creates new ones.
 	 * \note This is temporary as we will not be spawning objects by putting them in the Script::Start function
 	 */
-	void Restart();
+	CORE_API void Restart();
 
 private:
 

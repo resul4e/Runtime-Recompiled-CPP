@@ -30,9 +30,8 @@ directories(_directories)
 
 void Level::Start()
 {
-	//setup compile and link tools
-	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
-	system(setupCommand.c_str());
+	//Setup directories where we will store the intermediate and binary files.
+	SetupDirectories();
 
 	//path gamePath(aGamePath);
 #ifdef FULL_RECOMPILE
@@ -120,6 +119,12 @@ void Level::Restart()
 {
 	objectList.clear();
 	scriptLoader->Restart();
+}
+
+void Level::SetupDirectories()
+{
+	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
+	system(setupCommand.c_str());
 }
 
 unsigned long long Level::RemoveOldDLL()
