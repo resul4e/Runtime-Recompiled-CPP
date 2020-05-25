@@ -15,7 +15,8 @@ protected:
 
 		//make sure that if we get a error or above, we throw an exception.
 		Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
-		
+
+		const testing::TestInfo* info = ::testing::UnitTest::GetInstance()->current_test_info();
 		configDir = std::make_shared<ConfigDirectories>();
 		configDir->RootSourceDirectory = { std::string{ SOURCE_DIR } };
 		configDir->RootBinaryDirectory = { std::string{ BINARY_DIR } };
@@ -24,6 +25,7 @@ protected:
 		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
 		configDir->RootGameSourceDirectory = { RCP::fs::path{TEST_DATA_DIR} / "Level" / "Game" };
 		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Engine" / "Tests" / "Game" };
+		configDir->RootGameBinaryDirectory /= std::string(info->test_case_name()) +  info->name();
 	}
 
 	void TearDown() override
@@ -55,15 +57,12 @@ TEST_F(LevelTests, CreatorNoConfigDirectory)
 
 TEST_F(LevelTests, Start)
 {
-	//everything that calls Start() should have its own build directory to not step on anyones toes.
-	configDir->RootGameBinaryDirectory /= "Start";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 }
 
 TEST_F(LevelTests, Update)
 {
-	configDir->RootGameBinaryDirectory /= "Update";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->Update(0.016f);
@@ -71,7 +70,6 @@ TEST_F(LevelTests, Update)
 
 TEST_F(LevelTests, UpdateWithNegativeDeltaTime)
 {
-	configDir->RootGameBinaryDirectory /= "UpdateWithNegativeDeltaTime";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->Update(-0.016f);
@@ -79,7 +77,6 @@ TEST_F(LevelTests, UpdateWithNegativeDeltaTime)
 
 TEST_F(LevelTests, FixedUpdate)
 {
-	configDir->RootGameBinaryDirectory /= "FixedUpdate";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->FixedUpdate();
@@ -87,7 +84,6 @@ TEST_F(LevelTests, FixedUpdate)
 
 TEST_F(LevelTests, Delete)
 {
-	configDir->RootGameBinaryDirectory /= "Delete";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->Delete();
@@ -95,7 +91,6 @@ TEST_F(LevelTests, Delete)
 
 TEST_F(LevelTests, CreateObjectThatExists)
 {
-	configDir->RootGameBinaryDirectory /= "CreateObjectThatExists";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT");
@@ -103,7 +98,6 @@ TEST_F(LevelTests, CreateObjectThatExists)
 
 TEST_F(LevelTests, CreateObjectThatDoesNotExist)
 {
-	configDir->RootGameBinaryDirectory /= "CreateObjectThatDoesNotExist";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	EXPECT_THROW_WITH_MESSAGE(lvl->CreateObject("SCRIPT_THAT_DOES_NOT_EXIST", "SOME_TEST_SCRIPT"), LoggerException, 
@@ -114,7 +108,6 @@ TEST_F(LevelTests, CreateObjectThatDoesNotExistNoThrow)
 {
 	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::NEVER);
 	
-	configDir->RootGameBinaryDirectory /= "CreateObjectThatDoesNotExistNoThrow";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	ObjectHandle hndl = lvl->CreateObject("SCRIPT_THAT_DOES_NOT_EXIST", "SOME_TEST_SCRIPT");
@@ -125,7 +118,6 @@ TEST_F(LevelTests, CreateObjectThatDoesNotExistNoThrow)
 
 TEST_F(LevelTests, GetObjectPointer)
 {
-	configDir->RootGameBinaryDirectory /= "GetObjectPointer";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	ObjectHandle hndl = lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
@@ -137,7 +129,6 @@ TEST_F(LevelTests, GetObjectPointer)
 
 TEST_F(LevelTests, GetObjectPointerNonExistentHandle)
 {
-	configDir->RootGameBinaryDirectory /= "GetObjectPointerNonExistentHandle";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
@@ -146,7 +137,6 @@ TEST_F(LevelTests, GetObjectPointerNonExistentHandle)
 
 TEST_F(LevelTests, GetObjectWithName)
 {
-	configDir->RootGameBinaryDirectory /= "GetObjectWithName";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->CreateObject("TestScript", testObjectName.c_str());
@@ -155,7 +145,6 @@ TEST_F(LevelTests, GetObjectWithName)
 
 TEST_F(LevelTests, GetObjectWithNameThatDoesNotExist)
 {
-	configDir->RootGameBinaryDirectory /= "GetObjectWithNameThatDoesNotExist";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->CreateObject("TestScript", testObjectName.c_str());
@@ -168,7 +157,6 @@ TEST_F(LevelTests, GetObjectWithNameThatDoesNotExistNoThrow)
 {
 	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::NEVER);
 	
-	configDir->RootGameBinaryDirectory /= "GetObjectWithNameThatDoesNotExistNoThrow";
 	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
 	lvl->Start();
 	lvl->CreateObject("TestScript", testObjectName.c_str());
