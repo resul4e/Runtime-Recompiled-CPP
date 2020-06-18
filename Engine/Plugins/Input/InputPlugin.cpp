@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Rendering/RenderEngineAPI.h"
 #include "InputComponent.h"
-
+#include "NoopFunctions.h"
 
 InputPlugin::InputPlugin()
 {
@@ -24,7 +24,7 @@ void InputPlugin::FixedUpdate()
 
 void InputPlugin::Update(float aDeltatime)
 {
-	_CRT_UNUSED(aDeltatime);
+	__noop(aDeltatime);
 }
 
 void InputPlugin::Delete()
