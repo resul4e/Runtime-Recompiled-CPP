@@ -9,6 +9,11 @@ add_executable(Tests
 "CustomMacros.h")
 
 target_compile_features(Tests INTERFACE cxx_std_17)
+if(WIN32)
+     #Do nothing
+else()
+    target_link_libraries(Tests stdc++fs)
+endif()
 
 target_link_libraries(Tests gtest_main)
 target_link_libraries(Tests PIL)
