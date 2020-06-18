@@ -321,7 +321,6 @@ void ScriptCompiler::LoadDLLInternal()
 {
 
 	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->sharedLibraryID));
-	LOG_TRACE(loggerHandle, "Loaded!");
 	if (!sharedLibraryLoaded)
 	{
 		std::string err = sharedLibrary->GetLoadingError();
