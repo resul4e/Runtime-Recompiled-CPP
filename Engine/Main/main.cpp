@@ -1,7 +1,5 @@
 #define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
 
-#include <direct.h>
-
 #include "Level.h"
 #include "PluginLoader.h"
 #include "ConfigDirectories.h"
