@@ -45,7 +45,9 @@ if(WIN32)
      #Do nothing
 else()
     target_link_libraries("Base" INTERFACE stdc++fs)
+    target_link_libraries("Base" INTERFACE ${CMAKE_DL_LIBS})
 endif()
+
 
 #base library for all engine projects
 add_library("EngineBase" INTERFACE)
