@@ -28,6 +28,10 @@ else:
 
 run_command = VSInstallDir +"\\VC\\Auxiliary\\Build\\vcvarsall.bat x" + project_platform
 run_command += "&& cl /std:c++17 "+configuration_dependant+" /MP /Fo"+game_path+"/Scripts/Intermediate/Objects/"+project_configuration+"/ "
+
+#temp: cause we can't use this on linux or whatever.
+run_command += "/D \"WIN32\" /D \"_WINDOWS\" "
+
 run_command += "/Fd"+game_path+"/Scripts\\Intermediate\\"+scriptName+".pdb /c /showIncludes /nologo /I"+VSSE+" /I"+VSSE+"/Plugins /I"+VSSE+"/Extern/glm /I"+VSSE+"/Extern/spdLog/include /I"+VSSE+"/PIL "+script_path
 
 subprocess.run(run_command)
