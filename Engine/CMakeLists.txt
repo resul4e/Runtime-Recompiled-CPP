@@ -41,6 +41,11 @@ add_library("Base" INTERFACE)
 #what features we need from the compiler
 target_compile_features("Base" INTERFACE cxx_attribute_deprecated)
 target_compile_features("Base" INTERFACE cxx_std_17)
+if(WIN32)
+     #Do nothing
+else()
+    target_link_libraries("Base" stdc++fs)
+endif()
 
 #base library for all engine projects
 add_library("EngineBase" INTERFACE)
