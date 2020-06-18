@@ -6,7 +6,8 @@ add_executable(Tests
 "LevelTests.cpp"
 "ScriptLoaderTests.cpp"
 "LoggerTests.cpp"
-"CustomMacros.h")
+"CustomMacros.h"
+"TestData/Level/Game/Scripts/TestScript.h")
 
 target_compile_features(Tests INTERFACE cxx_std_17)
 if(WIN32)
@@ -33,3 +34,6 @@ target_compile_definitions("Tests" PRIVATE BINARY_DIR="${CMAKE_BINARY_DIR}")
 set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
 set_target_properties("gtest" PROPERTIES FOLDER Tests)
 set_target_properties("Tests" PROPERTIES FOLDER Tests)
+
+#make filters in visual studio for test files
+source_group("TestData" FILES "TestData/Level/Game/Scripts/TestScript.h") 
