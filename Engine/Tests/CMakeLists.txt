@@ -1,6 +1,5 @@
 include(LoadGTest.cmake)
 
-
 add_executable(Tests 
 "SharedLibraryTests.cpp"
 "PluginLoaderTests.cpp"
@@ -8,6 +7,8 @@ add_executable(Tests
 "ScriptLoaderTests.cpp"
 "LoggerTests.cpp"
 "CustomMacros.h")
+
+target_compile_features(Tests INTERFACE cxx_std_17)
 
 target_link_libraries(Tests gtest_main)
 target_link_libraries(Tests PIL)
