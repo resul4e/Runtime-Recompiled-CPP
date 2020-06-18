@@ -3,7 +3,7 @@
 #include "Logger.h"
 #include "CustomMacros.h"
 #include "Object.h"
-#include "TestData/Level/Game/Scripts/TestScript.h"
+//#include "TestData/Level/Game/Scripts/TestScript.h"
 
 
 class LevelTests : public ::testing::Test {
@@ -116,16 +116,16 @@ TEST_F(LevelTests, CreateObjectThatDoesNotExistNoThrow)
 	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
 }
 
-TEST_F(LevelTests, GetObjectPointer)
-{
-	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
-	lvl->Start();
-	ObjectHandle hndl = lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
-	Object* obj = lvl->GetObjectPointer(hndl);
-	EXPECT_STREQ(obj->GetName(), "SOME_TEST_SCRIPT_BY_POINTER");
-	std::string proof = dynamic_cast<TestScript*>(obj)->TestFunction();
-	EXPECT_STREQ(proof.c_str(), "PROOF_OF_TEST_SCRIPT");
-}
+//TEST_F(LevelTests, GetObjectPointer)
+//{
+//	std::shared_ptr<Level> lvl = CreateLevel(configDir.get());
+//	lvl->Start();
+//	ObjectHandle hndl = lvl->CreateObject("TestScript", "SOME_TEST_SCRIPT_BY_POINTER");
+//	Object* obj = lvl->GetObjectPointer(hndl);
+//	EXPECT_STREQ(obj->GetName(), "SOME_TEST_SCRIPT_BY_POINTER");
+//	std::string proof = dynamic_cast<TestScript*>(obj)->TestFunction();
+//	EXPECT_STREQ(proof.c_str(), "PROOF_OF_TEST_SCRIPT");
+//}
 
 TEST_F(LevelTests, GetObjectPointerNonExistentHandle)
 {
