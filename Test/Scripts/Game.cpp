@@ -1,8 +1,6 @@
 #include "Game.h"
 #include "Core/Storage.h"
 #include "Core/Level.h"
-#include "Core/Logger.h"
-#include "Rendering/RenderComponent.h"
 #include "Rendering/WindowComponent.h"
 #include "Particle.h"
 
