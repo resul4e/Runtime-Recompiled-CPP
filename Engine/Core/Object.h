@@ -7,6 +7,7 @@
 #include "Handle.h"
 #include "ExportDetails.h"
 #include "ForwardDecl.h"
+#include "FunctionDefinition.h"
 
 //forward declarations
 class Event;
@@ -19,17 +20,17 @@ Level* x ## Interface::lvl = nullptr;
 
 ///SCRIPT_END creates the necessary functions to create a object and pass it to the engine
 #define SCRIPT_END(x)\
-extern "C" _declspec(dllexport) Object* Create##x()\
+extern "C" EXPORT_SHARED_LIBRARY_FUNCTION Object* Create##x()\
 {\
 	Object* tempObj = new x();\
 	return tempObj;\
 }\
-extern "C" _declspec(dllexport) void Delete##x(Object* aObject)\
+extern "C" EXPORT_SHARED_LIBRARY_FUNCTION void Delete##x(Object* aObject)\
 {\
 	delete aObject;\
 	aObject = nullptr;\
 }\
-extern "C" _declspec(dllexport) void SetLevel##x(Level* aLvl)\
+extern "C" EXPORT_SHARED_LIBRARY_FUNCTION void SetLevel##x(Level* aLvl)\
 {\
 	x ## Interface::lvl = aLvl;\
 }
