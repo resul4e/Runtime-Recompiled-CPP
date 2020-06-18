@@ -161,7 +161,7 @@ TEST_F(LevelTests, GetObjectWithNameThatDoesNotExistNoThrow)
 	lvl->Start();
 	lvl->CreateObject("TestScript", testObjectName.c_str());
 	ObjectHandle obj = {0};
-	EXPECT_NO_FATAL_FAILURE(obj = lvl->GetObjectWithName(nonExistentObjectName.c_str()), LoggerException);
+	EXPECT_NO_FATAL_FAILURE(obj = lvl->GetObjectWithName(nonExistentObjectName.c_str()));
 	EXPECT_EQ(obj.index, std::numeric_limits<size_t>::max());
 
 	Logger::SetExceptionThreshold(Logger::Get("core"), Logger::ExceptionThreshold::ERROR_AND_ABOVE);
