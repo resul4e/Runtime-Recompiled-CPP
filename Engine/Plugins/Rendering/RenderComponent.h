@@ -3,6 +3,7 @@
 #include "Enums.h"
 #include "FileSystem.h"
 #include <unordered_map>
+#include <vector>
 #include "Transform/Vector.h"
 
 

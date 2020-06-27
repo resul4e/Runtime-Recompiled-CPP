@@ -5,6 +5,7 @@
 #include "Transform/Vector.h"
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
 //forward declare
 struct SpriteCompHandle;
