@@ -2,6 +2,7 @@
 **/.vscode
 
 **/build
+**/buildvs
 **/gameBuild
 **/Doxygen
 
