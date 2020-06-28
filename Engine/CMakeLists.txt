@@ -31,8 +31,11 @@ if(WIN32)
 endif()
 
 #indicate where external dependencies can be found
-set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
-
+if(WIN32)
+     set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+else()
+set(SFML_DIR "usr/lib/x86_64-linux-gnu/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+endif()
 find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
 
 add_subdirectory("Tests")
