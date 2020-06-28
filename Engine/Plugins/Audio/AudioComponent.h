@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <vector>
 #include "FileSystem.h"
 //forward declare
 namespace sf

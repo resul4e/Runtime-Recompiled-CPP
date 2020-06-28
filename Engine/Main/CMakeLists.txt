@@ -8,7 +8,8 @@ target_link_libraries("Main" "Core")
 target_link_libraries("Main" "PluginCore")
 target_link_libraries("Main" "Rendering")
 target_link_libraries("Main" "Input")
-target_link_libraries("Main" INTERFACE ${CMAKE_SFML_LIBS})
+target_link_libraries("Main" sfml-graphics)
+target_link_libraries("Main" sfml-window)
 
 #set the source dir for use in the engine.
 target_compile_definitions("Main" PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
