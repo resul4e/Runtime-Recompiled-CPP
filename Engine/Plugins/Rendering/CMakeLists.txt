@@ -1,7 +1,5 @@
 project(Rendering VERSION 1.0.0)
 
-find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
-
 add_library("Rendering" SHARED
     "ExportDetails.h"
     "RenderEngineAPI.h"

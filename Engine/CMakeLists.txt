@@ -33,6 +33,8 @@ endif()
 #indicate where external dependencies can be found
 set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
 
+find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
+
 add_subdirectory("Tests")
 
 #base library that all other project depend on
