@@ -16,6 +16,7 @@ target_compile_definitions("Main" PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions("Main" PRIVATE BINARY_DIR="${CMAKE_BINARY_DIR}")
 target_compile_definitions("Main" PRIVATE GAME_NAME="${GAME_NAME}")
 
+if(WIN32)
 #copy the sfml dlls from the extern folder to the output folder
 add_custom_command(TARGET Main POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
@@ -27,3 +28,4 @@ add_custom_command(TARGET Main POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory 
     "${CMAKE_SOURCE_DIR}/Engine/Extern/VSWhere" #from
     "${CMAKE_BINARY_DIR}/Engine/Extern/VSWhere") #to
+endif()
