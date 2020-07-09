@@ -36,6 +36,10 @@ bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 	{
 		libraryPath.replace_extension(sharedLibraryExtension);
 	}
+	else
+	{
+		libraryPath += sharedLibraryExtension;
+	}
 
 	//Load the library and store the handle.
 	handle = LOAD_LIBRARY_FUNC(libraryPath.string().c_str());

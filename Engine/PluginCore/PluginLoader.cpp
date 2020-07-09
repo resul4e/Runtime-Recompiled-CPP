@@ -42,18 +42,18 @@ void PluginLoader::LoadPlugins()
 		}
 
 		//Get the directory name as a string
-		std::string DLLName = p.path().stem().string();
+		std::string sharedLibraryName = p.path().stem().string();
 		//Check the whitelist and blacklist if this plugin is allowed
-		if(!IsPluginAllowed(DLLName))
+		if(!IsPluginAllowed(sharedLibraryName))
 		{
 			continue;
 		}
 		
-		if (!LoadPlugin(DLLName))
+		if (!LoadPlugin(sharedLibraryName))
 		{
 			continue;
 		}
-		pluginList.insert(std::pair<std::string, std::shared_ptr<PluginBase>>(DLLName, std::shared_ptr<PluginBase>(CreatePluginList.at(DLLName)(), DeletePluginList.at(DLLName))));
+		pluginList.insert(std::pair<std::string, std::shared_ptr<PluginBase>>(sharedLibraryName, std::shared_ptr<PluginBase>(CreatePluginList.at(sharedLibraryName)(), DeletePluginList.at(sharedLibraryName))));
 	}
 }
 
@@ -102,7 +102,7 @@ std::vector<std::string> PluginLoader::GetLoadedPlugins()
 
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / std::string(BUILD_CONFIG_NAME) / aSharedLibraryName);
+	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / std::string(BUILD_CONFIG_NAME) / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
 
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory.string());
 	library->LoadSharedLibrary(libraryPath.string());

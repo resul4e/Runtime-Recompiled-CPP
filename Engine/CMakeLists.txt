@@ -5,8 +5,13 @@ enable_testing()
 project("RRCPP")
 
 #set the output directory for all target to be bin
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if(WIN32)
+     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+else()
+     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
+     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
+endif()
 
 if(WIN32)
      #Do nothing
@@ -34,7 +39,7 @@ endif()
 if(WIN32)
      set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Extern/SFML/lib/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
 else()
-set(SFML_DIR "usr/lib/x86_64-linux-gnu/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
+     set(SFML_DIR "usr/lib/x86_64-linux-gnu/cmake/SFML" CACHE FILEPATH "Filepath for SFML")
 endif()
 find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
 

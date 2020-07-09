@@ -5,6 +5,8 @@
 **/buildvs
 **/gameBuild
 **/Doxygen
+**/out
 
 *.vcxproj.user
 *.vcxproj.filters
+CMakeSettings.json
