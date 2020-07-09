@@ -102,13 +102,7 @@ std::vector<std::string> PluginLoader::GetLoadedPlugins()
 
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	//TODO(Resul): Move this to SharedLibrary maybe, so that it contains all of the cross platform stuff.
-	RCP::fs::path libraryPath;
-#if defined(WIN32) || defined(__WIN32)
-	libraryPath = (RCP::fs::path("bin") / std::string(BUILD_CONFIG_NAME) / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
-#else
-	libraryPath = (RCP::fs::path("bin") / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
-#endif
+	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / "Plugins" / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
 	
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory);
 	library->LoadSharedLibrary(libraryPath.string());
