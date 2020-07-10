@@ -102,7 +102,7 @@ std::vector<std::string> PluginLoader::GetLoadedPlugins()
 
 bool PluginLoader::LoadPlugin(std::string aSharedLibraryName)
 {
-	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / "Plugins" / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
+	const RCP::fs::path libraryPath = (RCP::fs::path("bin") / (std::string(SharedLibrary::sharedLibraryPrefix) + aSharedLibraryName));
 	
 	std::unique_ptr<SharedLibrary> library = std::make_unique<SharedLibrary>(directories->RootBinaryDirectory);
 	library->LoadSharedLibrary(libraryPath.string());

@@ -10,11 +10,11 @@ RootBinaryDir=sys.argv[5]
 EngineSourceDir=sys.argv[6]
 
 objects_to_link = ""
-bin_path = game_path+"/Scripts/bin/"+project_configuration
-library_path = RootBinaryDir+"/bin/"+project_configuration
-library_includes = RootBinaryDir+"/Engine/Core/"+project_configuration+"/Core.lib "+RootBinaryDir+"/Engine/Plugins/Rendering/"+project_configuration+"/Rendering.lib "+ \
-	RootBinaryDir+"/Engine/Plugins/Input/"+project_configuration+"/Input.lib "+RootBinaryDir+"/Engine/Plugins/Transform/"+project_configuration+"/Transform.lib "+ \
-	RootBinaryDir+"/Engine/Plugins/Audio/"+project_configuration+"/Audio.lib "+ RootBinaryDir+"/Engine/Plugins/Physics/"+project_configuration+"/Physics.lib "
+bin_path = game_path+"/Scripts/bin/"
+library_path = RootBinaryDir+"/bin/"
+library_includes = library_path+"/Core.lib "+library_path+"/Rendering.lib "+ \
+	library_path+"/Input.lib "+library_path+"/Transform.lib "+ \
+	library_path+"/Audio.lib "+ library_path+"/Physics.lib "
 
 for i in range(7, len(sys.argv)):
     objects_to_link += game_path+"/Scripts/Intermediate/Objects/"+project_configuration+"/"+ sys.argv[i] + ".obj "

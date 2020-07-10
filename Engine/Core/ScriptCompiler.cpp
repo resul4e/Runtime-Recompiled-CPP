@@ -26,7 +26,7 @@ ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<
 	directories(aDirectories),
 	storage(new Storage())
 {
-	RCP::fs::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	RCP::fs::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin";
 	sharedLibrary = std::make_unique<SharedLibrary>(gamePath);
 
 	loggerHandle = Logger::Get("core");
