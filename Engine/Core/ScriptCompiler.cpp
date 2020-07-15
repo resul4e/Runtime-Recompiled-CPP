@@ -26,7 +26,7 @@ ScriptCompiler::ScriptCompiler(std::shared_ptr<Script> aScript, std::shared_ptr<
 	directories(aDirectories),
 	storage(new Storage())
 {
-	RCP::fs::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION;
+	RCP::fs::path gamePath = directories->RootGameBinaryDirectory / "Scripts" / "bin";
 	sharedLibrary = std::make_unique<SharedLibrary>(gamePath);
 
 	loggerHandle = Logger::Get("core");
@@ -190,7 +190,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	std::error_code err;		//used for error checking instead of triggering a breakpoint.
 
 	//Check if file is out of date
-	RCP::fs::file_time_type result = last_write_time(script->scriptPath, err);
+	RCP::fs::file_time_type result = RCP::fs::last_write_time(script->scriptPath, err);
 	time_t localLastScriptWriteTime = result.time_since_epoch().count();
 	
 	/**
@@ -205,16 +205,17 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	}
 	
 #ifdef SEPARATE_LINKING
-	//TODO(Resul): either fix this path too or remove it if the ifdef is not neccessary.
+	//TODO(Resul): either fix this path too or remove it if the ifdef is not necessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	RCP::fs::path dllPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID)+".dll"));	///\todo(Resul) dlls are windows specific
+	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
 #endif
-	RCP::fs::file_time_type DLLresult = last_write_time(dllPath, err);
-	time_t lastDLLWriteTime = DLLresult.time_since_epoch().count();
+	result = RCP::fs::last_write_time(sharedLibraryPath, err);
+	time_t lastSharedLibWriteTime = result.time_since_epoch().count();
 	if (err.value() != 0)
 	{
-		lastDLLWriteTime = 0;
+		LOG_WARN(loggerHandle, "Error during checking of last_write_time. We will return false just to be sure.");
+		return false;
 	}
 #ifdef SEPARATE_LINKING
 	dllPath = path(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDB + ".dll")); ///\todo(Resul) dlls are windows specific
@@ -229,7 +230,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	}
 #endif
 
-	return lastDLLWriteTime > localLastScriptWriteTime;
+	return lastSharedLibWriteTime > localLastScriptWriteTime;
 }
 
 void ScriptCompiler::LoadDLL()
