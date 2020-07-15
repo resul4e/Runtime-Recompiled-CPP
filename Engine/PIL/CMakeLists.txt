@@ -6,6 +6,8 @@ add_library("PIL"
     "ProcessFunctions.h"
     "SizeT.h"
     "SharedLibrary.h"
-    "SharedLibrary.cpp")
+    "SharedLibrary.cpp"
+    "RunPython.h"
+    "RunPython.cpp")
 
 target_link_libraries("PIL" "EngineBase")

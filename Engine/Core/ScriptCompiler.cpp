@@ -208,7 +208,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	//TODO(Resul): either fix this path too or remove it if the ifdef is not necessary.
 	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
 #else
-	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / PROJECT_CONFIGURATION / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
+	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
 #endif
 	result = RCP::fs::last_write_time(sharedLibraryPath, err);
 	time_t lastSharedLibWriteTime = result.time_since_epoch().count();

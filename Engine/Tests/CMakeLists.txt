@@ -15,7 +15,8 @@ add_executable(Tests
 "LevelTests.cpp"
 "ScriptLoaderTests.cpp"
 "LoggerTests.cpp"
-"CustomMacros.h")
+"CustomMacros.h" 
+"RunPythonTests.cpp")
 
 target_compile_features(Tests INTERFACE cxx_std_17)
 if(WIN32)

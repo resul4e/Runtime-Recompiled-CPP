@@ -12,6 +12,7 @@
 #include "Script.h"
 #include "ScriptLoader.h"
 #include "SharedLibrary.h"
+#include "ProcessFunctions.h"
 
 #define FULL_RECOMPILE
 
@@ -124,8 +125,16 @@ void Level::Restart()
 
 void Level::SetupDirectories()
 {
+	FILE* in;
+	
 	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
-	system(setupCommand.c_str());
+	//system(setupCommand.c_str());
+
+	if ((in = OPEN_SOME_PROCESS(setupCommand.c_str(), "rt")) == nullptr)
+	{
+		//TODO(Resul): Investigate how we can actually check if a process has run successfully.
+		assert(false && "file in commandLine could not be opened");
+	}
 }
 
 unsigned long long Level::RemoveOldDLL()
@@ -183,9 +192,9 @@ unsigned long long Level::RemoveOldDLL()
 	return 0;
 }
 
-std::shared_ptr<Level> CreateLevel(ConfigDirectories* _directories)
+std::shared_ptr<Level> CreateLevel(ConfigDirectories* aDirectories)
 {
-	std::shared_ptr<Level> lvl = std::make_shared<Level>(std::shared_ptr<ConfigDirectories>(_directories));
+	std::shared_ptr<Level> lvl = std::make_shared<Level>(std::shared_ptr<ConfigDirectories>(aDirectories));
 	lvl->thisLvl = lvl;
 	return lvl;
 }

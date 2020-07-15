@@ -41,6 +41,9 @@ bool SharedLibrary::LoadSharedLibrary(const std::string& aSharedLibraryPath)
 		libraryPath += sharedLibraryExtension;
 	}
 
+	//add the shared library prefix to the filename.
+	libraryPath.replace_filename(std::string(SharedLibrary::sharedLibraryPrefix) + libraryPath.filename().string());
+
 	//Load the library and store the handle.
 	handle = LOAD_LIBRARY_FUNC(libraryPath.string().c_str());
 	if(handle == nullptr)

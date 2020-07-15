@@ -97,7 +97,11 @@ std::shared_ptr<ConfigDirectories> SetConfigDirectories()
 	directories->RootGameBinaryDirectory = directories->RootBinaryDirectory / GAME_NAME;
 	directories->EngineSourceDirectory = { directories->RootSourceDirectory / "Engine" };
 	directories->PluginSourceDirectory = { directories->EngineSourceDirectory / "Plugins" };
+#if defined(WIN32) || defined(__WIN32)
 	directories->PythonToolsDirectory = { directories->EngineSourceDirectory / "Tools" };
+#else
+	directories->PythonToolsDirectory = { directories->EngineSourceDirectory / "Tools" / "Linux" };
+#endif
 
 	return directories;
 }

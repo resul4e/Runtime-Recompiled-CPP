@@ -21,7 +21,7 @@ if(WIN32)
     add_custom_command(TARGET Main POST_BUILD 
         COMMAND ${CMAKE_COMMAND} -E copy_directory 
         "${CMAKE_SOURCE_DIR}/Engine/Extern/SFML/bin" #from
-        "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)") #to
+        "${CMAKE_BINARY_DIR}/bin") #to
 
     #copy the vswhere tools from the source folder to the ouput folder
     add_custom_command(TARGET Main POST_BUILD 
