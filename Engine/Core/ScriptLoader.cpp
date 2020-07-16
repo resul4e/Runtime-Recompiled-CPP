@@ -188,7 +188,7 @@ void ScriptLoader::LinkScripts()
 #endif
 	}
 
-	if (RunPython::Stop(result))
+	if (!RunPython::Stop(result))
 	{
 		LOG_ERROR(loggerHandle, "error in linking")
 	}
