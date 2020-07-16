@@ -17,7 +17,7 @@ library_includes = library_path+"/Core.lib "+library_path+"/Rendering.lib "+ \
 	library_path+"/Audio.lib "+ library_path+"/Physics.lib "
 
 for i in range(7, len(sys.argv)):
-    objects_to_link += game_path+"/Scripts/Intermediate/Objects/"+project_configuration+"/"+ sys.argv[i] + ".obj "
+    objects_to_link += game_path+"/Scripts/Intermediate/Objects/"+ sys.argv[i] + ".obj "
 
 if project_configuration == "Release":
 	configuration_dependant = " /DEBUG:NONE"

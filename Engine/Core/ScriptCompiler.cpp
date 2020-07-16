@@ -14,6 +14,7 @@
 #include "ScriptLoader.h"
 #include "Handle.h"
 #include "SharedLibrary.h"
+#include "RunPython.h"
 
 #ifdef _DEBUG
 #define COMPILER_OUTPUT
@@ -204,12 +205,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 		return false;	//recompile to be sure
 	}
 	
-#ifdef SEPARATE_LINKING
-	//TODO(Resul): either fix this path too or remove it if the ifdef is not necessary.
-	path dllPath(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDA + ".dll"));	///\todo(Resul) dlls are windows specific
-#else
 	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
-#endif
 	result = RCP::fs::last_write_time(sharedLibraryPath, err);
 	time_t lastSharedLibWriteTime = result.time_since_epoch().count();
 	if (err.value() != 0)
@@ -217,18 +213,6 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 		LOG_WARN(loggerHandle, "Error during checking of last_write_time. We will return false just to be sure.");
 		return false;
 	}
-#ifdef SEPARATE_LINKING
-	dllPath = path(std::string(gamePath.string() + "/bin/" + PROJECT_PLATFORM + "/" + PROJECT_CONFIGURATION + "/" + script->scriptType + scriptIDB + ".dll")); ///\todo(Resul) dlls are windows specific
-
-	DLLresult = last_write_time(dllPath, err);
-	if (err.value() == 0)
-	{
-		if (lastDLLWriteTime < DLLresult.time_since_epoch().count())
-		{
-			lastDLLWriteTime = DLLresult.time_since_epoch().count();
-		}
-	}
-#endif
 
 	return lastSharedLibWriteTime > localLastScriptWriteTime;
 }
@@ -253,12 +237,15 @@ void ScriptCompiler::LoadDLL()
 
 void ScriptCompiler::CompileInternal()
 {
-	FILE *in;
-	//create the command line to compile the script, the python file automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
-	std::string commandLine("py " + (directories->PythonToolsDirectory / "Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	//create the command line to compile the script.
+	std::string commandLine((directories->PythonToolsDirectory / "Compile.py").string() + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + script->scriptPath.string() + " " + script->scriptType + " " + directories->EngineSourceDirectory.string());	//the gamePath, scriptPath and the scriptName
+	FILE* output = RunPython::Start(commandLine);
+	
+
+
 	//compile the script using a python script, found in the tools folder
-	if((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
+	if(output == nullptr)
 	{
 		//TODO(Resul): Investigate how we can actually check if a process has run successfully.
 		assert(false && "file in commandLine could not be opened");
@@ -266,13 +253,13 @@ void ScriptCompiler::CompileInternal()
 		return;
 	}
 
-	char buff[2048];
 	std::unordered_map<std::string, std::shared_ptr<Script>>& scriptList = script->level->scriptLoader->scriptList;
 	RCP::fs::path dependencyPath;
-	while (fgets(buff, sizeof(buff), in) != nullptr)
+	std::string originalString;
+	while (RunPython::GetLine(output, originalString))
 	{
 		//Throw buffer in string and remove trailing newline.
-		std::string buffstring(buff);
+		std::string buffstring(originalString);
 		if (buffstring.find("\n") != buffstring.npos)
 		{
 			buffstring.erase(buffstring.find("\n"));
@@ -299,7 +286,7 @@ void ScriptCompiler::CompileInternal()
 		if (!script->isRecompiling)
 		{
 			//get all of the includes and set the includedInScripts variable for each of the included scripts
-			const std::string stringbuff(buff);
+			const std::string stringbuff(originalString);
 			if (GetInclude(stringbuff, /*out*/dependencyPath))
 			{
 				std::string dependencyType = dependencyPath.filename().string();
@@ -311,7 +298,7 @@ void ScriptCompiler::CompileInternal()
 		}
 	}
 
-	if(CLOSE_SOME_PROCESS(in)!=0)
+	if(!RunPython::Stop(output))
 	{
 		LOG_ERROR(loggerHandle, "error in compilation of script with type {}", script->scriptType);
 		script->isCompilerError = true;

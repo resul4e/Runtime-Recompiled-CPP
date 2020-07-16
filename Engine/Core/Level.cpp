@@ -13,6 +13,7 @@
 #include "ScriptLoader.h"
 #include "SharedLibrary.h"
 #include "ProcessFunctions.h"
+#include "RunPython.h"
 
 #define FULL_RECOMPILE
 
@@ -125,14 +126,9 @@ void Level::Restart()
 
 void Level::SetupDirectories()
 {
-	FILE* in;
-	
-	std::string setupCommand = "py " + (directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string();
-	//system(setupCommand.c_str());
-
-	if ((in = OPEN_SOME_PROCESS(setupCommand.c_str(), "rt")) == nullptr)
+	bool output = RunPython::Run((directories->PythonToolsDirectory / "Setup.py").string() + " " + PROJECT_CONFIGURATION + " " + directories->RootGameBinaryDirectory.string());
+	if (!output)
 	{
-		//TODO(Resul): Investigate how we can actually check if a process has run successfully.
 		assert(false && "file in commandLine could not be opened");
 	}
 }

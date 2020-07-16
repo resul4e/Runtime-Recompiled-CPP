@@ -27,7 +27,7 @@ else:
 	configuration_dependant = "/ZI /LDd"
 
 run_command = VSInstallDir +"\\VC\\Auxiliary\\Build\\vcvarsall.bat x" + project_platform
-run_command += "&& cl /std:c++17 "+configuration_dependant+" /MP /Fo"+game_path+"/Scripts/Intermediate/Objects/"+project_configuration+"/ "
+run_command += "&& cl /std:c++17 "+configuration_dependant+" /MP /Fo"+game_path+"/Scripts/Intermediate/Objects/ "
 
 #temp: cause we can't use this on linux or whatever.
 run_command += "/D \"WIN32\" /D \"_WINDOWS\" "

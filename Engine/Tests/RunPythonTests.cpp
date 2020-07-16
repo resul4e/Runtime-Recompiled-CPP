@@ -32,3 +32,10 @@ TEST(RunPythonTests, RunWhereFileExists)
     RCP::fs::remove(outputPath);
 }
 
+TEST(RunPythonTests, RunWhereFileDoesNotExist)
+{
+    RCP::fs::path scriptPath = RCP::fs::path(TEST_DATA_DIR) / "RunPython" / "PYTHON_SCRIPT_THAT_DOES_NOT_EXIST.py";
+
+    bool output = RunPython::Run(scriptPath.string());
+    EXPECT_EQ(output, false);
+}
