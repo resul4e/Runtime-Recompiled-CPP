@@ -59,9 +59,9 @@ private:
 	void LinkScripts();
 	/**
 	 * \brief Loads each dll of each script
-	 * \see ScriptCompiler::LoadDLL()
+	 * \see ScriptCompiler::LoadSharedObject()
 	 */
-	void LoadDLLs();
+	void LoadSharedObjects();
 //variables
 public:
 private:

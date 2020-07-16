@@ -81,7 +81,7 @@ private:
 	*/
 	CORE_API void SetupDirectories();
 	
-	unsigned long long RemoveOldDLL();
+	unsigned long long RemoveOldSharedObject();
 
 //variables
 public:

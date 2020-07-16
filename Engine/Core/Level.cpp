@@ -43,7 +43,7 @@ void Level::Start()
 	std::string deleteCommand("del /S /Q \"" + (directories->RootGameBinaryDirectory / "Scripts" / "bin").string() + "\" \"" + (directories->RootGameBinaryDirectory / "Scripts" / "Intermediate").string() + "\"");
 	system(deleteCommand.c_str());
 #endif
-	unsigned long long ID = RemoveOldDLL();
+	unsigned long long ID = RemoveOldSharedObject();
 	scriptLoader = std::make_unique<ScriptLoader>(thisLvl, ID);
 
 	scriptLoader->Start();
@@ -133,7 +133,7 @@ void Level::SetupDirectories()
 	}
 }
 
-unsigned long long Level::RemoveOldDLL()
+unsigned long long Level::RemoveOldSharedObject()
 {
 	RCP::fs::path binDirectory = directories->RootGameBinaryDirectory / "Scripts" / "bin";
 	if(!exists(binDirectory) || !is_directory(binDirectory))

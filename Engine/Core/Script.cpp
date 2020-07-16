@@ -36,7 +36,7 @@ void Script::Start()
 
 void Script::Update(float aDeltatime)
 {
-	if(scriptCompiler->CheckIfDLLIsUpToDate())
+	if(scriptCompiler->CheckIfSharedObjectIsUpToDate())
 	{
 		if (!isCompilerError && !isRuntimeError)
 		{

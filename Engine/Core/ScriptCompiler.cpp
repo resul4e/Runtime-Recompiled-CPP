@@ -41,7 +41,7 @@ void ScriptCompiler::Compile()
 		script->isCompilerError = false;
 
 		//if the file is out of date compile it
-		if (script->isRecompiling || !CheckIfDLLIsUpToDate())
+		if (script->isRecompiling || !CheckIfSharedObjectIsUpToDate())
 		{
 			script->isUpToDate = false;
 			CompileInternal();
@@ -101,7 +101,7 @@ void ScriptCompiler::ReloadScript()
 			for(auto p : script->level->scriptLoader->scriptList)
 			{
 				p.second->scriptCompiler->Unload();
-				p.second->scriptCompiler->LoadDLL();
+				p.second->scriptCompiler->LoadSharedObject();
 				if (!p.second->isCompilerError)
 				{
 					p.second->scriptCompiler->SwapRunningObjects();
@@ -186,7 +186,7 @@ void ScriptCompiler::Unload()
 	script->DeleteObject = nullptr;
 }
 
-bool ScriptCompiler::CheckIfDLLIsUpToDate()
+bool ScriptCompiler::CheckIfSharedObjectIsUpToDate()
 {
 	std::error_code err;		//used for error checking instead of triggering a breakpoint.
 
@@ -217,15 +217,15 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 	return lastSharedLibWriteTime > localLastScriptWriteTime;
 }
 
-void ScriptCompiler::LoadDLL()
+void ScriptCompiler::LoadSharedObject()
 {
 	if(script->isCompilerError)
 	{
-		LOG_ERROR(loggerHandle, "Can't load DLL because there is an error in the script {}", script->scriptType)
+		LOG_ERROR(loggerHandle, "Can't load shared object because there is an error in the script {}", script->scriptType)
 		return;
 	}
 
-	LoadDLLInternal();
+	LoadSharedObjectInternal();
 
 	if (script->isCompilerError)
 	{
@@ -305,7 +305,7 @@ void ScriptCompiler::CompileInternal()
 	}
 }
 
-void ScriptCompiler::LoadDLLInternal()
+void ScriptCompiler::LoadSharedObjectInternal()
 {
 
 	const bool sharedLibraryLoaded = sharedLibrary->LoadSharedLibrary("Scripts" + std::to_string(script->level->scriptLoader->sharedLibraryID));
@@ -313,7 +313,7 @@ void ScriptCompiler::LoadDLLInternal()
 	{
 		std::string err = sharedLibrary->GetLoadingError();
 		script->isCompilerError = true;
-		LOG_ERROR(loggerHandle, "Couldn't load the DLL of the script \"{}\" with error code \"{}\"", script->scriptType, err);
+		LOG_ERROR(loggerHandle, "Couldn't load the shared object of the script \"{}\" with error code \"{}\"", script->scriptType, err);
 		return;
 	}
 

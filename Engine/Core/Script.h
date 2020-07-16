@@ -11,7 +11,7 @@
 class ScriptCompiler;
 class ScriptLoader;
 
-//DLL function definitions
+//exported function definitions
 typedef Object* (FUNCTION_CDECL *CREATEFUNCTION)();
 typedef void(FUNCTION_CDECL *DELTEFUNCTION)(Object*);
 typedef void(FUNCTION_CDECL *SET_LEVEL_FUNCTION)(Level*);
@@ -48,7 +48,7 @@ public:
 	/**
 	 * \brief Goes through all of the scripts and updates them or recompiles them.
 	 * 
-	 * Checks if the CPP file is newer than the DLL. If this is the case it tries to recompile.
+	 * Checks if the CPP file is newer than the shared object. If this is the case it tries to recompile.
 	 * If the recompile is unsuccessful it will continue updating the old script, which did work.
 	 * If the recompile is successful it will reload all of the running objects.
 	 * If a recompile is not necessary it will loop through all of the running objects and call
@@ -87,7 +87,7 @@ public:
 private:
 	///Initializes each Script
 	friend class ScriptLoader;
-	///Compiles each script and loads all of the necessary objects (DLLs, functions)
+	///Compiles each script and loads all of the necessary objects (shared objects, functions)
 	friend class ScriptCompiler;
 
 	///the current level 
@@ -115,7 +115,7 @@ private:
 	bool isCompilerError;
 	bool isRuntimeError;
 
-	///if the DLL is up to date with the file
+	///if the shared object is up to date with the file
 	bool isUpToDate;
 
 	///if the script is recompiling

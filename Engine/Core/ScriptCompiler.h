@@ -41,15 +41,15 @@ public:
 	/**
 	 * \brief loads the DLL and all of the functions we need to be able to use the script
 	 * 
-	 * Internally calls LoadDLLInternal().
-	 * \see LoadDLLInternal()
+	 * Internally calls LoadSharedObjectInternal().
+	 * \see LoadSharedObjectInternal()
 	 */
-	void LoadDLL();
+	void LoadSharedObject();
 	/**
 	 * \brief Checks if the DLL is older than the cpp file. If it is older the Script needs a recompile.
 	 * \return True if the DLL is younger than the saved cpp file. False if the DLL is older than the saved cpp file.
 	 */
-	bool CheckIfDLLIsUpToDate();
+	bool CheckIfSharedObjectIsUpToDate();
 	/**
 	 * \brief recompiles and relinks the script
 	 * \see Recompile()
@@ -69,7 +69,7 @@ private:
 	///\brief Calls the batch file to compile all of the scripts and sets the dependencies of each script
 	void CompileInternal();
 	///\brief loads the dll and the functions the script needs
-	void LoadDLLInternal();
+	void LoadSharedObjectInternal();
 	/**
 	 * \brief formats the output of /showincludes command in the .py file to only output the includes we are interested in.
 	 * \param[in] in		One line of the output f _popen.

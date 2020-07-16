@@ -41,7 +41,7 @@ void ScriptLoader::Start()
 	}
 	CompileScripts();
 	LinkScripts();
-	LoadDLLs();
+	LoadSharedObjects();
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{
@@ -194,11 +194,11 @@ void ScriptLoader::LinkScripts()
 	}
 }
 
-void ScriptLoader::LoadDLLs()
+void ScriptLoader::LoadSharedObjects()
 {
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
 	{
-		it->second->scriptCompiler->LoadDLL();
+		it->second->scriptCompiler->LoadSharedObject();
 	}
 }
 
