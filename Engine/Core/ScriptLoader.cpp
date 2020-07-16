@@ -14,6 +14,7 @@
 //TESTING
 #include <chrono>
 #include "PlatformDetails.h"
+#include "RunPython.h"
 
 typedef std::chrono::system_clock Clock;
 
@@ -139,7 +140,7 @@ void ScriptLoader::LinkScripts()
 
 	//create the command line to link the script, there is a python file that automatically selects the project configuration (DEBUG, RELEASE) and the platform (32 bit, 64 bit)
 	std::string linkString = (directories->PythonToolsDirectory / "Link.py").string();
-	std::string commandLine("py " + linkString + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
+	std::string commandLine(linkString + " " + PROJECT_CONFIGURATION + " " + PROJECT_PLATFORM);
 	commandLine.append(" " + directories->RootGameBinaryDirectory.string() + " " + std::to_string(sharedLibraryID) + " " + directories->RootBinaryDirectory.string() + " " + directories->EngineSourceDirectory.string());	//the gamePath and the sharedLibraryID
 
 	for (auto it = scriptList.begin(); it != scriptList.end(); ++it)
@@ -150,19 +151,19 @@ void ScriptLoader::LinkScripts()
 		}
 	}
 
-	FILE* in;
-	if ((in = OPEN_SOME_PROCESS(commandLine.c_str(), "rt")) == nullptr)
+	FILE* result = RunPython::Start(commandLine);
+	if (result == nullptr)
 	{
 		LOG_ERROR(loggerHandle, "Could not run {} to link files", linkString);
 		return;
 	}
 
-	char buff[2048];
-	while (fgets(buff, sizeof(buff), in) != nullptr)
+	std::string originalMessage;
+	while (RunPython::GetLine(result, originalMessage))
 	{
 #ifdef LINKER_OUTPUT
 		//throw buffer in string and remove trailing newline.
-		std::string buffstring(buff);
+		std::string buffstring(originalMessage);
 		if(buffstring.find("\n") != buffstring.npos)
 		{
 			buffstring.erase(buffstring.find("\n"));
@@ -187,7 +188,7 @@ void ScriptLoader::LinkScripts()
 #endif
 	}
 
-	if (CLOSE_SOME_PROCESS(in) != 0)
+	if (RunPython::Stop(result))
 	{
 		LOG_ERROR(loggerHandle, "error in linking")
 	}

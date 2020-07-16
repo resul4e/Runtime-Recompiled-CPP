@@ -205,7 +205,7 @@ bool ScriptCompiler::CheckIfDLLIsUpToDate()
 		return false;	//recompile to be sure
 	}
 	
-	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / ("Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
+	RCP::fs::path sharedLibraryPath = directories->RootGameBinaryDirectory / "Scripts" / "bin" / (std::string(SharedLibrary::sharedLibraryPrefix) + "Scripts" + (std::to_string(script->level->scriptLoader->sharedLibraryID) + SharedLibrary::sharedLibraryExtension));
 	result = RCP::fs::last_write_time(sharedLibraryPath, err);
 	time_t lastSharedLibWriteTime = result.time_since_epoch().count();
 	if (err.value() != 0)

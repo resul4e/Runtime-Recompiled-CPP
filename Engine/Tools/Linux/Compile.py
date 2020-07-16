@@ -21,7 +21,7 @@ VSSE=sys.argv[6]
 #
 #run_command += "/Fd"+game_path+"/Scripts\\Intermediate\\"+scriptName+".pdb /showIncludes /nologo -I"+VSSE+" -I"+VSSE+"/Plugins -I"+VSSE+"/Extern/glm -I"+VSSE+"/Extern/spdLog/include -I"+VSSE+"/PIL "+script_path
 
-run_command = "g++ -c " + script_path + " -o " + game_path + "/Scripts/Intermediate/Objects/"+scriptName+".o" " -I"+VSSE+" -I"+VSSE+"/Plugins -I"+VSSE+"/Extern/glm -I"+VSSE+"/Extern/spdLog/include -I"+VSSE+"/PIL -std=c++17"
+run_command = "g++ -c -fPIC " + script_path + " -o " + game_path + "/Scripts/Intermediate/Objects/"+scriptName+".o" " -I"+VSSE+" -I"+VSSE+"/Plugins -I"+VSSE+"/Extern/glm -I"+VSSE+"/Extern/spdLog/include -I"+VSSE+"/PIL -std=c++17"
 os.system(run_command)
 
 
