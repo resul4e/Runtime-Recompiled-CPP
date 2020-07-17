@@ -47,7 +47,7 @@ TEST_F(PluginLoaderTests, Start)
 
 	//load the shared lib separately so that we can call monitoring functions.
 	SharedLibrary lib(configDir->RootBinaryDirectory);
-	lib.LoadSharedLibrary(std::string("bin/") +"/TestPlugin");
+	lib.LoadSharedLibrary(std::string("bin/") + "/TestPlugin");
 	const auto StartCallAmount = lib.GetExportedFunction<START_CALL_AMOUNT_FUNCTION>("GetStartCallAmount");
 
 	//check that we have a valid connection to the shared lib.
@@ -66,7 +66,7 @@ TEST_F(PluginLoaderTests, Update)
 {
 	LoadPlugin();
 
-	//load the shared lib separately so that we can call monitoring functions.
+	//load the shared lib separately so that we can call the monitoring functions.
 	SharedLibrary lib(configDir->RootBinaryDirectory);
 	lib.LoadSharedLibrary(std::string("bin/") + "/TestPlugin");
 	const auto LastDeltaTime = lib.GetExportedFunction<LAST_DELTA_TIME_FUNCTION>("GetLastDeltaTime");

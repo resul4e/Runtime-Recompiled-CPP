@@ -22,7 +22,11 @@ protected:
 		configDir->RootBinaryDirectory = { std::string{ BINARY_DIR } };
 		configDir->EngineSourceDirectory = { configDir->RootSourceDirectory / "Engine" };
 		configDir->PluginSourceDirectory = { configDir->EngineSourceDirectory / "Plugins" };
+#if defined(WIN32) || defined(__WIN32)
 		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" };
+#else
+		configDir->PythonToolsDirectory = { configDir->EngineSourceDirectory / "Tools" / "Linux" };
+#endif
 		configDir->RootGameSourceDirectory = { RCP::fs::path{TEST_DATA_DIR} / "Level" / "Game" };
 		configDir->RootGameBinaryDirectory = { configDir->RootBinaryDirectory / "Engine" / "Tests" / "Game" };
 		configDir->RootGameBinaryDirectory /= std::string(info->test_case_name()) +  info->name();
