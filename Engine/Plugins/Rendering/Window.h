@@ -35,6 +35,6 @@ public:
 private:
 
 	///The implementation specific RenderWindow, at the moment it is SFML
-	std::shared_ptr<sf::RenderWindow> renderWindow;
+	sf::RenderWindow* renderWindow;
 };
 

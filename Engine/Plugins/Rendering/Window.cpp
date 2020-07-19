@@ -25,9 +25,9 @@ Window::~Window()
 
 void Window::Start()
 {
-	renderWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(448, 448), "SFML works!", sf::Style::Close | sf::Style::Titlebar);
+	renderWindow = new sf::RenderWindow(sf::VideoMode(448, 448), "SFML works!", sf::Style::Close | sf::Style::Titlebar);
 	renderWindow->setVerticalSyncEnabled(false);
-	RenderEngineAPI::window = renderWindow.get();
+	RenderEngineAPI::window = renderWindow;
 	WindowComponent::window = renderWindow;
 	WindowComponent::view = std::make_shared<sf::View>(sf::Vector2f(224, 224), sf::Vector2f(448, 448));
 	renderWindow->setView(*WindowComponent::view);
@@ -85,6 +85,9 @@ void Window::Update(float aDeltatime)
 
 void Window::Delete()
 {
+	delete renderWindow;
+	renderWindow = nullptr;
+	
 	RenderComponent::renderShapeList.clear();
 	RenderComponent::shapeList.clear();
 

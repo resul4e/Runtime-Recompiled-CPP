@@ -55,7 +55,7 @@ private:
 	friend class Window;
 
 	///The implementation specific RenderWindow, at the moment it is SFML.
-	static std::shared_ptr<sf::RenderWindow> window;
+	static sf::RenderWindow* window;
 	///The implementation specific View, at the moment it is SFML.
 	static std::shared_ptr<sf::View> view;
 	///The color of the background.

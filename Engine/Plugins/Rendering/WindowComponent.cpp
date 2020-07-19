@@ -2,7 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 
-std::shared_ptr<sf::RenderWindow> WindowComponent::window;
+sf::RenderWindow* WindowComponent::window;
 std::shared_ptr < sf::View> WindowComponent::view;
 glm::vec4 WindowComponent::clearColor;
 
