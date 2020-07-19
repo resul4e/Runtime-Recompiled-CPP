@@ -11,4 +11,6 @@ public:
 	static FILE* Start(const std::string& aCommand);
 	static bool GetLine(FILE* aFile, std::string& oLine);
 	static bool Stop(FILE* aFile);
+
+	static std::string pythonRunCommand;
 };

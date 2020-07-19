@@ -5,10 +5,12 @@
 constexpr uint32_t bufferSize = 2048;
 
 #if defined(WIN32) || defined(__WIN32)
-	constexpr char pythonRunCommand[] = "py ";
+	constexpr char pythonRunCommandCA[] = "py ";
 #else
-	constexpr char pythonRunCommand[] = "python3 ";
+	constexpr char pythonRunCommandCA[] = "python3 ";
 #endif
+
+std::string RunPython::pythonRunCommand(pythonRunCommandCA);
 
 bool RunPython::Run(const std::string& aCommand)
 {
@@ -33,7 +35,7 @@ bool RunPython::Run(const std::string& aCommand)
 FILE* RunPython::Start(const std::string& aCommand)
 {
 	//add the correct python run command at the start of the command.
-	std::string setupCommand = std::string(pythonRunCommand) + aCommand;
+	std::string setupCommand = pythonRunCommand + aCommand;
 
 	//Try to open the process and return the process pointer we get back.
 	FILE* in;
