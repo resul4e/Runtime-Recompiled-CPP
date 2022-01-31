@@ -1,5 +1,9 @@
 project("Tests")
 
+enable_testing()
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
@@ -9,8 +13,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-
-include(LoadGTest.cmake)
 
 add_executable(Tests 
 "SharedLibraryTests.cpp"
@@ -28,7 +30,7 @@ else()
     target_link_libraries(Tests stdc++fs)
 endif()
 
-target_link_libraries(Tests gtest_main)
+target_link_libraries(Tests ${GTEST_BOTH_LIBRARIES})
 target_link_libraries(Tests PIL)
 target_link_libraries(Tests PluginCore)
 target_link_libraries(Tests Core)
@@ -43,6 +45,4 @@ target_compile_definitions("Tests" PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 target_compile_definitions("Tests" PRIVATE BINARY_DIR="${CMAKE_BINARY_DIR}")
 
 #add all testing related projects into one visual studio filter
-set_target_properties("gtest_main" PROPERTIES FOLDER Tests)
-set_target_properties("gtest" PROPERTIES FOLDER Tests)
 set_target_properties("Tests" PROPERTIES FOLDER Tests)
