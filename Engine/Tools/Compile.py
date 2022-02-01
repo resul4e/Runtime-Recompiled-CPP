@@ -11,11 +11,12 @@ scriptName=sys.argv[5]
 VSSE=sys.argv[6]
 
 #finds the installed visual studio versions and uses one of them to compile
-VSInstallDir = ""
 VSInstallDirByte = ""
 VSInstallDirByte = subprocess.check_output(VSSE+"/Extern/VSWhere/vswhere.exe -property installationPath")
-VSInstallDir = VSInstallDirByte.decode("utf-8")
-VSInstallDir = VSInstallDir.rstrip()
+VSInstallDirs = VSInstallDirByte.decode("utf-8")
+VSInstallDirs = VSInstallDirs.rstrip()
+VSInstallDirs = VSInstallDirs.split('\r\n')
+VSInstallDir = next(obj for obj in VSInstallDirs if "2022" in obj)
 
 if VSInstallDir == "":
     print("error no installation of visual studios found")

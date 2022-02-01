@@ -25,11 +25,12 @@ else:
 	configuration_dependant = " /DEBUG /PDB:"+game_path+"\\Scripts\\Intermediate\\Scripts"+DLL_ID+".pdb /PDBALTPATH:"+game_path+"/Scripts/Intermediate/Scripts"+DLL_ID+".pdb"
 
 #finds the installed visual studio versions and uses it to compile
-VSInstallDir = ""
 VSInstallDirByte = ""
 VSInstallDirByte = subprocess.check_output(EngineSourceDir+"/Extern/VSWhere/vswhere.exe -property installationPath")
-VSInstallDir = VSInstallDirByte.decode("utf-8")
-VSInstallDir = VSInstallDir.rstrip()
+VSInstallDirs = VSInstallDirByte.decode("utf-8")
+VSInstallDirs = VSInstallDirs.rstrip()
+VSInstallDirs = VSInstallDirs.split('\r\n')
+VSInstallDir = next(obj for obj in VSInstallDirs if "2022" in obj)
 
 run_command = VSInstallDir+"\\VC\\Auxiliary\\Build\\vcvarsall.bat x" + project_platform
 run_command +="&& LINK /MACHINE:X"+project_platform+configuration_dependant+ " /IMPLIB:"+bin_path+"/Scripts.lib"
