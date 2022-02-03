@@ -4,6 +4,9 @@ enable_testing()
 
 project("RRCPP")
 
+#Set toggle for unit tests to be added to the project
+set("INCLUDE_UNIT_TESTS" "FALSE") 
+
 #set the output directory for all target to be bin
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
@@ -20,7 +23,6 @@ if(WIN32)
 else()
      set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
-
 #includes from within the project
 include_directories(BEFORE "Core")
 include_directories(BEFORE "PluginCore")
@@ -45,7 +47,9 @@ else()
 endif()
 find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
 
-add_subdirectory("Tests")
+if(${INCLUDE_UNIT_TESTS})
+     add_subdirectory("Tests")
+endif()
 
 #base library that all other project depend on
 add_library("Base" INTERFACE)
