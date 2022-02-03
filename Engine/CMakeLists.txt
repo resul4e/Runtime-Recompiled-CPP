@@ -5,7 +5,7 @@ enable_testing()
 project("RRCPP")
 
 #Set toggle for unit tests to be added to the project
-set("INCLUDE_UNIT_TESTS" "FALSE") 
+set("INCLUDE_UNIT_TESTS" "FALSE" CACHE BOOL "If the project should include the engine unit tests")
 
 #set the output directory for all target to be bin
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/bin")
